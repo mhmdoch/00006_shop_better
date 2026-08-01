@@ -1,55 +1,44 @@
-<?php return ["body" => function ($opt) { ?>
+<?php return [
+    "body" => function ($opt) { ?>
 
-    <?= count($opt["catalogs"]) ?>
+    <?php
+        $cardsPerRow = 3;
+        $cardsPerRowCurrent = 0;
+        $catalogCount = count($opt["catalogs"]);
+    ?>
+
 
     <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
+        <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
+            <div class="card-deck">
+            <?php } ?>
 
+            <div class="card mb-4">
+                <img src="..." class="card-img-top" alt="<?= e($catalog["name"]) ?>">
+                <div class="card-body">
+                    <p class="card-text mb-1 small"><?= e($catalog['brand_name']) ?></p>
+                    <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
+                    <p class="card-text"><a href="/catalog/show/<?= e($catalog["id"]) ?>"><?= e($catalog['description']) ?></a></p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+            <?php $cardsPerRowCurrent++; ?>
 
-
-
-
-
-
-        <li>
-
-            <a href="/catalog/show/<?= e($catalog['id']) ?>"><?= e($catalog["brand_name"]) ?> <?= e($catalog["name"]) ?></a>
-        </li>
+            <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
+            </div>
+        <?php } ?>
     <?php } ?>
 
 
+    <?php if ($cardsPerRowCurrent % $cardsPerRow !== 0) { ?>
+        <?php $cardsPerRowMissing = $cardsPerRow - ($cardsPerRowCurrent % $cardsPerRow); ?>
 
+        <?php for ($i = 0; $i < $cardsPerRowMissing; $i++) { ?>
+            <div class="card mb-4 invisible" aria-hidden="true"></div>
+        <?php } ?>
 
-
-
-
-
-
-
-    <div class="card-deck">
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
         </div>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-        </div>
-    </div>
-<?php }]; ?>
+    <?php } ?>
+<?php }
+]; ?>

@@ -21,7 +21,7 @@ class CatalogController extends z_controller
 
         return $res->render("catalog/show", [
             "catalog" => $catalog,
-            "items" => $items
+            "items" => $items,
         ]);
     }
 }
