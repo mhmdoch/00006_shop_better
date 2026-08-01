@@ -1,118 +1,167 @@
-SET @air_max_catalog_id = (
+-- Nike Air Max 90, Herrenschuh, Style DO6706-002
+-- https://www.nike.com/de/t/air-max-90-herrenschuh-EZeqopR0
+SET @air_max_90_catalog_id = (
   SELECT `catalog`.`id`
   FROM `catalog`
   INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
   WHERE `brand`.`name` = 'Nike'
-    AND `catalog`.`name` = 'Air Max'
+    AND `catalog`.`name` = 'Air Max 90'
   LIMIT 1
 );
 
 INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
-(@air_max_catalog_id, 'NIKE-AM-GRN-39', '39', 'grün',    109.99,  7),
-(@air_max_catalog_id, 'NIKE-AM-BLK-39', '39', 'schwarz',  99.99, 12),
-(@air_max_catalog_id, 'NIKE-AM-WHT-40', '40', 'weiß',     94.99, 28),
-(@air_max_catalog_id, 'NIKE-AM-BLK-40', '40', 'schwarz',  99.99, 14),
-(@air_max_catalog_id, 'NIKE-AM-BLU-40', '40', 'blau',    104.99,  9),
-(@air_max_catalog_id, 'NIKE-AM-RED-40', '40', 'rot',     114.99,  2),
-(@air_max_catalog_id, 'NIKE-AM-GRN-41', '41', 'grün',    109.99,  4),
-(@air_max_catalog_id, 'NIKE-AM-BLK-41', '41', 'schwarz',  89.99, 36),
-(@air_max_catalog_id, 'NIKE-AM-WHT-41', '41', 'weiß',     94.99, 11),
-(@air_max_catalog_id, 'NIKE-AM-BLU-41', '41', 'blau',    104.99, 13),
-(@air_max_catalog_id, 'NIKE-AM-RED-41', '41', 'rot',     114.99,  5),
-(@air_max_catalog_id, 'NIKE-AM-BLK-42', '42', 'schwarz',  99.99,  8),
-(@air_max_catalog_id, 'NIKE-AM-WHT-42', '42', 'weiß',     94.99, 24),
-(@air_max_catalog_id, 'NIKE-AM-BLU-42', '42', 'blau',    104.99,  6),
-(@air_max_catalog_id, 'NIKE-AM-GRN-43', '43', 'grün',    109.99,  3),
-(@air_max_catalog_id, 'NIKE-AM-RED-43', '43', 'rot',     114.99,  1),
-(@air_max_catalog_id, 'NIKE-AM-BLK-45', '45', 'schwarz',  99.99, 10),
-(@air_max_catalog_id, 'NIKE-AM-BLU-45', '45', 'blau',    104.99,  4),
-(@air_max_catalog_id, 'NIKE-AM-RED-45', '45', 'rot',     114.99,  2),
-(@air_max_catalog_id, 'NIKE-AM-WHT-45', '45', 'weiß',     94.99,  7),
-(@air_max_catalog_id, 'NIKE-AM-BLK-46', '46', 'schwarz',  99.99,  5),
-(@air_max_catalog_id, 'NIKE-AM-WHT-46', '46', 'weiß',     94.99,  6),
-(@air_max_catalog_id, 'NIKE-AM-GRN-46', '46', 'grün',    109.99,  1);
+(@air_max_90_catalog_id, 'DO6706-002-EU38.5', '38.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  4),
+(@air_max_90_catalog_id, 'DO6706-002-EU39',   '39',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  7),
+(@air_max_90_catalog_id, 'DO6706-002-EU40',   '40',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 12),
+(@air_max_90_catalog_id, 'DO6706-002-EU40.5', '40.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  9),
+(@air_max_90_catalog_id, 'DO6706-002-EU41',   '41',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 14),
+(@air_max_90_catalog_id, 'DO6706-002-EU42',   '42',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 18),
+(@air_max_90_catalog_id, 'DO6706-002-EU42.5', '42.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 11),
+(@air_max_90_catalog_id, 'DO6706-002-EU43',   '43',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 10),
+(@air_max_90_catalog_id, 'DO6706-002-EU44',   '44',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99, 13),
+(@air_max_90_catalog_id, 'DO6706-002-EU44.5', '44.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  8),
+(@air_max_90_catalog_id, 'DO6706-002-EU45',   '45',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  9),
+(@air_max_90_catalog_id, 'DO6706-002-EU45.5', '45.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  5),
+(@air_max_90_catalog_id, 'DO6706-002-EU46',   '46',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  6),
+(@air_max_90_catalog_id, 'DO6706-002-EU47',   '47',   'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  4),
+(@air_max_90_catalog_id, 'DO6706-002-EU47.5', '47.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  3),
+(@air_max_90_catalog_id, 'DO6706-002-EU48.5', '48.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  2),
+(@air_max_90_catalog_id, 'DO6706-002-EU49.5', '49.5', 'Smoke Grey/Light Photo Blue/Metallic Silver/Schwarz', 149.99,  1);
 
-SET @air_force_1_catalog_id = (
+-- Nike Air Force 1 '07, Herrenschuh, Style CT2302-002
+-- https://www.nike.com/de/t/air-force-1-07-herrenschuh-n8juM1H2/CT2302-002
+SET @air_force_1_07_catalog_id = (
   SELECT `catalog`.`id`
   FROM `catalog`
   INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
   WHERE `brand`.`name` = 'Nike'
-    AND `catalog`.`name` = 'Air Force 1'
+    AND `catalog`.`name` = 'Air Force 1 ''07'
   LIMIT 1
 );
 
 INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-36', '36', 'weiß',     94.99,  6),
-(@air_force_1_catalog_id, 'NIKE-AF1-PNK-36', '36', 'rosa',    104.99,  3),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-37', '37', 'weiß',     94.99, 12),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-37', '37', 'schwarz', 104.99,  8),
-(@air_force_1_catalog_id, 'NIKE-AF1-PNK-37', '37', 'rosa',    104.99,  2),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-38', '38', 'weiß',     94.99, 31),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-38', '38', 'schwarz', 104.99, 13),
-(@air_force_1_catalog_id, 'NIKE-AF1-BGE-38', '38', 'beige',   109.99,  5),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLU-38', '38', 'blau',     99.99,  9),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-39', '39', 'weiß',     94.99, 11),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-39', '39', 'schwarz', 104.99,  4),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-40', '40', 'weiß',     94.99, 38),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-40', '40', 'schwarz', 104.99, 14),
-(@air_force_1_catalog_id, 'NIKE-AF1-BGE-40', '40', 'beige',   109.99,  7),
-(@air_force_1_catalog_id, 'NIKE-AF1-RED-40', '40', 'rot',     114.99,  2),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-41', '41', 'weiß',     94.99, 15),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-41', '41', 'schwarz', 104.99, 10),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLU-41', '41', 'blau',     99.99,  6),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-42', '42', 'weiß',     94.99, 29),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-42', '42', 'schwarz', 104.99, 24),
-(@air_force_1_catalog_id, 'NIKE-AF1-BGE-42', '42', 'beige',   109.99,  3),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLU-42', '42', 'blau',     99.99, 12),
-(@air_force_1_catalog_id, 'NIKE-AF1-RED-42', '42', 'rot',     114.99,  1),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-43', '43', 'weiß',     94.99, 22),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-43', '43', 'schwarz', 104.99, 11),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-44', '44', 'weiß',     94.99,  8),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLU-44', '44', 'blau',     99.99,  4),
-(@air_force_1_catalog_id, 'NIKE-AF1-RED-44', '44', 'rot',     114.99,  2),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-45', '45', 'schwarz', 104.99,  9),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-45', '45', 'weiß',     94.99,  6),
-(@air_force_1_catalog_id, 'NIKE-AF1-BGE-45', '45', 'beige',   109.99,  1),
-(@air_force_1_catalog_id, 'NIKE-AF1-BLK-46', '46', 'schwarz', 104.99,  5),
-(@air_force_1_catalog_id, 'NIKE-AF1-WHT-46', '46', 'weiß',     94.99,  3);
+(@air_force_1_07_catalog_id, 'CT2302-002-EU38.5', '38.5', 'Schwarz/Weiß', 119.99,  6),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU39',   '39',   'Schwarz/Weiß', 119.99,  9),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU40',   '40',   'Schwarz/Weiß', 119.99, 15),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU40.5', '40.5', 'Schwarz/Weiß', 119.99, 12),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU41',   '41',   'Schwarz/Weiß', 119.99, 18),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU42',   '42',   'Schwarz/Weiß', 119.99, 24),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU42.5', '42.5', 'Schwarz/Weiß', 119.99, 16),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU43',   '43',   'Schwarz/Weiß', 119.99, 20),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU44',   '44',   'Schwarz/Weiß', 119.99, 17),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU44.5', '44.5', 'Schwarz/Weiß', 119.99, 11),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU45',   '45',   'Schwarz/Weiß', 119.99, 14),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU45.5', '45.5', 'Schwarz/Weiß', 119.99,  8),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU46',   '46',   'Schwarz/Weiß', 119.99, 10),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU47',   '47',   'Schwarz/Weiß', 119.99,  7),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU47.5', '47.5', 'Schwarz/Weiß', 119.99,  5),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU48.5', '48.5', 'Schwarz/Weiß', 119.99,  4),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU49.5', '49.5', 'Schwarz/Weiß', 119.99,  3),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU50.5', '50.5', 'Schwarz/Weiß', 119.99,  2),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU51.5', '51.5', 'Schwarz/Weiß', 119.99,  1),
+(@air_force_1_07_catalog_id, 'CT2302-002-EU52.5', '52.5', 'Schwarz/Weiß', 119.99,  1);
 
-SET @jordan_catalog_id = (
+-- Air Jordan 1 Mid, Herrenschuh, Style 554724-078
+-- https://www.nike.com/de/t/air-jordan-1-mid-schuh-herren-QJTvQh
+SET @air_jordan_1_mid_catalog_id = (
   SELECT `catalog`.`id`
   FROM `catalog`
   INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
   WHERE `brand`.`name` = 'Nike'
-    AND `catalog`.`name` = 'Jordan'
+    AND `catalog`.`name` = 'Air Jordan 1 Mid'
   LIMIT 1
 );
 
 INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
-(@jordan_catalog_id, 'NIKE-JDN-BLK-40', '40', 'schwarz', 109.99,  9),
-(@jordan_catalog_id, 'NIKE-JDN-RED-40', '40', 'rot',     119.99,  3),
-(@jordan_catalog_id, 'NIKE-JDN-WHT-40', '40', 'weiß',    114.99,  6),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-41', '41', 'schwarz', 109.99, 14),
-(@jordan_catalog_id, 'NIKE-JDN-RED-41', '41', 'rot',     119.99,  5),
-(@jordan_catalog_id, 'NIKE-JDN-BLU-41', '41', 'blau',    119.99,  2),
-(@jordan_catalog_id, 'NIKE-JDN-GRN-41', '41', 'grün',    114.99,  1),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-42', '42', 'schwarz', 109.99, 22),
-(@jordan_catalog_id, 'NIKE-JDN-RED-42', '42', 'rot',     119.99, 12),
-(@jordan_catalog_id, 'NIKE-JDN-WHT-42', '42', 'weiß',    114.99,  8),
-(@jordan_catalog_id, 'NIKE-JDN-BLU-42', '42', 'blau',    119.99,  4),
-(@jordan_catalog_id, 'NIKE-JDN-ORG-42', '42', 'orange',  119.99,  2),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-43', '43', 'schwarz', 109.99, 11),
-(@jordan_catalog_id, 'NIKE-JDN-WHT-43', '43', 'weiß',    114.99,  7),
-(@jordan_catalog_id, 'NIKE-JDN-RED-43', '43', 'rot',     119.99, 26),
-(@jordan_catalog_id, 'NIKE-JDN-RED-44', '44', 'rot',     119.99,  6),
-(@jordan_catalog_id, 'NIKE-JDN-BLU-44', '44', 'blau',    119.99,  3),
-(@jordan_catalog_id, 'NIKE-JDN-ORG-44', '44', 'orange',  119.99,  1),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-44', '44', 'schwarz', 109.99, 19),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-45', '45', 'schwarz', 109.99, 13),
-(@jordan_catalog_id, 'NIKE-JDN-WHT-45', '45', 'weiß',    114.99, 18),
-(@jordan_catalog_id, 'NIKE-JDN-RED-45', '45', 'rot',     119.99,  5),
-(@jordan_catalog_id, 'NIKE-JDN-GRN-45', '45', 'grün',    114.99,  2),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-46', '46', 'schwarz', 109.99,  8),
-(@jordan_catalog_id, 'NIKE-JDN-RED-46', '46', 'rot',     119.99,  4),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-47', '47', 'schwarz', 109.99,  6),
-(@jordan_catalog_id, 'NIKE-JDN-WHT-47', '47', 'weiß',    114.99,  3),
-(@jordan_catalog_id, 'NIKE-JDN-BLU-47', '47', 'blau',    119.99,  1),
-(@jordan_catalog_id, 'NIKE-JDN-BLK-48', '48', 'schwarz', 109.99,  4),
-(@jordan_catalog_id, 'NIKE-JDN-RED-48', '48', 'rot',     119.99,  2);
+(@air_jordan_1_mid_catalog_id, '554724-078-EU40',   '40',   'Light Smoke Grey/Anthracite/Weiß', 139.99,  5),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU40.5', '40.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  4),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU41',   '41',   'Light Smoke Grey/Anthracite/Weiß', 139.99,  8),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU42',   '42',   'Light Smoke Grey/Anthracite/Weiß', 139.99, 12),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU42.5', '42.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  9),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU43',   '43',   'Light Smoke Grey/Anthracite/Weiß', 139.99, 10),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU44',   '44',   'Light Smoke Grey/Anthracite/Weiß', 139.99, 11),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU44.5', '44.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  7),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU45',   '45',   'Light Smoke Grey/Anthracite/Weiß', 139.99,  8),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU45.5', '45.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  5),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU46',   '46',   'Light Smoke Grey/Anthracite/Weiß', 139.99,  6),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU47',   '47',   'Light Smoke Grey/Anthracite/Weiß', 139.99,  4),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU47.5', '47.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  3),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU48.5', '48.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  2),
+(@air_jordan_1_mid_catalog_id, '554724-078-EU49.5', '49.5', 'Light Smoke Grey/Anthracite/Weiß', 139.99,  1);
+
+-- Timberland Classic 2-Eye Bootsschuh für Herren
+-- Braun TB025077214, Blau TB174036484, Grau TB0A2GEREL7
+-- https://www.timberland.com/de-de/p/herren-10029/klassischer-bootsschuh-fur-herren-in-braun-TB025077214
+SET @timberland_classic_2_eye_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'Timberland'
+    AND `catalog`.`name` = 'Classic 2-Eye Bootsschuh'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU40',  '40', 'braun', 160.00,  7),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU40',  '40', 'blau',  160.00,  5),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU40',  '40', 'grau',  160.00,  3),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU41',  '41', 'braun', 160.00, 10),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU41',  '41', 'blau',  160.00,  7),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU41',  '41', 'grau',  160.00,  4),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU42',  '42', 'braun', 160.00, 14),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU42',  '42', 'blau',  160.00,  9),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU42',  '42', 'grau',  160.00,  6),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU43',  '43', 'braun', 160.00, 12),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU43',  '43', 'blau',  160.00,  8),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU43',  '43', 'grau',  160.00,  5),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU44',  '44', 'braun', 160.00,  9),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU44',  '44', 'blau',  160.00,  6),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU44',  '44', 'grau',  160.00,  4),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU45',  '45', 'braun', 160.00,  7),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU45',  '45', 'blau',  160.00,  5),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU45',  '45', 'grau',  160.00,  3),
+(@timberland_classic_2_eye_catalog_id, 'TB025077214-EU46',  '46', 'braun', 160.00,  5),
+(@timberland_classic_2_eye_catalog_id, 'TB174036484-EU46',  '46', 'blau',  160.00,  3),
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU46',  '46', 'grau',  160.00,  2);
+
+-- Timberland Premium 6-Inch Boot für Herren
+-- Gelb TB110061713, Dunkelgelb TB172066EBL, Braun TB110001214, Schwarz TB110073001
+-- https://www.timberland.com/de-de/p/herren-10029/wasserdichter-timberland-premium-6-inch-boot-fur-herren-in-gelb-TB110061713
+SET @timberland_premium_6_inch_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'Timberland'
+    AND `catalog`.`name` = 'Premium 6-Inch Boot'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU40', '40', 'gelb',       230.00,  6),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU40', '40', 'dunkelgelb', 230.00,  4),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU40', '40', 'braun',      230.00,  3),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU40', '40', 'schwarz',    230.00,  2),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU41', '41', 'gelb',       230.00, 10),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU41', '41', 'dunkelgelb', 230.00,  7),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU41', '41', 'braun',      230.00,  5),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU41', '41', 'schwarz',    230.00,  4),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU42', '42', 'gelb',       230.00, 14),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU42', '42', 'dunkelgelb', 230.00, 11),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU42', '42', 'braun',      230.00,  8),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU42', '42', 'schwarz',    230.00,  6),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU43', '43', 'gelb',       230.00, 11),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU43', '43', 'dunkelgelb', 230.00,  9),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU43', '43', 'braun',      230.00,  7),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU43', '43', 'schwarz',    230.00,  5),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU44', '44', 'gelb',       230.00,  9),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU44', '44', 'dunkelgelb', 230.00,  6),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU44', '44', 'braun',      230.00,  4),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU44', '44', 'schwarz',    230.00,  3),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU45', '45', 'gelb',       230.00,  5),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU45', '45', 'dunkelgelb', 230.00,  4),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU45', '45', 'braun',      230.00,  2),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU45', '45', 'schwarz',    230.00,  2),
+(@timberland_premium_6_inch_catalog_id, 'TB110061713-EU46', '46', 'gelb',       230.00,  3),
+(@timberland_premium_6_inch_catalog_id, 'TB172066EBL-EU46', '46', 'dunkelgelb', 230.00,  2),
+(@timberland_premium_6_inch_catalog_id, 'TB110001214-EU46', '46', 'braun',      230.00,  2),
+(@timberland_premium_6_inch_catalog_id, 'TB110073001-EU46', '46', 'schwarz',    230.00,  1);

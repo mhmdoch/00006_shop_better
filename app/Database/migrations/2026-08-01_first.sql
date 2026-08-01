@@ -11,6 +11,7 @@ CREATE TABLE `catalog` (
   `name` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
   `itemable_type` VARCHAR(50) NOT NULL,
+  `gender` VARCHAR(50) DEFAULT NULL,
   `titlethumb` VARCHAR(255) DEFAULT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
 

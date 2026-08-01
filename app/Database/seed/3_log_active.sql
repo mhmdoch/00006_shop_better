@@ -9,15 +9,15 @@ FROM `item`;
 UPDATE `item`
 SET `is_active` = 0
 WHERE `sku` IN (
-  'NIKE-AM-RED-43',
-  'NIKE-AM-GRN-46',
-  'NIKE-AF1-PNK-36',
-  'NIKE-AF1-RED-42',
-  'NIKE-AF1-RED-44',
-  'NIKE-AF1-BGE-45',
-  'NIKE-JDN-GRN-41',
-  'NIKE-JDN-ORG-44',
-  'NIKE-JDN-BLU-47'
+  'DO6706-002-EU38.5',
+  'DO6706-002-EU47.5',
+  'CT2302-002-EU39',
+  'CT2302-002-EU42.5',
+  'CT2302-002-EU50.5',
+  '554724-078-EU40.5',
+  '554724-078-EU44.5',
+  '554724-078-EU49.5',
+  'TB110073001-EU46'
 );
 
 INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)

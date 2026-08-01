@@ -5,7 +5,7 @@ class CatalogController extends z_controller
 
     public function action_index(Request $req, Response $res)
     {
-        $catalogs = $req->getModel("Catalog")->getCatalogsIfActive();
+        $catalogs = $req->getModel("Catalog")->getCatalogs();
 
         return $res->render("catalog/index", [
             "catalogs" => $catalogs,
