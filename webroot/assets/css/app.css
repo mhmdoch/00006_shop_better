@@ -1,0 +1,109 @@
+.navbar .login-fields,
+.login-links {
+    color: white;
+}
+
+.navbar .login-fields,
+.login-links a {
+    text-decoration: none;
+    color: rgb(0, 255, 200);
+}
+
+.navbar .login-fields,
+.login-links a:hover {
+    text-decoration: none;
+    color: rgb(169, 255, 236);
+}
+
+.navbar .login-fields input {
+    padding: 3px 3px;
+    background-color: rgb(85, 88, 90);
+    border: 1px solid black;
+    font-size: 0.8rem;
+    height: 24px;
+    line-height: 1.0;
+}
+
+.navbar .login-fields button {
+    padding: 3px 5px;
+    color: white;
+    background-color: rgb(85, 88, 90);
+    border: 1px solid black;
+    font-size: 0.8rem;
+    height: 24px;
+    line-height: 1.0;
+}
+
+.navbar .login-fields button:hover {
+    border: 1px solid rgb(0, 255, 200);
+    font-size: 0.8rem;
+    height: 24px;
+    line-height: 1.0;
+    color: rgb(0, 255, 200);
+
+}
+
+/*
+.login-form-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.login-fields input {
+    padding: 3px 3px;
+    background-color: rgb(85, 88, 90);
+    width: 140px;
+    border: 1px solid black;
+    font-size: 0.8rem;
+    height: 24px;
+    line-height: 1.0;
+}
+
+.login-form-top input:-webkit-autofill,
+.login-form-top input:-webkit-autofill:hover,
+.login-form-top input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px rgb(85, 88, 90) inset;
+    -webkit-text-fill-color: white;
+    height: 24px;
+    line-height: 1.0;
+}
+
+.login-fields button {
+    background-color: rgb(85, 88, 90);
+    width: 60px;
+    color: white;
+    border: 1px solid black;
+    font-size: 0.8rem;
+    height: 24px;
+    line-height: 1.0;
+}
+
+.login-form-top button:hover {
+    background-color: rgb(114, 117, 119);
+    color: rgb(169, 255, 236);
+}
+
+.login-fields {
+    display: flex;
+    gap: 5px;
+}
+
+.login-links {
+    color: white;
+    align-self: stretch;
+    text-align: right;
+}
+
+.login-links a {
+    text-decoration: none;
+    color: rgb(0, 255, 200);
+}
+
+.login-links a:hover {
+    text-decoration: none;
+    color: rgb(169, 255, 236);
+}
+
+*/
