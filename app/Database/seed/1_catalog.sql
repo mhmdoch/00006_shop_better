@@ -32,3 +32,31 @@ INSERT INTO `brand` (`name`, `website`) VALUES
 
 INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES
 (LAST_INSERT_ID(), 'Hangisi 70', 'Damen-Pumps aus Satin mit mandelförmiger Spitze, quadratischer Kristallschnalle, 70-mm-Stilettoabsatz, Lederfutter und Ledersohle; gefertigt in Italien.', 'shoe', 'women');
+
+INSERT INTO `brand` (`name`, `website`) VALUES
+('LEGO', 'https://www.lego.com/de-de/');
+
+INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES
+(LAST_INSERT_ID(), 'Lion Knights'' Castle (10305)', 'LEGO Icons Burg zum 90-jährigen LEGO Jubiläum mit aufklappbarer Anlage, Zugbrücke, Fallgitter, Wasserrad und 22 Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Wolfpack Tower (6075)', 'Klassisches LEGO Castle Set der Wolfpack Fraktion mit Turm, Zugbrücke, Wagen, Pferd und vier Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Wolfpack Renegades (6038)', 'Kleines LEGO Castle Set der Wolfpack Fraktion mit Pferdewagen, Schatztruhe und zwei Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Battering Ram (6062)', 'Klassisches LEGO Castle Set mit Rammbock-Belagerungsturm, beweglichem Mauerabschnitt sowie Crusaders und Black Falcons.', 'lego', NULL),
+(LAST_INSERT_ID(), 'King''s Castle (6080)', 'Modulare graue LEGO Castle Königsburg mit Zugbrücke, Fallgitter, vier Pferden und zwölf Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'City Square (60097)', 'Großes LEGO City Stadtzentrum mit LEGO Store, Autohaus, Straßenbahn, Abschleppwagen, Hubschrauber und 14 Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Fire Station (60004)', 'LEGO City Feuerwache mit Garage, Leitstelle, Feuerwehrfahrzeugen, Hubschrauber und fünf Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Train Station (60335)', 'LEGO City Bahnhof mit Bus, Schienenwartungsfahrzeug, Bahnübergang, Gleiselementen und sechs Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Police Station (60246)', 'LEGO City Polizeistation von 2020 mit Gefängnis, Fahrzeugen, Drohne, Licht- und Soundsteinen sowie sieben Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Police Station (60047)', 'LEGO City Polizeistation von 2014 mit Gefängnis, Garage, Kontrollturm, Hubschrauber und sieben Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Police Station (60316)', 'LEGO City Polizeistation von 2022 mit Gefängnis, Übungsplatz, Polizeifahrzeugen und fünf Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Galaxy Explorer (10497)', 'LEGO Icons Neuinterpretation des klassischen Galaxy Explorer mit aufklappbarem Raumschiff, Rover und fünf Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Explorien Starship (6982)', 'Großes LEGO Space Raumschiff der Exploriens mit modularer Konstruktion, Magnetkran, Bodenfahrzeug und vier Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Space Cruiser and Moonbase (928)', 'Klassisches LEGO Space Set von 1979, auch als Galaxy Explorer bekannt, mit Raumschiff, Mondbasis, Rover und vier Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Eldorado Fortress (6276)', 'Klassische LEGO Pirates Festung der Imperial Soldiers mit Hafen, Gefängnis, Kran, Boot und acht Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Eldorado Fortress (10320)', 'LEGO Icons Neuinterpretation der Eldorado Fortress mit modularer Inselfestung, Segelboot, Ruderboot und neun Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Black Seas Barracuda (6285)', 'Klassisches LEGO Pirates Segelschiff mit drei Masten, Kanonen, Ruderboot und acht Piraten-Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Pirates of Barracuda Bay (21322)', 'LEGO Ideas Pirateninsel, die sich zur Black Seas Barracuda umbauen lässt, mit Schiffswrack und zehn Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Medieval Market Village (10193)', 'LEGO Castle Marktdorf mit zwei aufklappbaren Fachwerkhäusern, Schmiede, Stall, Tieren und acht Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Medieval Town Square (10332)', 'LEGO Icons Mittelalterlicher Stadtplatz mit Herberge, Werkstätten, Bauernhaus, Tieren und acht Minifiguren.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Eiffel Tower (10181)', 'Großes LEGO Advanced Models Wahrzeichen des Eiffelturms im Maßstab 1:300 mit 3.428 Teilen.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Eiffel Tower (10307)', 'LEGO Icons Eiffelturm mit vier transportierbaren Segmenten, Aussichtsplattformen, Aufzügen und Pariser Esplanade.', 'lego', NULL),
+(LAST_INSERT_ID(), 'Medieval Blacksmith (21325)', 'LEGO Ideas Mittelalterliche Schmiede mit dreigeschossigem Gebäude, Werkstatt, Leuchtstein, Wagen und vier Minifiguren.', 'lego', NULL);

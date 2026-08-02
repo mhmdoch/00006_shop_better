@@ -17,7 +17,7 @@
             <div class="card mb-4">
                 <img src="..." class="card-img-top" alt="<?= e($catalog["name"]) ?>">
                 <div class="card-body">
-                    <p class="card-text mb-1 small"><?= e($catalog['brand_name']) ?></p>
+                    <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>
                     <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
                     <p class="card-text"><a href="/catalog/show/<?= e($catalog["id"]) ?>"><?= e($catalog['description']) ?></a></p>
                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>

@@ -14,4 +14,10 @@ class CatalogModel extends z_model
         $sql = "SELECT * FROM `catalog` WHERE `id` = ?";
         return $this->exec($sql, "i", $catalogId)->resultToLine();
     }
+
+    public function getCatalogsByBrand($brandId): array
+    {
+        $sql = "SELECT * FROM `catalog` WHERE `brand_id` = ? ORDER BY `name`";
+        return $this->exec($sql, "i", $brandId)->resultToArray();
+    }
 }
