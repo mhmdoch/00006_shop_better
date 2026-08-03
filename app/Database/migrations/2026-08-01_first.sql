@@ -14,10 +14,10 @@ CREATE TABLE `catalog` (
   `itemable_type` VARCHAR(50) NOT NULL,
   `gender` VARCHAR(50) DEFAULT NULL,
   `titlethumb` VARCHAR(255) DEFAULT NULL,
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
 
 
-  INDEX `idx_catalog_active` (`is_active`),
+  INDEX `idx_catalog_active` (`active`),
 
   CONSTRAINT `fk_catalog_brand`
     FOREIGN KEY (`brand_id`)
@@ -41,9 +41,9 @@ CREATE TABLE `item` (
   `release_date` DATE DEFAULT NULL,
   `price` DECIMAL(12,2) NOT NULL,
   `stock` INT UNSIGNED NOT NULL DEFAULT 0,
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
 
-  INDEX `idx_item_catalog_active` (`catalog_id`, `is_active`),
+  INDEX `idx_item_catalog_active` (`catalog_id`, `active`),
 
   CONSTRAINT `fk_item_catalog`
     FOREIGN KEY (`catalog_id`)
@@ -53,8 +53,8 @@ CREATE TABLE `item` (
 
 CREATE TABLE `log_active` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `active_type` ENUM('catalog', 'item') NOT NULL,
+  `active_type` ENUM('catalog', 'item', 'brand') NOT NULL,
   `active_id` INT NOT NULL,
-  `action` ENUM('activated', 'deactivated') NOT NULL,
+  `action` ENUM('aktiviert', 'deaktiviert', 'gelöscht') NOT NULL,
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );

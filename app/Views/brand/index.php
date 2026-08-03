@@ -18,18 +18,30 @@
             <?php foreach ($opt["brands"] as $brand) { ?>
                 <div class="bg-box rounded p-4 mt-4">
                     <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a>
+                    <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
+                        <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
+                    <?php endif; ?>
+                    <?php if ($opt["user"]->checkPermission("brand.delete")): ?>
+                        <?php if (! e($brand["active"] === 0)): ?>
+                            <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
+                        <?php else: ?>
 
-                    <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
+                            <?= (e($brand["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?>
+
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             <?php } ?>
         </main>
 
         <aside class="col-lg-4">
-            <?php if ($opt["user"]->checkPermission("brand.create") || $opt["user"]->checkPermission("brand.edit")): ?>
+            <?php if ($opt["user"]->checkPermission("brand.create")): ?>
                 <div class="bg-box rounded p-4 mb-4">
                     <h5>Verwaltung</h5>
                     <hr>
-                    <div> - <a href="/brand/create">Hinzufügen</a></div>
+                    <div> - <a href="/brand/">Index</a></div>
+                    <div> - <a href="/brand/inactive">Inaktive</a></div>
+                    <div class="mt-2"> - <a href="/brand/create">Hinzufügen</a></div>
                 </div>
             <? endif; ?>
 

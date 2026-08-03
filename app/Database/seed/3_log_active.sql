@@ -1,13 +1,17 @@
 INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'catalog', `id`, 'activated', '2026-07-01 08:00:00'
+SELECT 'brand', `id`, 'aktiviert', '2026-07-01 07:00:00'
+FROM `brand`;
+
+INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
+SELECT 'catalog', `id`, 'aktiviert', '2026-07-01 08:00:00'
 FROM `catalog`;
 
 INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'item', `id`, 'activated', '2026-07-01 09:00:00'
+SELECT 'item', `id`, 'aktiviert', '2026-07-01 09:00:00'
 FROM `item`;
 
 UPDATE `item`
-SET `is_active` = 0
+SET `active` = 0
 WHERE `sku` IN (
   'DO6706-002-EU38.5',
   'DO6706-002-EU47.5',
@@ -21,6 +25,6 @@ WHERE `sku` IN (
 );
 
 INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'item', `id`, 'deactivated', '2026-07-20 12:00:00'
+SELECT 'item', `id`, 'deaktiviert', '2026-07-20 12:00:00'
 FROM `item`
-WHERE `is_active` = 0;
+WHERE `active` = 0;

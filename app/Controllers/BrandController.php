@@ -7,6 +7,9 @@ class BrandController extends z_controller
     {
         $brands = $req->getModel("Brand")->getBrands();
 
+        $showActivity = false;
+
+
         if ($req->isAction("delete-brand")) {
             $req->checkPermission("brand.delete");
             $brandId = $req->getPost("brandId");
@@ -16,10 +19,30 @@ class BrandController extends z_controller
 
         return $res->render("brand/index", [
             "brands" => $brands,
+            "showActivity" => $showActivity
         ]);
     }
 
+    public function action_inactive(Request $req, Response $res)
+    {
+        $req->checkPermission("brand.create");
 
+        $brands = $req->getModel("Brand")->getBrandsPlusInactive();
+
+        $showActivity = true;
+
+        if ($req->isAction("delete-brand")) {
+            $req->checkPermission("brand.delete");
+            $brandId = $req->getPost("brandId");
+            $req->getModel("Brand")->deleteBrand($brandId);
+            return $res->success();
+        }
+
+        return $res->render("brand/index", [
+            "brands" => $brands,
+            "showActivity" => $showActivity
+        ]);
+    }
 
     public function action_show(Request $req, Response $res)
     {
@@ -30,17 +53,18 @@ class BrandController extends z_controller
 
         $catalogIds = array_column($catalogs, "id");
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
+        $logActive = $req->getModel("LogActive")->getLogByidAndType($brandId, "brand");
 
         return $res->render("brand/show", [
             "brand" => $brand,
             "catalogs" => $catalogs,
             "items" => $items,
+            "logActive" => $logActive,
         ]);
     }
 
     public function action_create(Request $req, Response $res)
     {
-
         $req->checkPermission("brand.create");
 
         if ($req->hasFormData()) {
@@ -53,7 +77,9 @@ class BrandController extends z_controller
                 return $res->formErrors($formResult->errors);
             }
 
-            $res->insertDatabase("brand", $formResult);
+            $brandId = $res->insertDatabase("brand", $formResult);
+            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "brand", "active_id" => $brandId, "action" => "aktiviert"]);
+
 
             return $res->success();
         }
@@ -63,18 +89,12 @@ class BrandController extends z_controller
         ]);
     }
 
-
-
-
     public function action_edit(Request $req, Response $res)
     {
-
         $req->checkPermission("brand.edit");
 
         $brandId = $req->getParameters(0, 1);
-
         $brand = $req->getModel("Brand")->getBrandById($brandId);
-
 
         if ($req->hasFormData()) {
             $formResult = $req->validateForm([

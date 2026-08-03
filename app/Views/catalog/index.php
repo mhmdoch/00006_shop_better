@@ -13,6 +13,17 @@
             <li class="breadcrumb-item active" aria-current="page">Katalog</li>
         </ol>
     </nav>
+
+
+    <div class="row">
+        <main class="col-lg-12">
+            <div class="bg-box rounded p-4 mb-4">
+                <h3>Katalog - Übersicht</h3>
+            </div>
+
+        </main>
+    </div>
+
     <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
         <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
@@ -20,7 +31,7 @@
             <?php } ?>
 
             <div class="card mb-4 rounded">
-                <img src="..." class="card-img-top" alt="<?= e($catalog["name"]) ?>">
+                <img src="<?php $opt["generateResourceLink"]("assets/img/shoe.png"); ?>" class="card-img-top">
                 <div class="card-body">
                     <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>
                     <h5 class="card-title"><?= e($catalog["name"]) ?></h5>

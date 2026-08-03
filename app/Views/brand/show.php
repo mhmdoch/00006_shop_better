@@ -24,7 +24,7 @@
 
         </main>
         <aside class="col-lg-4">
-            <div class="bg-box rounded p-4">
+            <div class="bg-box rounded p-4 mb-4">
                 <h5>Übersicht</h5>
                 <hr>
                 <?php if ($opt["user"]->checkPermission("brand.edit") || $opt["user"]->checkPermission("brand.create")): ?>
@@ -47,15 +47,24 @@
                     <span>
                         <?php if (filter_var($opt["brand"]["website"], FILTER_VALIDATE_URL) !== false) { ?>
 
-                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank">Link</a></span>
-                <?php } else { ?>
-                    -
-
-                <?php } ?>
+                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank">Link</a>
+                        <?php } else { ?> - <?php } ?>
+                    </span>
                 </div>
             </div>
+            <?php if ($opt["user"]->checkPermission("delete.edit")): ?>
+                <div class="bg-box rounded p-4">
+                    <h5>Verlauf</h5>
+                    <hr>
+
+                    <?php foreach ($opt["logActive"] as $log) { ?>
+                        <div class="d-flex justify-content-between">
+                            <span><?= $log["date"] ?></span>
+                            <span><?= $log["action"] ?></span>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php endif; ?>
         </aside>
     </div>
-
-
 <?php }]; ?>

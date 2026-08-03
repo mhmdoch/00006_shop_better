@@ -5,7 +5,7 @@ class ItemModel extends z_model
 
     public function getItemsByCatalogId($catalogId): array
     {
-        $sql = "SELECT * FROM `item` WHERE `catalog_id` = ? AND is_active = 1";
+        $sql = "SELECT * FROM `item` WHERE `catalog_id` = ? AND active = 1";
         return $this->exec($sql, "i", $catalogId)->resultToArray();
     }
 
@@ -26,7 +26,7 @@ class ItemModel extends z_model
         $sql = "SELECT *
         FROM `item`
         WHERE `catalog_id` IN ({$catalogIdList})
-        AND `is_active` = 1";
+        AND `active` = 1";
 
         return $this->exec($sql)->resultToArray();
     }
