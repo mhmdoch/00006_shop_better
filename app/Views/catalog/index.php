@@ -7,14 +7,19 @@
         $catalogCount = count($opt["catalogs"]);
     ?>
 
-
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">dAShop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Katalog</li>
+        </ol>
+    </nav>
     <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
         <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
             <div class="card-deck">
             <?php } ?>
 
-            <div class="card mb-4">
+            <div class="card mb-4 rounded">
                 <img src="..." class="card-img-top" alt="<?= e($catalog["name"]) ?>">
                 <div class="card-body">
                     <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>

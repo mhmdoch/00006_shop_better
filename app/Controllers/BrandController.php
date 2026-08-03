@@ -32,19 +32,20 @@ class BrandController extends z_controller
     }
     public function action_create(Request $req, Response $res)
     {
-        // if ($req->hasFormData()) {
-        //     $formResult = $req->validateForm([
-        //         // (new FormField("title"))->required()->length(3, 255),
-        //         // (new FormField("subtitle"))->length(0, 500),
-        //         // (new FormField("language"))->required()->length(2, 2),
-        //         // (new FormField("content"))->required()->length(5, 10000),
-        //         // (new FormField("is_published"))
-        //     ]);
+        if ($req->hasFormData()) {
+            $formResult = $req->validateForm([
+                (new FormField("name"))->required()->length(3, 255),
+                (new FormField("website"))->length(5, 500)
+            ]);
 
-        //     if ($formResult->hasErrors) {
-        //         return $res->formErrors($formResult->errors);
-        //     }
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
 
+            $res->insertDatabase("brand", $formResult);
+
+            return $res->success();
+        }
 
         //     $isPublished = $req->getPost("is_published");
         //     $fixed = [
