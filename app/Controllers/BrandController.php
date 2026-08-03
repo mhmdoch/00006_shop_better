@@ -7,6 +7,13 @@ class BrandController extends z_controller
     {
         $brands = $req->getModel("Brand")->getBrands();
 
+        if ($req->isAction("delete-brand")) {
+            $req->checkPermission("brand.delete");
+            $brandId = $req->getPost("brandId");
+            $req->getModel("Brand")->deleteBrand($brandId);
+            return $res->success();
+        }
+
         return $res->render("brand/index", [
             "brands" => $brands,
         ]);
@@ -53,6 +60,38 @@ class BrandController extends z_controller
 
         return $res->render("brand/create", [
             //"userId" => $user->userId,
+        ]);
+    }
+
+
+
+
+    public function action_edit(Request $req, Response $res)
+    {
+
+        $req->checkPermission("brand.edit");
+
+        $brandId = $req->getParameters(0, 1);
+
+        $brand = $req->getModel("Brand")->getBrandById($brandId);
+
+
+        if ($req->hasFormData()) {
+            $formResult = $req->validateForm([
+                (new FormField("name"))->required()->length(3, 255),
+                (new FormField("website"))->length(5, 500)
+            ]);
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            $res->updateDatabase("brand", "id", "i", $brandId, $formResult);
+            return $res->success();
+        }
+
+        return $res->render("brand/edit", [
+            "brand" => $brand,
         ]);
     }
 }

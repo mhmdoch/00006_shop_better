@@ -28,6 +28,10 @@
                 <h5>Übersicht</h5>
                 <hr>
                 <div class="d-flex justify-content-between">
+                    <span>Status</span>
+                    <span><?= (e($opt["brand"]["active"]) == true) ? "<span style='color:green'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
                     <span>Produkte</span>
                     <span><?= count($opt["catalogs"]) ?></span>
                 </div>

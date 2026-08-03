@@ -11,13 +11,15 @@
     <br>
 
     <div class="row">
-        <main class="col-lg-8">
+        <main class="col-lg-8" id="brandIndexContainer">
             <div class="bg-box rounded p-4">
                 <h3>Marken - Übersicht</h3>
             </div>
             <?php foreach ($opt["brands"] as $brand) { ?>
                 <div class="bg-box rounded p-4 mt-4">
-                    <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a> <a href="/brand/edit/<?= e($brand["id"]) ?>">Hinzufügen</a> <a class="bi bi-plus-circle"></a><br>
+                    <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a>
+
+                    <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
                 </div>
             <?php } ?>
         </main>
@@ -36,4 +38,31 @@
             </div>
         </aside>
     </div>
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $("#brandIndexContainer").on("click", ".delete-brand", function() {
+                // der Link wird hier eh nicht ausgeführt, aber damit verhindere ich hier an der Stelle
+                // dass der Cursor wieder zum Seitenanfang geht
+                event.preventDefault();
+
+                var id = $(this).data("id");
+
+                Z.Request.action('delete-brand', {
+                    brandId: id
+                }, (res) => {
+                    if (res.result == 'success') {
+                        location.reload();
+                        return;
+                    }
+                    alert("An error occurred");
+                });
+            });
+        });
+    </script>
+
 <?php }]; ?>

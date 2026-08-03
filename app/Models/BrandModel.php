@@ -5,7 +5,7 @@ class BrandModel extends z_model
 
     public function getBrands(): array
     {
-        $sql = "SELECT * FROM `brand` ORDER BY `name` ASC";
+        $sql = "SELECT * FROM `brand` WHERE `active` = 1 ORDER BY `name` ASC";
         return $this->exec($sql)->resultToArray();
     }
 
@@ -14,5 +14,12 @@ class BrandModel extends z_model
     {
         $sql = "SELECT * FROM `brand` WHERE `id` = ?";
         return $this->exec($sql, "i", $brandId)->resultToLine();
+    }
+
+
+    public function deleteBrand($brandId)
+    {
+        $sql = "UPDATE `brand` SET `active` = false WHERE `id` = ?";
+        $this->exec($sql, "i", $brandId);
     }
 }
