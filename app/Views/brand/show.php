@@ -27,10 +27,13 @@
             <div class="bg-box rounded p-4">
                 <h5>Übersicht</h5>
                 <hr>
-                <div class="d-flex justify-content-between">
-                    <span>Status</span>
-                    <span><?= (e($opt["brand"]["active"]) == true) ? "<span style='color:green'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
-                </div>
+                <?php if ($opt["user"]->checkPermission("brand.edit") || $opt["user"]->checkPermission("brand.create")): ?>
+                    <div class="d-flex justify-content-between">
+                        <span>Status</span>
+                        <span><?= (e($opt["brand"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
+                    </div>
+                <? endif; ?>
+
                 <div class="d-flex justify-content-between">
                     <span>Produkte</span>
                     <span><?= count($opt["catalogs"]) ?></span>
@@ -44,7 +47,7 @@
                     <span>
                         <?php if (filter_var($opt["brand"]["website"], FILTER_VALIDATE_URL) !== false) { ?>
 
-                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank" rel="noopener noreferrer">Link</a></span>
+                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank">Link</a></span>
                 <?php } else { ?>
                     -
 

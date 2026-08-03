@@ -19,7 +19,7 @@ class BrandModel extends z_model
 
     public function deleteBrand($brandId)
     {
-        $sql = "UPDATE `brand` SET `active` = false WHERE `id` = ?";
+        $sql = "UPDATE `brand` SET `active` = 0 WHERE `id` = ?";
         $this->exec($sql, "i", $brandId);
     }
 }

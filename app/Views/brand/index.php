@@ -39,16 +39,16 @@
         </aside>
     </div>
 
-
-
-
-
     <script>
         $(document).ready(function() {
             $("#brandIndexContainer").on("click", ".delete-brand", function() {
                 // der Link wird hier eh nicht ausgeführt, aber damit verhindere ich hier an der Stelle
                 // dass der Cursor wieder zum Seitenanfang geht
                 event.preventDefault();
+
+                if (!confirm("ACHTUNG: Marke wirklich löschen? Dies hat Auswirkungen auf zugehörige Produkte und deren Varianten.")) {
+                    return;
+                }
 
                 var id = $(this).data("id");
 
