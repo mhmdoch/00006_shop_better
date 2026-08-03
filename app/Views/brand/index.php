@@ -8,11 +8,29 @@
         </ol>
     </nav>
 
-    <a href="/brand/create">Hinzufügen</a> <br>
+    <br>
 
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="bg-box rounded p-4">
+                <h3>Marken - Übersicht</h3>
+            </div>
+            <?php foreach ($opt["brands"] as $brand) { ?>
+                <div class="bg-box rounded p-4 mt-4">
+                    <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a> <br>
+                </div>
+            <?php } ?>
+        </main>
 
-    <?php foreach ($opt["brands"] as $brand) { ?>
-        <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a> <br>
-    <?php } ?>
-
+        <aside class="col-lg-4">
+            <div class="bg-box rounded p-4">
+                <h5>Verwaltung</h5>
+                <hr>
+                <div> - <a href="/brand/create">Hinzufügen</a></div>
+            </div>
+            <div class="bg-box rounded p-4 mt-4">
+                A–Z-Filter
+            </div>
+        </aside>
+    </div>
 <?php }]; ?>

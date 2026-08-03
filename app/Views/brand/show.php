@@ -7,56 +7,41 @@
         </ol>
     </nav>
 
-    <div class="brand-layout">
-        <main class="brand-panel">
-            <header class="brand-header">
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="bg-box rounded p-4">
                 <p class="brand-kicker mb-1">Marke</p>
                 <h1 class="h2 mb-2"><?= e($opt["brand"]["name"]) ?></h1>
-                <p class="text-muted mb-0">Entdecke alle Produkte und verfügbaren Varianten dieser Marke.</p>
-            </header>
-
-            <div class="brand-product-grid">
-                <?php foreach ($opt["catalogs"] as $catalog) { ?>
-                    <article class="brand-product-card">
-                        <p class="text-muted small mb-2"><?= e(ucfirst($catalog["itemable_type"])) ?></p>
-                        <h2 class="h5 mb-2">
-                            <a href="/catalog/show/<?= e($catalog["id"]) ?>">
-                                <?= e($catalog["name"]) ?>
-                            </a>
-                        </h2>
-                        <p class="mb-0"><?= e($catalog["description"]) ?></p>
-                    </article>
-                <?php } ?>
-
-                <?php if (empty($opt["catalogs"])) { ?>
-                    <p class="text-muted mb-0">Für diese Marke sind noch keine Produkte vorhanden.</p>
-                <?php } ?>
             </div>
+            <?php foreach ($opt["catalogs"] as $catalog) { ?>
+
+                <div class="bg-box rounded p-4 mt-4">
+                    <div><?= e($catalog["name"]) ?></div>
+                    <div><?= e($catalog["description"]) ?></div>
+                </div>
+            <?php } ?>
+
+
         </main>
-
-        <aside class="brand-panel brand-sidebar">
-            <h2 class="h5 mb-3">Kurzinfo</h2>
-
-            <dl class="brand-facts mb-0">
-                <div>
-                    <dt>Produkte</dt>
-                    <dd><?= count($opt["catalogs"]) ?></dd>
+        <aside class="col-lg-4">
+            <div class="bg-box rounded p-4">
+                <h5>Übersicht</h5>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span>Produkte</span>
+                    <span><?= count($opt["catalogs"]) ?></span>
                 </div>
-                <div>
-                    <dt>Varianten</dt>
-                    <dd><?= count($opt["items"]) ?></dd>
+                <div class="d-flex justify-content-between">
+                    <span>Varianten</span>
+                    <span><?= count($opt["items"]) ?></span>
                 </div>
-                <?php if (!empty($opt["brand"]["website"])) { ?>
-                    <div>
-                        <dt>Website</dt>
-                        <dd>
-                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank" rel="noopener noreferrer">
-                                Herstellerseite
-                            </a>
-                        </dd>
-                    </div>
-                <?php } ?>
-            </dl>
+                <div class="d-flex justify-content-between">
+                    <span>Webseite</span>
+                    <span><a href="<?= e($opt["brand"]["website"]) ?>" target="_blank" rel="noopener noreferrer">Link</a></span>
+                </div>
+            </div>
         </aside>
     </div>
+
+
 <?php }]; ?>

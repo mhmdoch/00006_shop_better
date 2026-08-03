@@ -47,37 +47,6 @@ class BrandController extends z_controller
             return $res->success();
         }
 
-        //     $isPublished = $req->getPost("is_published");
-        //     $fixed = [
-        //         "z_user_id" => $user->userId,
-        //     ];
-
-        //     if ($isPublished) {
-
-        //         $publishedAtDate = date("Y-m-d H:i:s");
-
-        //         $fixed["published_at"] = $publishedAtDate;
-        //         $res->insertDatabase("post", $formResult, $fixed);
-
-        //         model("Queue")->publishToAll(
-        //             "postalert",
-        //             "1",
-        //             [
-        //                 "title" => $req->getPost("title"),
-        //                 "subtitle" => $req->getPost("subtitle"),
-        //                 "published_at" => $publishedAtDate,
-        //                 "content" => $req->getPost("content"),
-        //                 "email" => $user->fields["email"],
-        //             ],
-        //         );
-        //     } else {
-        //         $res->insertDatabase("post", $formResult, $fixed);
-        //     }
-
-
-
-        //     return $res->success();
-        // }
         return $res->render("brand/create", [
             //"userId" => $user->userId,
         ]);
