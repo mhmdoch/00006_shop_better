@@ -7,8 +7,8 @@ INSERT INTO `z_role` (`id`, `name`) VALUES
 INSERT INTO `z_role_permission` (`role`, `name`) VALUES
 -- Admin
 (1, '*.*'),
-(1, 'admin.brand.create'),
-(1, 'admin.brand.edit'),
+(1, 'brand.create'),
+(1, 'brand.edit'),
 
 -- Support
 (2, 'support'),

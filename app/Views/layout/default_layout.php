@@ -5,6 +5,7 @@
     <head>
         <?php $opt["layout_essentials_head"]($opt); ?>
         <?php $head($opt); ?>
+        <link href="<?php $opt["generateResourceLink"]("assets/bootstrap-icons/bootstrap-icons.min.css"); ?>" rel="stylesheet">
         <link href="<?php $opt["generateResourceLink"]("assets/css/app.css"); ?>" rel="stylesheet">
 
     </head>

@@ -20,5 +20,8 @@
         "mocha": "^11.7.2",
         "puppeteer": "^24.19.0",
         "unicode-substring": "^1.0.0"
+    },
+    "dependencies": {
+        "bootstrap-icons": "^1.13.1"
     }
 }

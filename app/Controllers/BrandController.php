@@ -30,8 +30,12 @@ class BrandController extends z_controller
             "items" => $items,
         ]);
     }
+
     public function action_create(Request $req, Response $res)
     {
+
+        $req->checkPermission("brand.create");
+
         if ($req->hasFormData()) {
             $formResult = $req->validateForm([
                 (new FormField("name"))->required()->length(3, 255),

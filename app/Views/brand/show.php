@@ -37,7 +37,14 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Webseite</span>
-                    <span><a href="<?= e($opt["brand"]["website"]) ?>" target="_blank" rel="noopener noreferrer">Link</a></span>
+                    <span>
+                        <?php if (filter_var($opt["brand"]["website"], FILTER_VALIDATE_URL) !== false) { ?>
+
+                            <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank" rel="noopener noreferrer">Link</a></span>
+                <?php } else { ?>
+                    -
+
+                <?php } ?>
                 </div>
             </div>
         </aside>
