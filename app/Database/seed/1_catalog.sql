@@ -28,6 +28,27 @@ INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gend
 (LAST_INSERT_ID(), 'Ultraboost 5X', 'Herren-Laufschuh IH3110 in Core Black/Cloud White/Carbon mit Light-BOOST-Dämpfung, Torsion System, Continental-Gummiaußensohle und mindestens 20 % recycelten Materialien.', 'shoe', 'men');
 
 INSERT INTO `brand` (`name`, `website`, `active`) VALUES
+('ASICS', 'https://www.asics.com/de/de-de/', TRUE);
+
+INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES
+(LAST_INSERT_ID(), 'GEL-NIMBUS 27', 'Herren-Laufschuh 1011B958-001 in Black/Graphite Grey für die Straße mit maximaler Dämpfung, neutraler Unterstützung und 8 mm Fersensprengung.', 'shoe', 'men'),
+(LAST_INSERT_ID(), 'GEL-KAYANO 31', 'Herren-Laufschuh 1011B867-300 in Cool Matcha/Celadon mit 4D Guidance System, PureGEL-Technologie und FF Blast Plus Eco-Dämpfung.', 'shoe', 'men');
+
+INSERT INTO `brand` (`name`, `website`, `active`) VALUES
+('New Balance', 'https://www.newbalance.de/', TRUE);
+
+INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES
+(LAST_INSERT_ID(), '530', 'Unisex-Sneaker MR530SG in White/Natural Indigo mit ABZORB-Mittelsohle sowie einem Obermaterial aus Mesh und synthetischen Overlays.', 'shoe', 'unisex'),
+(LAST_INSERT_ID(), '574', 'Herren-Sneaker ML574OMC in NB Navy/Classic Burgundy mit EVA- und ENCAP-Dämpfung, Leder-Obermaterial und Gummiaußensohle.', 'shoe', 'men');
+
+INSERT INTO `brand` (`name`, `website`, `active`) VALUES
+('Rieker', 'https://rieker.com/de-de/', TRUE);
+
+INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES
+(LAST_INSERT_ID(), 'Sneaker Low 54022-81', 'Weißer veganer Damen-Sneaker mit Schnürung, gepolsterter herausnehmbarer MemoCup-Einlegesohle und ultraleichter flexibler IM-EVA-Sohle.', 'shoe', 'women'),
+(LAST_INSERT_ID(), 'Sneaker Low 04301-14', 'Blauer Herren-Sneaker aus Kunstleder mit Reißverschluss und Schnürung, herausnehmbarer Einlegesohle, Komfortweite G und ultraleichter IM-EVA-Sohle.', 'shoe', 'men');
+
+INSERT INTO `brand` (`name`, `website`, `active`) VALUES
 ('Manolo Blahnik', 'https://www.manoloblahnik.com/eu/', TRUE);
 
 INSERT INTO `catalog` (`brand_id`, `name`, `description`, `itemable_type`, `gender`) VALUES

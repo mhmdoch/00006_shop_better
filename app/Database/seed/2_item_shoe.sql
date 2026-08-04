@@ -310,3 +310,105 @@ INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALU
 (@adidas_ultraboost_5x_catalog_id, 'IH3110-EU47-1-3', '47 1/3', 'Core Black/Cloud White/Carbon', 180.00,  4),
 (@adidas_ultraboost_5x_catalog_id, 'IH3110-EU48',     '48',     'Core Black/Cloud White/Carbon', 180.00,  3),
 (@adidas_ultraboost_5x_catalog_id, 'IH3110-EU48-2-3', '48 2/3', 'Core Black/Cloud White/Carbon', 180.00,  2);
+
+-- ASICS GEL-NIMBUS 27 Herren-Laufschuh, Style 1011B958-001
+-- https://www.asics.com/de/de-de/gel-nimbus-27/p/1011B958-001.html
+SET @asics_gel_nimbus_27_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'ASICS'
+    AND `catalog`.`name` = 'GEL-NIMBUS 27'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@asics_gel_nimbus_27_catalog_id, '1011B958-001-EU41.5', '41.5', 'Black/Graphite Grey', 200.00, 4),
+(@asics_gel_nimbus_27_catalog_id, '1011B958-001-EU42',   '42',   'Black/Graphite Grey', 200.00, 7),
+(@asics_gel_nimbus_27_catalog_id, '1011B958-001-EU43.5', '43.5', 'Black/Graphite Grey', 200.00, 5),
+(@asics_gel_nimbus_27_catalog_id, '1011B958-001-EU44',   '44',   'Black/Graphite Grey', 200.00, 3);
+
+-- ASICS GEL-KAYANO 31 Herren-Laufschuh, Style 1011B867-300
+-- https://outlet.asics.com/de/en-de/gel-kayano-31/p/1011B867-300.html
+SET @asics_gel_kayano_31_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'ASICS'
+    AND `catalog`.`name` = 'GEL-KAYANO 31'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@asics_gel_kayano_31_catalog_id, '1011B867-300-EU41.5', '41.5', 'Cool Matcha/Celadon', 200.00, 3),
+(@asics_gel_kayano_31_catalog_id, '1011B867-300-EU42',   '42',   'Cool Matcha/Celadon', 200.00, 6),
+(@asics_gel_kayano_31_catalog_id, '1011B867-300-EU43.5', '43.5', 'Cool Matcha/Celadon', 200.00, 4),
+(@asics_gel_kayano_31_catalog_id, '1011B867-300-EU44',   '44',   'Cool Matcha/Celadon', 200.00, 2);
+
+-- New Balance 530 Unisex-Sneaker, Modell MR530SG
+-- https://www.newbalance.de/pd/530/MR530SG-D-095.html
+SET @new_balance_530_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'New Balance'
+    AND `catalog`.`name` = '530'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@new_balance_530_catalog_id, 'MR530SG-EU38',   '38',   'White/Natural Indigo', 120.00, 4),
+(@new_balance_530_catalog_id, 'MR530SG-EU39.5', '39.5', 'White/Natural Indigo', 120.00, 6),
+(@new_balance_530_catalog_id, 'MR530SG-EU42',   '42',   'White/Natural Indigo', 120.00, 5),
+(@new_balance_530_catalog_id, 'MR530SG-EU44',   '44',   'White/Natural Indigo', 120.00, 3);
+
+-- New Balance 574 Herren-Sneaker, Modell ML574OMC
+-- https://www.newbalance.de/de/pd/574/ML574V2-30883.html
+SET @new_balance_574_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'New Balance'
+    AND `catalog`.`name` = '574'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@new_balance_574_catalog_id, 'ML574OMC-EU40',   '40',   'NB Navy/Classic Burgundy', 140.00, 3),
+(@new_balance_574_catalog_id, 'ML574OMC-EU41.5', '41.5', 'NB Navy/Classic Burgundy', 140.00, 5),
+(@new_balance_574_catalog_id, 'ML574OMC-EU42.5', '42.5', 'NB Navy/Classic Burgundy', 140.00, 4),
+(@new_balance_574_catalog_id, 'ML574OMC-EU44',   '44',   'NB Navy/Classic Burgundy', 140.00, 2);
+
+-- Rieker Damen Sneaker Low, Artikelnummer 54022-81
+-- https://rieker.com/de-de/rieker-damen-sneaker-low-54022-81.html
+SET @rieker_sneaker_low_54022_81_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'Rieker'
+    AND `catalog`.`name` = 'Sneaker Low 54022-81'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@rieker_sneaker_low_54022_81_catalog_id, '54022-81-EU37', '37', 'weiß', 64.95, 4),
+(@rieker_sneaker_low_54022_81_catalog_id, '54022-81-EU38', '38', 'weiß', 64.95, 6),
+(@rieker_sneaker_low_54022_81_catalog_id, '54022-81-EU39', '39', 'weiß', 64.95, 5),
+(@rieker_sneaker_low_54022_81_catalog_id, '54022-81-EU40', '40', 'weiß', 64.95, 3);
+
+-- Rieker Herren Sneaker Low, Artikelnummer 04301-14
+-- https://rieker.com/de-de/rieker-herren-sneaker-low-04301-14.html
+SET @rieker_sneaker_low_04301_14_catalog_id = (
+  SELECT `catalog`.`id`
+  FROM `catalog`
+  INNER JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+  WHERE `brand`.`name` = 'Rieker'
+    AND `catalog`.`name` = 'Sneaker Low 04301-14'
+  LIMIT 1
+);
+
+INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `stock`) VALUES
+(@rieker_sneaker_low_04301_14_catalog_id, '04301-14-EU41', '41', 'blau', 79.95, 3),
+(@rieker_sneaker_low_04301_14_catalog_id, '04301-14-EU42', '42', 'blau', 79.95, 6),
+(@rieker_sneaker_low_04301_14_catalog_id, '04301-14-EU43', '43', 'blau', 79.95, 5),
+(@rieker_sneaker_low_04301_14_catalog_id, '04301-14-EU44', '44', 'blau', 79.95, 4);

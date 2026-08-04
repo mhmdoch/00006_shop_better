@@ -17,10 +17,19 @@ class CatalogController extends z_controller
 
         $catalogsType = $req->getParameters(0, 1) ?: "all";
         $brandId = $req->getParameters(1, 1) ?: 0;
+        $name = $req->getParameters(2, 1) ?: "all";
 
-        // catalog/type/
+
+        // catalog/paginate/all/0/all/name/ASC/10/0
         // type: all, shoe, lego
-        $catalogs = $req->getModel("Catalog")->getCatalogsByFilters($catalogsType, $brandId);
+
+        $orderBy = $req->getParameters(3, 1) ?: "ASC";
+        $sortDir = $req->getParameters(4, 1) ?: "name";
+        $pageLimit = $req->getParameters(5, 1) ?: 10;
+        $pageOffset = $req->getParameters(6, 1) ?: 0;
+
+
+        $catalogs = $req->getModel("Catalog")->getCatalogsByFilters($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset);
 
         return $res->render("catalog/index", [
             "catalogs" => $catalogs,

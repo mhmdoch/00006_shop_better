@@ -15,10 +15,10 @@ class CatalogModel extends z_model
         return $this->exec($sql, "i", $catalogId)->resultToLine();
     }
 
-    public function getCatalogsByFilters($type, $brandId): array
+    public function getCatalogsByFilters($type, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset): array
     {
-        $sql = "SELECT catalog.*, brand.name AS brand_name FROM `catalog` JOIN `brand` ON catalog.brand_id = brand.id WHERE (? = 'all' OR itemable_type = ?) AND (? = 0 OR brand_id = ?) ORDER BY `name`";
-        return $this->exec($sql, "ssii", $type, $type, $brandId, $brandId)->resultToArray();
+        $sql = "SELECT catalog.*, brand.name AS brand_name FROM `catalog` JOIN `brand` ON catalog.brand_id = brand.id WHERE catalog.active = 1 AND (? = 'all' OR catalog.itemable_type = ?) AND (? = 0 OR catalog.brand_id = ?) AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%')) ORDER BY {$orderBy} {$sortDir} LIMIT ? OFFSET ?";
+        return $this->exec($sql, "ssiissii", $type, $type, $brandId, $brandId, $name, $name, $pageLimit, $pageOffset)->resultToArray();
     }
 
     public function getCatalogsByBrand($brandId): array
