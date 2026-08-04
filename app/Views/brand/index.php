@@ -4,7 +4,12 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Marken</li>
+            <?php if ($opt["showActivity"] == 0): ?>
+                <li class="breadcrumb-item active" aria-current="page">Marken</li>
+            <?php else: ?>
+                <li class="breadcrumb-item"><a href="/brand">Marken</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inaktive</li>
+            <?php endif; ?>
         </ol>
     </nav>
 
@@ -46,7 +51,16 @@
             <? endif; ?>
 
             <div class="bg-box rounded p-4">
-                A–Z-Filter
+                <h5>Von A-Z</h5>
+                <hr>
+                <div>- <a href="/brand">Alle</a></div>
+                <?php foreach ($opt["brandsAZ"] as $brand) { ?>
+                    <div>
+                        - <a href="/brand/az/<?= rawurlencode($brand["firstLetter"]) ?>">
+                            <?= e($brand["firstLetter"]) ?> (<?= e($brand["amount"]) ?>)
+                        </a>
+                    </div>
+                <?php } ?>
             </div>
         </aside>
     </div>

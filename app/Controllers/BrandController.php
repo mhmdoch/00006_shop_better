@@ -9,6 +9,7 @@ class BrandController extends z_controller
 
         $showActivity = false;
 
+        $brandsAZ = $req->getModel("Brand")->getBrandsAZ();
 
         if ($req->isAction("delete-brand")) {
             $req->checkPermission("brand.delete");
@@ -19,7 +20,32 @@ class BrandController extends z_controller
 
         return $res->render("brand/index", [
             "brands" => $brands,
-            "showActivity" => $showActivity
+            "showActivity" => $showActivity,
+            "brandsAZ" => $brandsAZ
+        ]);
+    }
+
+    public function action_az(Request $req, Response $res)
+    {
+        $firstLetter = $req->getParameters(0, 1);
+
+        $brands = $req->getModel("Brand")->getBrandsByFirstLetter($firstLetter);
+
+        $showActivity = false;
+
+        $brandsAZ = $req->getModel("Brand")->getBrandsAZ();
+
+        if ($req->isAction("delete-brand")) {
+            $req->checkPermission("brand.delete");
+            $brandId = $req->getPost("brandId");
+            $req->getModel("Brand")->deleteBrand($brandId);
+            return $res->success();
+        }
+
+        return $res->render("brand/index", [
+            "brands" => $brands,
+            "showActivity" => $showActivity,
+            "brandsAZ" => $brandsAZ
         ]);
     }
 
