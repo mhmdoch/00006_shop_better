@@ -19,13 +19,16 @@ class CatalogController extends z_controller
         $brandId = $req->getParameters(1, 1) ?: 0;
         $name = $req->getParameters(2, 1) ?: "all";
 
+        $sortDir = $req->getParameters(3, 1) ?: "name";
 
         // catalog/paginate/all/0/all/name/ASC/10/0
         // type: all, shoe, lego
 
-        $orderBy = $req->getParameters(3, 1) ?: "ASC";
-        $sortDir = $req->getParameters(4, 1) ?: "name";
-        $pageLimit = $req->getParameters(5, 1) ?: 10;
+        $orderBy = $req->getParameters(4, 1) ?: "ASC";
+        if (!in_array($orderBy, ["ASC", "DESC"], true)) {
+            $orderBy = "ASC";
+        }
+        $pageLimit = $req->getParameters(5, 1) ?: 24;
         $pageOffset = $req->getParameters(6, 1) ?: 0;
 
 

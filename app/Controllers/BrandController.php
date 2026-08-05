@@ -57,6 +57,9 @@ class BrandController extends z_controller
 
         $showActivity = true;
 
+        $brandsAZ = $req->getModel("Brand")->getBrandsAZ();
+
+
         if ($req->isAction("delete-brand")) {
             $req->checkPermission("brand.delete");
             $brandId = $req->getPost("brandId");
@@ -66,7 +69,8 @@ class BrandController extends z_controller
 
         return $res->render("brand/index", [
             "brands" => $brands,
-            "showActivity" => $showActivity
+            "showActivity" => $showActivity,
+            "brandsAZ" => $brandsAZ
         ]);
     }
 

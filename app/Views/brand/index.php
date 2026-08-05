@@ -13,8 +13,6 @@
         </ol>
     </nav>
 
-    <br>
-
     <div class="row">
         <main class="col-lg-8" id="brandIndexContainer">
             <div class="bg-box rounded p-4">
