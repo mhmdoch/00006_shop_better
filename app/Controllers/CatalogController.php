@@ -28,14 +28,22 @@ class CatalogController extends z_controller
         if (!in_array($orderBy, ["ASC", "DESC"], true)) {
             $orderBy = "ASC";
         }
-        $pageLimit = $req->getParameters(5, 1) ?: 24;
+        $pageLimit = $req->getParameters(5, 1) ?: 15;
         $pageOffset = $req->getParameters(6, 1) ?: 0;
 
+        $brands = $req->getModel("Brand")->getBrands();
 
         $catalogs = $req->getModel("Catalog")->getCatalogsByFilters($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset);
 
+        $settings['type'] = $catalogsType;
+        $settings['brandId'] = $brandId;
+        $settings['name'] = $name;
+
+
         return $res->render("catalog/index", [
             "catalogs" => $catalogs,
+            "brands" => $brands,
+            "settings" => $settings
         ]);
     }
 

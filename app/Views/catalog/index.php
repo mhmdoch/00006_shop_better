@@ -29,8 +29,11 @@
         <main class="col-lg-12">
             <div class="bg-box rounded p-4 mb-4">
                 <div class="row pl-3">
-                    <h5>Filter</h5><!-- catalog/paginate/all/0/all/name/ASC/10/0 
-                    ($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset)      -->
+                    <h5>Filter</h5>
+                    <!-- 
+                    catalog/paginate/all/0/all/name/ASC/10/0 
+                    ($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset)
+                    -->
                 </div>
                 <hr>
                 <div class="row pl-1">
@@ -38,7 +41,7 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Typ</label>
                             <select class="form-control" name="selectType" id="selectType">
-                                <option selected>alle</option>
+                                <option selected value="all">alle</option>
                                 <option value="lego">LEGO</option>
                                 <option value="shoe">Schuhe</option>
                             </select>
@@ -48,22 +51,24 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Marke</label>
                             <select class="form-control" name="selectBrand" id="selectBrand">
-                                <option selected>alle</option>
-                                <option value="brand_id">brand_name</option>
+                                <option selected value="0">alle</option>
+                                <?php foreach ($opt["brands"] as $brand) { ?>
+                                    <option value="<?= $brand['id'] ?>"><?= $brand['name'] ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Name</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Sortieren</label>
-                            <select class="form-control" name="selectType" id="selectType">
-                                <option selected>alle</option>
+                            <select class="form-control" name="selectSort" id="selectSort">
+                                <option selected value="all">alle</option>
                                 <option value="value">Typ (aufsteigend)</option>
                                 <option value="value">Typ (absteigend)</option>
                                 <option value="value">Marke (aufsteigend)</option>
@@ -77,6 +82,69 @@
             </div>
         </main>
     </div>
+    <form id="gaga"></form>
+    <script>
+        var filterForm = Z.Forms.create({
+            dom: "gaga"
+        });
+
+        var filterByType = filterForm.createField({
+            name: "filterByType",
+            type: "text",
+            value: "<?= $opt['settings']['type'] ?>" ?? 'all',
+        });
+        var filterByBrand = filterForm.createField({
+            name: "filterByBrand",
+            type: "text",
+            value: "<?= $opt['settings']['brandId'] ?>" ?? '0',
+        });
+        var filterByName = filterForm.createField({
+            name: "filterByName",
+            type: "text",
+            value: "<?= $opt['settings']['name'] ?>" ?? 'all',
+        });
+        var sortBy = filterForm.createField({
+            name: "sortBy",
+            type: "text",
+        });
+        filterForm.buttonSubmit.remove();
+
+        function applyFilters() {
+            var typeValue = $('#selectType').val();
+            var brandValue = $('#selectBrand').val();
+            var nameValue = $('#selectName').val().trim();
+
+            if (nameValue === '') {
+                nameValue = 'all';
+            }
+
+            var parameters = [
+                typeValue,
+                brandValue,
+                nameValue
+            ];
+
+            window.location.href =
+                '/catalog/paginate/' +
+                parameters.map(encodeURIComponent).join('/') +
+                "/name/ASC/15/0";
+
+
+            // How it works
+            // ----------------------
+            // var parameters = ['shoe', '12', 'Air Max'];
+            // var encodedParameters = parameters.map(function(parameter) {
+            //     return encodeURIComponent(parameter);
+            // });
+            // var path = encodedParameters.join('/');
+            // console.log(path);
+            // "shoe/12/Air%20Max"
+
+        }
+
+        $('#selectType, #selectBrand').on('change', applyFilters);
+        $('#selectName').on('change', applyFilters);
+    </script>
 
     <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
