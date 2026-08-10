@@ -19,7 +19,17 @@ class CatalogController extends z_controller
         $brandId = $req->getParameters(1, 1) ?: 0;
         $name = $req->getParameters(2, 1) ?: "all";
 
-        $sortDir = $req->getParameters(3, 1) ?: "name";
+        $sortKey = $req->getParameters(3, 1) ?: "all";
+
+        $sortColumns = [
+            "all"   => "catalog.name",
+            "type"  => "catalog.itemable_type",
+            "brand" => "brand.name",
+            "name"  => "catalog.name",
+        ];
+
+        $sortDir = $sortColumns[$sortKey] ?? "catalog.name";
+
 
         // catalog/paginate/all/0/all/name/ASC/10/0
         // type: all, shoe, lego

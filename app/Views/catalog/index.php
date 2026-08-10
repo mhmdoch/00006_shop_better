@@ -68,13 +68,13 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Sortieren</label>
                             <select class="form-control" name="selectSort" id="selectSort">
-                                <option selected value="all">alle</option>
-                                <option value="value">Typ (aufsteigend)</option>
-                                <option value="value">Typ (absteigend)</option>
-                                <option value="value">Marke (aufsteigend)</option>
-                                <option value="value">Marke (absteigend)</option>
-                                <option value="value">Name (aufsteigend)</option>
-                                <option value="value">Name (absteigend)</option>
+                                <option selected value="all" data-direction="ASC">alle</option>
+                                <option value="type" data-direction="ASC">Typ (aufsteigend)</option>
+                                <option value="type" data-direction="DESC">Typ (absteigend)</option>
+                                <option value="brand" data-direction="ASC">Marke (aufsteigend)</option>
+                                <option value="brand" data-direction="DESC">Marke (absteigend)</option>
+                                <option value="name" data-direction="ASC">Name aufsteigend</option>
+                                <option value="name" data-direction="DESC">Name absteigend</option>
                             </select>
                         </div>
                     </div>
@@ -82,108 +82,120 @@
             </div>
         </main>
     </div>
-    <form id="gaga"></form>
-    <script>
-        var filterForm = Z.Forms.create({
-            dom: "gaga"
-        });
-
-        var filterByType = filterForm.createField({
-            name: "filterByType",
-            type: "text",
-            value: "<?= $opt['settings']['type'] ?>" ?? 'all',
-        });
-        var filterByBrand = filterForm.createField({
-            name: "filterByBrand",
-            type: "text",
-            value: "<?= $opt['settings']['brandId'] ?>" ?? '0',
-        });
-        var filterByName = filterForm.createField({
-            name: "filterByName",
-            type: "text",
-            value: "<?= $opt['settings']['name'] ?>" ?? 'all',
-        });
-        var sortBy = filterForm.createField({
-            name: "sortBy",
-            type: "text",
-        });
-        filterForm.buttonSubmit.remove();
-
-        function applyFilters() {
-            var typeValue = $('#selectType').val();
-            var brandValue = $('#selectBrand').val();
-            var nameValue = $('#selectName').val().trim();
-
-            if (nameValue === '') {
-                nameValue = 'all';
-            }
-
-            var parameters = [
-                typeValue,
-                brandValue,
-                nameValue
-            ];
-
-            window.location.href =
-                '/catalog/paginate/' +
-                parameters.map(encodeURIComponent).join('/') +
-                "/name/ASC/15/0";
+    <form id="catalogsFilterForm"></form>
 
 
-            // How it works
-            // ----------------------
-            // var parameters = ['shoe', '12', 'Air Max'];
-            // var encodedParameters = parameters.map(function(parameter) {
-            //     return encodeURIComponent(parameter);
-            // });
-            // var path = encodedParameters.join('/');
-            // console.log(path);
-            // "shoe/12/Air%20Max"
-
-        }
-
-        $('#selectType, #selectBrand').on('change', applyFilters);
-        $('#selectName').on('change', applyFilters);
-    </script>
-
-    <?php foreach ($opt["catalogs"] as $catalog) { ?>
-
-        <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
-            <div class="card-deck">
-            <?php } ?>
-
-            <a href="/catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
-                <img src="<?php $opt["generateResourceLink"]("assets/img/shoe.png"); ?>" class="card-img-top">
-                <div class="card-body">
-                    <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>
-                    <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
-                    <p class="card-text"><?= e($catalog['description']) ?></p>
-                    <p class="card-text">
-                        <?php if ($catalog["lowest_price"] !== null) { ?>
-                            ab <?= e(number_format((float) $catalog["lowest_price"], 2, ",", ".")) ?> €
-                        <?php } else { ?>
-                            Noch kein Preis
-                        <?php } ?>
-                    </p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
-            </a>
-            <?php $cardsPerRowCurrent++; ?>
+    <div id="catalogsContainer">
+        <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
             <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
-            </div>
+                <div class="card-deck">
+                <?php } ?>
+
+                <a href="/catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
+                    <img src="<?php $opt["generateResourceLink"]("assets/img/shoe.png"); ?>" class="card-img-top">
+                    <div class="card-body">
+                        <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>
+                        <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
+                        <p class="card-text"><?= e($catalog['description']) ?></p>
+                        <p class="card-text">
+                            <?php if ($catalog["lowest_price"] !== null) { ?>
+                                ab <?= e(number_format((float) $catalog["lowest_price"], 2, ",", ".")) ?> €
+                            <?php } else { ?>
+                                Noch kein Preis
+                            <?php } ?>
+                        </p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </a>
+                <?php $cardsPerRowCurrent++; ?>
+
+                <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
+                </div>
+            <?php } ?>
         <?php } ?>
-    <?php } ?>
 
 
-    <?php if ($cardsPerRowCurrent % $cardsPerRow !== 0) { ?>
-        <?php $cardsPerRowMissing = $cardsPerRow - ($cardsPerRowCurrent % $cardsPerRow); ?>
+        <?php if ($cardsPerRowCurrent % $cardsPerRow !== 0) { ?>
+            <?php $cardsPerRowMissing = $cardsPerRow - ($cardsPerRowCurrent % $cardsPerRow); ?>
 
-        <?php for ($i = 0; $i < $cardsPerRowMissing; $i++) { ?>
-            <div class="card mb-4 invisible" aria-hidden="true"></div>
-        <?php } ?>
+            <?php for ($i = 0; $i < $cardsPerRowMissing; $i++) { ?>
+                <div class="card mb-4 invisible" aria-hidden="true"></div>
+            <?php } ?>
 
-        </div>
-    <?php } ?>
+    </div>
+<?php } ?>
+</div>
+
+<script>
+    var filterForm = Z.Forms.create({
+        dom: "catalogsFilterForm"
+    });
+
+    var filterByType = filterForm.createField({
+        name: "filterByType",
+        type: "hidden",
+        value: "<?= $opt['settings']['type'] ?>" ?? 'all',
+    });
+    var filterByBrand = filterForm.createField({
+        name: "filterByBrand",
+        type: "hidden",
+        value: "<?= $opt['settings']['brandId'] ?>" ?? '0',
+    });
+    var filterByName = filterForm.createField({
+        name: "filterByName",
+        type: "hidden",
+        value: "<?= $opt['settings']['name'] ?>" ?? 'all',
+    });
+    var sortBy = filterForm.createField({
+        name: "sortBy",
+        type: "hidden",
+    });
+    var sortOrder = filterForm.createField({
+        name: "sortOrder",
+        type: "hidden",
+    });
+    filterForm.buttonSubmit.remove();
+
+    function applyFilters() {
+        var typeValue = $('#selectType').val();
+        var brandValue = $('#selectBrand').val();
+        var nameValue = $('#selectName').val().trim();
+        var sortByTable = $('#selectSort').val();
+        var sortOrderTable = $('#selectSort option:selected').data('direction');
+
+        if (nameValue === '') {
+            nameValue = 'all';
+        }
+
+        var parameters = [
+            typeValue,
+            brandValue,
+            nameValue,
+            sortByTable,
+            sortOrderTable
+        ];
+
+        var url =
+            '/catalog/paginate/' +
+            parameters.map(encodeURIComponent).join('/') +
+            "/15/0";
+        // How it works
+        // ----------------------
+        // var parameters = ['shoe', '12', 'Air Max'];
+        // var encodedParameters = parameters.map(function(parameter) {
+        //     return encodeURIComponent(parameter);
+        // });
+        // var path = encodedParameters.join('/');
+        // console.log(path);
+        // "shoe/12/Air%20Max"
+
+        $("#catalogsContainer").load(url + " #catalogsContainer > *");
+        window.history.pushState({}, "", url);
+    }
+
+    $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
+    $('#selectName').on('input', applyFilters);
+</script>
 <?php }
 ]; ?>
