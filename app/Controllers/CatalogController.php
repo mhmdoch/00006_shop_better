@@ -60,10 +60,12 @@ class CatalogController extends z_controller
 
         $settings['pageNeighboorsAmount'] = 3;
 
-        if (($pageNumber - 1) > $settings['pageNeighboorsAmount']) {
-        }
-        $pagination['pageNeighboorsLeft'] = $pageNumber - 1;
-        $pagination['pageNeighboorsRight'] = $pagination['pageLast'] - $pageNumber;
+        $pagesAvailableLeft = $pageNumber - 1;
+        $pagesAvailableRight = $pagination['pageLast'] - $pageNumber;
+
+        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
+        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
+
 
 
         return $res->render("catalog/index", [

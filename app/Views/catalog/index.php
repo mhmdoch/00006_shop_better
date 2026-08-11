@@ -136,19 +136,16 @@
             </a>
         </li>
 
-        <?php if ($opt["pagination"]['pageNeighboorsLeft'] >= $opt["settings"]['pageNeighboorsAmount']): ?>
-            <?php for ($i = $opt["pagination"]["pageCurrent"] - $opt["settings"]["pageNeighboorsAmount"]; $i < $opt["pagination"]["pageCurrent"]; $i++): ?>
-                <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
-            <?php endfor; ?>
-        <?php else: ?>
+        <?php for ($i = $opt["pagination"]["pageCurrent"] - $opt["pagination"]["pageNeighboorsLeft"]; $i < $opt["pagination"]["pageCurrent"]; $i++): ?>
+            <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
+        <?php endfor; ?>
 
-            gugu
-
-        <?php endif; ?>
         <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><?= $opt["pagination"]["pageCurrent"] ?></a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+        <?php for ($i = $opt["pagination"]["pageCurrent"] + 1; $i <= $opt["pagination"]["pageCurrent"] + $opt["pagination"]["pageNeighboorsRight"]; $i++): ?>
+            <li class="page-item"><a class="page-link" href="/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>"><?= $i ?></a></li>
+        <?php endfor; ?>
+
         <li class="page-item">
             <a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageLast"] ?>' aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
