@@ -30,7 +30,6 @@ class CatalogController extends z_controller
 
         $sortDir = $sortColumns[$sortKey] ?? "catalog.name";
 
-
         // catalog/paginate/all/0/all/name/ASC/10/0
         // type: all, shoe, lego
 
@@ -39,21 +38,39 @@ class CatalogController extends z_controller
             $orderBy = "ASC";
         }
         $pageLimit = $req->getParameters(5, 1) ?: 15;
-        $pageOffset = $req->getParameters(6, 1) ?: 0;
+        $pageNumber = $req->getParameters(6, 1) ?: 1;
+        $pageOffset = (int) $pageLimit * ($pageNumber - 1);
+
+
 
         $brands = $req->getModel("Brand")->getBrands();
 
         $catalogs = $req->getModel("Catalog")->getCatalogsByFilters($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset);
+        $catalogsAmount = $req->getModel("Catalog")->getCatalogsByFiltersAmount($catalogsType, $brandId, $name);
 
+        $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
         $settings['type'] = $catalogsType;
         $settings['brandId'] = $brandId;
         $settings['name'] = $name;
+        $settings['limit'] = $pageLimit;
+        $settings['orderBy'] = $orderBy;
+        $settings['sortKey'] = $sortKey;
+
+        $pagination['pageCurrent'] = $pageNumber;
+
+        $settings['pageNeighboorsAmount'] = 3;
+
+        if (($pageNumber - 1) > $settings['pageNeighboorsAmount']) {
+        }
+        $pagination['pageNeighboorsLeft'] = $pageNumber - 1;
+        $pagination['pageNeighboorsRight'] = $pagination['pageLast'] - $pageNumber;
 
 
         return $res->render("catalog/index", [
             "catalogs" => $catalogs,
             "brands" => $brands,
-            "settings" => $settings
+            "settings" => $settings,
+            "pagination" => $pagination
         ]);
     }
 

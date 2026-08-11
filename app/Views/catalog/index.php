@@ -11,6 +11,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">dAShop</a></li>
             <li class="breadcrumb-item active" aria-current="page">Katalog</li>
+            <li class="breadcrumb-item active" aria-current="page"><?= $opt["pagination"]["pageLast"] ?></li>
         </ol>
     </nav>
 
@@ -125,6 +126,38 @@
 
     </div>
 <?php } ?>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination  justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/1' aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+
+        <?php if ($opt["pagination"]['pageNeighboorsLeft'] >= $opt["settings"]['pageNeighboorsAmount']): ?>
+            <?php for ($i = $opt["pagination"]["pageCurrent"] - $opt["settings"]["pageNeighboorsAmount"]; $i < $opt["pagination"]["pageCurrent"]; $i++): ?>
+                <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
+            <?php endfor; ?>
+        <?php else: ?>
+
+            gugu
+
+        <?php endif; ?>
+        <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><?= $opt["pagination"]["pageCurrent"] ?></a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageLast"] ?>' aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
 </div>
 
 <script>
