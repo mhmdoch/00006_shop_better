@@ -19,11 +19,6 @@
                 <img src="<?php $opt["generateResourceLink"]("assets/img/shoe.png"); ?>" class="card-img-top">
             </div>
             <div class="bg-box rounded p-4 mt-4">
-                <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
-                    <a href="/item/itemShoe_create/<?= e($opt["catalog"]["id"]) ?>">Produkt hinzufügen</a>
-                <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
-                    <a href="/item/itemLegoCreate/<?= e($opt["catalog"]["id"]) ?>">Produkt hinzufügen</a>
-                <?php } ?>
                 <a href="/brand/show/"></a>
                 <a href="/brand/edit/" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
             </div>
@@ -41,9 +36,20 @@
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between">
-                    <span>Produkte</span>
+                    <span>Varianten</span>
                     <span><?= count($opt["items"]) ?></span>
                 </div>
+
+                <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span> <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
+                                <a href="/item/itemShoe_create/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
+                            <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
+                                <a href="/item/itemLegoCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
+                            <?php } ?></span>
+                        <span></span>
+                    </div>
+                <?php endif; ?>
 
             </div>
         </aside>
@@ -57,6 +63,11 @@
         <?php foreach ($opt["items"] as $item) { ?>
             <li>
                 <?= e($item["color"]) ?> <?= e($item["size"]) ?> <?= e($item["price"]) ?>
+                <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
+                    <a href="/item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a>
+                <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
+
+                <?php } ?>
             </li>
         <?php } ?>
     </ul>

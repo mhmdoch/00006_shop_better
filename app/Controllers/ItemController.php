@@ -55,8 +55,10 @@ class ItemController extends z_controller
                 return $res->formErrors($formResult->errors);
             }
 
-            $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]]);
+            $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]]);
             $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["active" => 0]);
+            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $newItemId, "action" => "aktiviert"]);
+            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "deaktiviert"]);
 
             return $res->success();
         }
