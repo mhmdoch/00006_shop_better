@@ -69,12 +69,12 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Sortieren</label>
                             <select class="form-control" name="selectSort" id="selectSort">
-                                <option selected value="all" data-direction="ASC">alle</option>
+                                <!-- <option selected value="all" data-direction="ASC">alle</option> -->
                                 <option value="type" data-direction="ASC">Typ (aufsteigend)</option>
                                 <option value="type" data-direction="DESC">Typ (absteigend)</option>
                                 <option value="brand" data-direction="ASC">Marke (aufsteigend)</option>
                                 <option value="brand" data-direction="DESC">Marke (absteigend)</option>
-                                <option value="name" data-direction="ASC">Name aufsteigend</option>
+                                <option selected value="name" data-direction="ASC">Name aufsteigend</option>
                                 <option value="name" data-direction="DESC">Name absteigend</option>
                             </select>
                         </div>
@@ -140,7 +140,7 @@
             <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
         <?php endfor; ?>
 
-        <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><?= $opt["pagination"]["pageCurrent"] ?></a></li>
+        <li class="page-item active"><span class="page-link" deactivated href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><strong><?= $opt["pagination"]["pageCurrent"] ?></strong></span></li>
 
         <?php for ($i = $opt["pagination"]["pageCurrent"] + 1; $i <= $opt["pagination"]["pageCurrent"] + $opt["pagination"]["pageNeighboorsRight"]; $i++): ?>
             <li class="page-item"><a class="page-link" href="/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>"><?= $i ?></a></li>
@@ -209,7 +209,7 @@
         var url =
             '/catalog/paginate/' +
             parameters.map(encodeURIComponent).join('/') +
-            "/15/0";
+            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
         // How it works
         // ----------------------
         // var parameters = ['shoe', '12', 'Air Max'];

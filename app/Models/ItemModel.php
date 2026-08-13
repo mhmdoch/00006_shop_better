@@ -3,6 +3,12 @@
 class ItemModel extends z_model
 {
 
+    public function getItemById($itemId): array
+    {
+        $sql = "SELECT * FROM `item` WHERE `id` = ?";
+        return $this->exec($sql, "i", $itemId)->resultToLine();
+    }
+
     public function getItemsByCatalogId($catalogId): array
     {
         $sql = "SELECT * FROM `item` WHERE `catalog_id` = ? AND active = 1";
