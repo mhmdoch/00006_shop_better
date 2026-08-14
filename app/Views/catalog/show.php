@@ -16,7 +16,7 @@
             </div>
 
             <div class="bg-box rounded p-4 mt-4">
-                <img src="<?php $opt["generateResourceLink"]("assets/img/shoe.png"); ?>" class="card-img-top">
+                <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
             </div>
             <div class="bg-box rounded p-4 mt-4">
                 <a href="/brand/show/"></a>
