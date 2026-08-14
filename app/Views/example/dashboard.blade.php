@@ -1,4 +1,6 @@
-<?php return ["body" => function ($opt) { ?>
+@extends($layout)
+
+@section("content")
     Hello there! You have reached the DashboardController.
 
     <br><br>
@@ -18,4 +20,4 @@
             </li>
         <?php } ?>
     </ul>
-<?php }]; ?>
+@endsection

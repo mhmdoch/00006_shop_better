@@ -1,4 +1,6 @@
-<?php return ["body" => function ($opt) { ?>
+@extends($layout)
+
+@section("content")
     <div id="reset-error-label" style="display: none;" data-test="error"></div>
     <input type="email" id="username" data-test="username">
     <a class="text-primary" href="<?= $opt["root"]; ?>">
@@ -17,4 +19,4 @@
             if(e.keyCode == 13) reset();
         });
     </script>
-<?php }]; ?>
+@endsection

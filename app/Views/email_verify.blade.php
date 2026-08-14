@@ -1,4 +1,10 @@
-<?php return [ "head" => function() {}, "body" => function($opt) { ?>
+@extends($layout)
+
+@section("head")
+
+@endsection
+
+@section("content")
     <div class="mb-3">
         <a href="<?= $opt["url"]; ?>" class="text-primary font-weight-bold">Hier klicken</a>,
         um deine E-Mail-Adresse zu verifizieren.
@@ -10,4 +16,4 @@
             <?= $opt["url"]; ?>
         </a>
     </div>
-<?php }]; ?>
+@endsection

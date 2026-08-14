@@ -1,6 +1,10 @@
-<?php return ["head" => function($opt) { ?>
+@extends($layout)
+
+@section("head")
 	<link rel="stylesheet" href="<?= $opt["root"]; ?>assets/css/loadCircle.css">
-<?php }, "body" => function($opt) { ?>
+@endsection
+
+@section("content")
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 col-12 p-0">
@@ -41,4 +45,4 @@
         </div>
     </div>
 	<div class="loading" id="loading" style="display: none;">Lädt&#8230;</div>
-<?php }]; ?>
+@endsection

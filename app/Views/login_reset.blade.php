@@ -1,14 +1,11 @@
-<?php
+@extends($layout)
 
-/**
- * The password reset view
- */
-
-return ["head" => function ($opt) { ?>
+@section("head")
     <link rel="stylesheet" href="<?php $opt["generateResourceLink"]("assets/css/loadCircle.css") ?>">
     <link rel="stylesheet" href="<?php $opt["generateResourceLink"]("assets/css/main.css") ?>">
+@endsection
 
-<?php }, "body" => function ($opt) { ?>
+@section("content")
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 col-12 p-0">
@@ -64,4 +61,4 @@ return ["head" => function ($opt) { ?>
             document.getElementById("reset-btn").disabled = !isValid;
         }
     </script>
-<?php }]; ?>
+@endsection

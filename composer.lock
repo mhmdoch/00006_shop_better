@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "803bf4ddc60826ea117fd3f752c0e517",
+    "content-hash": "fd320cab84b386aefaa20e728d824050",
     "packages": [
         {
             "name": "cakephp/core",
@@ -618,6 +618,48 @@
                 }
             ],
             "time": "2025-08-08T12:00:00+00:00"
+        },
+        {
+            "name": "katanaphp/blade",
+            "version": "dev-integration/zubzet",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/katanaphp/blade.git",
+                "reference": "ac9a8f2d338d0e6e7fd8ea5094ede615e9fb6a5c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/katanaphp/blade/zipball/ac9a8f2d338d0e6e7fd8ea5094ede615e9fb6a5c",
+                "reference": "ac9a8f2d338d0e6e7fd8ea5094ede615e9fb6a5c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.2",
+                "phpunit/phpunit": "^9",
+                "symfony/var-dumper": "^5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Blade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Standalone version of Laravel Blade",
+            "support": {
+                "issues": "https://github.com/katanaphp/blade/issues",
+                "source": "https://github.com/katanaphp/blade/tree/integration/zubzet"
+            },
+            "time": "2026-07-26T18:13:11+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -1720,16 +1762,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v7.4.15",
+            "version": "v7.4.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "088ec6fe0ef6819cbc301174093b6bfa4ad26930"
+                "reference": "f4c69c9aed03abf933b294257d618bdd9b30a06d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/088ec6fe0ef6819cbc301174093b6bfa4ad26930",
-                "reference": "088ec6fe0ef6819cbc301174093b6bfa4ad26930",
+                "url": "https://api.github.com/repos/symfony/console/zipball/f4c69c9aed03abf933b294257d618bdd9b30a06d",
+                "reference": "f4c69c9aed03abf933b294257d618bdd9b30a06d",
                 "shasum": ""
             },
             "require": {
@@ -1794,7 +1836,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.4.15"
+                "source": "https://github.com/symfony/console/tree/v7.4.16"
             },
             "funding": [
                 {
@@ -1814,7 +1856,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-27T13:51:00+00:00"
+            "time": "2026-07-31T12:37:14+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -2374,35 +2416,34 @@
         },
         {
             "name": "symfony/string",
-            "version": "v7.4.15",
+            "version": "v8.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "e394af32256bf9e7bf80849d95e589167c10097b"
+                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/e394af32256bf9e7bf80849d95e589167c10097b",
-                "reference": "e394af32256bf9e7bf80849d95e589167c10097b",
+                "url": "https://api.github.com/repos/symfony/string/zipball/286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
+                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2",
-                "symfony/deprecation-contracts": "^2.5|^3.0",
-                "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-intl-grapheme": "~1.33",
-                "symfony/polyfill-intl-normalizer": "~1.0",
-                "symfony/polyfill-mbstring": "~1.0"
+                "php": ">=8.4.1",
+                "symfony/polyfill-ctype": "^1.8",
+                "symfony/polyfill-intl-grapheme": "^1.33",
+                "symfony/polyfill-intl-normalizer": "^1.0",
+                "symfony/polyfill-mbstring": "^1.0"
             },
             "conflict": {
                 "symfony/translation-contracts": "<2.5"
             },
             "require-dev": {
-                "symfony/emoji": "^7.1|^8.0",
-                "symfony/http-client": "^6.4|^7.0|^8.0",
-                "symfony/intl": "^6.4|^7.0|^8.0",
+                "symfony/emoji": "^7.4|^8.0",
+                "symfony/http-client": "^7.4|^8.0",
+                "symfony/intl": "^7.4|^8.0",
                 "symfony/translation-contracts": "^2.5|^3.0",
-                "symfony/var-exporter": "^6.4|^7.0|^8.0"
+                "symfony/var-exporter": "^7.4|^8.0"
             },
             "type": "library",
             "autoload": {
@@ -2441,7 +2482,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v7.4.15"
+                "source": "https://github.com/symfony/string/tree/v8.1.2"
             },
             "funding": [
                 {
@@ -2461,7 +2502,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-28T07:33:02+00:00"
+            "time": "2026-07-28T07:35:25+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -2602,16 +2643,16 @@
         },
         {
             "name": "zubzet/framework",
-            "version": "v1.2.0",
+            "version": "v1.3.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zubzet/framework.git",
-                "reference": "79f5fc732cff42491ae8f84eeaac585df6acf353"
+                "reference": "23a3bcea7787d738989413ed0d2a79548445d795"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zubzet/framework/zipball/79f5fc732cff42491ae8f84eeaac585df6acf353",
-                "reference": "79f5fc732cff42491ae8f84eeaac585df6acf353",
+                "url": "https://api.github.com/repos/zubzet/framework/zipball/23a3bcea7787d738989413ed0d2a79548445d795",
+                "reference": "23a3bcea7787d738989413ed0d2a79548445d795",
                 "shasum": ""
             },
             "require": {
@@ -2619,8 +2660,10 @@
                 "components/bootstrap": "4.6.*",
                 "components/font-awesome": "6.5.*",
                 "components/jquery": "3.5.*",
+                "composer-runtime-api": "^2.1",
                 "doctrine/dbal": "^3.10 || ^4.4",
                 "filp/whoops": "^2.18.4",
+                "katanaphp/blade": "dev-integration/zubzet#ac9a8f2d338d0e6e7fd8ea5094ede615e9fb6a5c",
                 "league/mime-type-detection": "^1.16",
                 "monolog/monolog": "^2.11",
                 "nikic/fast-route": "^1.3",
@@ -2647,21 +2690,19 @@
             "description": " A lightweight PHP framework focused on rapid development, ease of use, and great portability.",
             "support": {
                 "issues": "https://github.com/zubzet/framework/issues",
-                "source": "https://github.com/zubzet/framework/tree/v1.2.0",
+                "source": "https://github.com/zubzet/framework/tree/v1.3.0-alpha2",
                 "wiki": "https://zubzet.com/docs"
             },
-            "time": "2026-07-06T08:37:11+00:00"
+            "time": "2026-08-10T21:18:10+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {
-        "zubzet/framework": 5
-    },
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {},
+    "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

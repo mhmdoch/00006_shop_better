@@ -1,5 +1,6 @@
-<?php return ["body" => function ($opt) { ?>
+@extends($layout)
 
+@section("content")
     <div id="login-error-label" data-test="error"></div>
 
     <input type="email" id="username" data-test="username">
@@ -25,4 +26,4 @@
             if(e.keyCode == 13) login();
         });
     </script>
-<?php }]; ?>
+@endsection

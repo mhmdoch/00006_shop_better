@@ -1,5 +1,6 @@
-<?php return ["body" => function ($opt) { ?>
+@extends($layout)
 
+@section("content")
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">dAShop</a></li>
@@ -55,5 +56,4 @@
 
         });
     </script>
-
-<?php }]; ?>
+@endsection
