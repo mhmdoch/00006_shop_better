@@ -10,4 +10,7 @@ Hi
     </x-test>
 <?php } ?>
 
+<x-newtest>
+</x-newtest>
+
 @endsection
