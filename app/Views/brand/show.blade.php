@@ -24,6 +24,11 @@
             <?php } ?>
 
 
+
+<?php foreach ($opt["catalogs"] as $catalog) { ?>
+    <x-cataloglist :catalog="$catalog" :opt="$opt"></x-cataloglist>
+<?php } ?>
+
         </main>
         <aside class="col-lg-4">
             <div class="bg-box rounded p-4 mb-4">

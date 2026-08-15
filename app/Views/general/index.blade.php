@@ -10,7 +10,11 @@ Hi
     </x-test>
 <?php } ?>
 
-<x-newtest>
-</x-newtest>
+<x-newtest title="bin ich blade?"></x-newtest>
+
+<?php $title2 = "bin ich auch blade?"; ?>
+@foreach(str_split($title2) as $letter2)
+    <p>{{ $letter2 }}</p>
+@endforeach
 
 @endsection

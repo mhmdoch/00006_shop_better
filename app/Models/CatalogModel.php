@@ -53,7 +53,12 @@ class CatalogModel extends z_model
 
     public function getCatalogsByBrand($brandId): array
     {
-        $sql = "SELECT catalog.*, brand.name AS brand_name FROM `catalog` JOIN `brand` ON catalog.brand_id = brand.id WHERE `brand_id` = ? ORDER BY `name`";
+        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price 
+                        FROM `catalog` JOIN `brand` ON catalog.brand_id = brand.id
+                        LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
+                        WHERE `brand_id` = ? 
+                        GROUP BY catalog.id 
+                        ORDER BY `name`";
         return $this->exec($sql, "i", $brandId)->resultToArray();
     }
 }
