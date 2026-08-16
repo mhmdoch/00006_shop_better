@@ -20,6 +20,8 @@ class Breadcrumbs
 
         $urlParts = array_slice(request()->getUrlParts(), 0, 3);
 
+        $urlParts = array_diff($urlParts, ["show"]);
+
         $currentUrl = "/";
         foreach ($urlParts as $part) {
             if (is_numeric($part)) break;
@@ -43,3 +45,24 @@ class Breadcrumbs
         return $translations[$path] ?? ucfirst($path);
     }
 }
+
+
+
+
+// <nav aria-label="breadcrumb">
+//     <ol class="breadcrumb">
+//         @foreach (App\Helper\Breadcrumbs::items() as $name => $url)
+//         @if ($loop->last)
+//         <li class="breadcrumb-item active" aria-current="page">
+//             {{ $name }}
+//         </li>
+//         @else
+//         <li class="breadcrumb-item">
+//             <a href="{{ $url }}">
+//                 {{ $name }}
+//             </a>
+//         </li>
+//         @endif
+//         @endforeach
+//     </ol>
+// </nav>

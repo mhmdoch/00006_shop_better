@@ -2,17 +2,7 @@
 
 @section("content")
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-        <?php if ($opt["showActivity"] == 0): ?>
-            <li class="breadcrumb-item active" aria-current="page">Marken</li>
-        <?php else: ?>
-            <li class="breadcrumb-item"><a href="/brand">Marken</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Inaktive</li>
-        <?php endif; ?>
-    </ol>
-</nav>
+
 
 <div class="row">
     <main class="col-lg-8" id="brandIndexContainer">

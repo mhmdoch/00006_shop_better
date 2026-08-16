@@ -85,7 +85,7 @@ class BrandController extends z_controller
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
         $logActive = $req->getModel("LogActive")->getLogByidAndType($brandId, "brand");
 
-        App\Helper\Breadcrumbs::append("Reebok", "/test");
+        App\Helper\Breadcrumbs::append("{$brand['name']}", "/brand/show/" . $brandId);
 
         return $res->render("brand/show", [
             "brand" => $brand,
