@@ -2,28 +2,69 @@
 
 @section("content")
 
+<?php
+$cardsPerRow = 3;
+$cardsPerRowCurrent = 0;
+$catalogCount = count($opt["catalogs"]);
+?>
 
     <div class="row">
         <main class="col-lg-8">
-            <div class="bg-box rounded p-4">
+            <div class="bg-box rounded p-4 mb-4">
                 <p class="brand-kicker mb-1">Marke</p>
                 <h1 class="h2 mb-2"><?= e($opt["brand"]["name"]) ?></h1>
             </div>
-            <?php foreach ($opt["catalogs"] as $catalog) { ?>
 
-                <div class="bg-box rounded p-4 mt-4">
-                    <div><?= e($catalog["name"]) ?></div>
-                    <div><?= e($catalog["description"]) ?></div>
+
+<div class="row">
+    <main class="col-lg-12">
+        <div class="bg-box rounded p-4 mb-4">
+            <div class="row pl-3">
+                <h5>Filter</h5>
+                <!-- 
+                    catalog/paginate/all/0/all/name/ASC/10/0 
+                    ($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset)
+                    -->
+            </div>
+            <hr>
+            <div class="row pl-1">
+                                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
+                    </div>
                 </div>
-            <?php } ?>
+                                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Maximaler Preis</label>
+                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
+                    </div>
+                </div>
 
 
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Sortieren</label>
+                        <select class="form-control" name="selectSort" id="selectSort">
+                            <!-- <option selected value="all" data-direction="ASC">alle</option> -->
+                            <option value="type" data-direction="ASC">Preis (aufsteigend)</option>
+                            <option value="type" data-direction="DESC">Preis (absteigend)</option>
+                            <option selected value="name" data-direction="ASC">Name aufsteigend</option>
+                            <option value="name" data-direction="DESC">Name absteigend</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 
-<?php foreach ($opt["catalogs"] as $catalog) { ?>
-    <x-cataloglist :catalog="$catalog" :opt="$opt"></x-cataloglist>
-<?php } ?>
+    <x-cataloglist2 :catalogs="$opt['catalogs']" :opt="$opt"></x-cataloglist>
 
-        </main>
+
+    </main>
+
+
         <aside class="col-lg-4">
             <div class="bg-box rounded p-4 mb-4">
                 <h5>Übersicht</h5>
@@ -68,4 +109,60 @@
             <?php endif; ?>
         </aside>
     </div>
+
+<script>
+    var filterForm = Z.Forms.create({
+        dom: "catalogsFilterForm"
+    });
+
+    var filterByName = filterForm.createField({
+        name: "filterByName",
+        type: "hidden",
+        value: "<?= $opt['settings']['name'] ?>" ?? 'all',
+    });
+    var filterByPrice = filterForm.createField({
+        name: "filterByPrice",
+        type: "hidden",
+        value: "<?= $opt['settings']['price'] ?>" ?? 'all',
+    });
+    var sortBy = filterForm.createField({
+        name: "sortBy",
+        type: "hidden",
+    });
+    var sortOrder = filterForm.createField({
+        name: "sortOrder",
+        type: "hidden",
+    });
+    filterForm.buttonSubmit.remove();
+
+    function applyFilters() {
+        var nameValue = $('#selectName').val();
+        var priceValue = $('#filterByPrice').val();
+        var sortByTable = $('#selectSort').val();
+        var sortOrderTable = $('#selectSort option:selected').data('direction');
+
+        if (nameValue === '') {
+            nameValue = 'all';
+        }
+
+        var parameters = [
+            nameValue,
+            priceValue,
+            sortByTable,
+            sortOrderTable
+        ];
+
+        var url =
+            '/brand/show/<?= $opt["brand"]["id"] ?>' +
+            parameters.map(encodeURIComponent).join('/') +
+            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["settings"]["pageCurrent"] ?>";
+
+        $("#catalogsContainer").load(url + " #catalogsContainer > *");
+        window.history.pushState({}, "", url);
+    }
+
+    $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
+    $('#selectName').on('input', applyFilters);
+</script>
+    
 @endsection

@@ -8,14 +8,6 @@ $cardsPerRowCurrent = 0;
 $catalogCount = count($opt["catalogs"]);
 ?>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Katalog</li>
-        <li class="breadcrumb-item active" aria-current="page"><?= $opt["pagination"]["pageLast"] ?></li>
-    </ol>
-</nav>
-
 
 
 

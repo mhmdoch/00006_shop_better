@@ -81,6 +81,36 @@ class BrandController extends z_controller
         $brand = $req->getModel("Brand")->getBrandById($brandId);
         $catalogs = $req->getModel("Catalog")->getCatalogsByBrand($brandId);
 
+        
+        $name = $req->getParameters(1, 1) ?: "all";
+        $price = $req->getParameters(2, 1) ?: 999999999;
+        $sortKey = $req->getParameters(3, 1) ?: "name";
+
+        $sortColumns = [
+            "name" => "catalog.name",
+            "price" => "highest_price",
+        ];
+
+        $sortDir = $sortColumns[$sortKey] ?? "catalog.name";
+
+        $orderBy = $req->getParameters(4, 1) ?: "ASC";
+        if (!in_array($orderBy, ["ASC", "DESC"], true)) {
+            $orderBy = "ASC";
+        }
+        $pageLimit = $req->getParameters(5, 1) ?: 6;
+        $pageNumber = $req->getParameters(6, 1) ?: 1;
+        $pageOffset = (int) $pageLimit * ($pageNumber - 1);
+
+        $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset);
+
+
+        $settings['name'] = $name;
+        $settings['price'] = $price;
+        $settings['limit'] = $pageLimit;
+        $settings['pageCurrent'] = $pageNumber;
+
+
+
         $catalogIds = array_column($catalogs, "id");
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
         $logActive = $req->getModel("LogActive")->getLogByidAndType($brandId, "brand");
@@ -92,6 +122,7 @@ class BrandController extends z_controller
             "catalogs" => $catalogs,
             "items" => $items,
             "logActive" => $logActive,
+            "settings" => $settings,
         ]);
     }
 
