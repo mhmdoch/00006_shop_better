@@ -36,4 +36,15 @@ class ItemModel extends z_model
 
         return $this->exec($sql)->resultToArray();
     }
+
+
+    public function getItemShoeById($itemId): array
+    {
+        $sql = "SELECT `item`.*, `brand`.`name` AS `brand_name`, `catalog`.`name` AS `catalog_name`, `catalog`.`id` AS `catalog_id`
+                FROM `item`
+                JOIN `catalog` ON `item`.`catalog_id` = `catalog`.`id`
+                JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id`
+                WHERE `item`.`id` = ?";
+        return $this->exec($sql, "i", $itemId)->resultToLine();
+    }
 }

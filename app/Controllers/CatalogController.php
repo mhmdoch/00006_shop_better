@@ -5,15 +5,6 @@ class CatalogController extends z_controller
 
     public function action_index(Request $req, Response $res)
     {
-        $catalogs = $req->getModel("Catalog")->getCatalogs();
-
-        return $res->render("catalog/index", [
-            "catalogs" => $catalogs,
-        ]);
-    }
-
-    public function action_paginate(Request $req, Response $res)
-    {
 
         $catalogsType = $req->getParameters(0, 1) ?: "all";
         $brandId = $req->getParameters(1, 1) ?: 0;
@@ -82,6 +73,8 @@ class CatalogController extends z_controller
 
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
+
+        App\Helper\Breadcrumbs::append("{$catalog['brand_name']} {$catalog['name']}", "/catalog/show/" . $catalogId);
 
         return $res->render("catalog/show", [
             "catalog" => $catalog,

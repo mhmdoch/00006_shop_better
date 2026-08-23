@@ -1,15 +1,8 @@
 @extends($layout)
 
 @section("content")
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-        <li class="breadcrumb-item"><a href="/catalog">Katalog</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= $opt["catalog"]["brand_name"] ?> <?= $opt["catalog"]["name"] ?></li>
-    </ol>
-</nav>
 
-<br>
+
 
 <div class="row">
     <main class="col-lg-8" id="brandIndexContainer">
@@ -45,7 +38,7 @@
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
                 <div class="d-flex justify-content-between mt-2">
                     <span> <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
-                            <a href="/item/itemShoe_create/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
+                            <a href="/item/itemShoeCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
                         <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
                             <a href="/item/itemLegoCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
                         <?php } ?></span>

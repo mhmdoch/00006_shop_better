@@ -3,7 +3,7 @@
 class ItemController extends z_controller
 {
 
-    public function action_itemshoe_create(Request $req, Response $res)
+    public function action_itemshoecreate(Request $req, Response $res)
     {
         $req->checkPermission("item.create");
 
@@ -29,17 +29,17 @@ class ItemController extends z_controller
             return $res->success();
         }
 
-        return $res->render("item/itemShoe_create", [
+        return $res->render("item/itemShoeCreate", [
             "catalog" => $catalog,
         ]);
     }
 
-    public function action_itemshoeedit(Request $req, Response $res)
+    public function action_itemShoeEdit(Request $req, Response $res)
     {
         $req->checkPermission("item.edit");
 
         $itemId = $req->getParameters(0, 1);
-        $item = $req->getModel("Item")->getItemById($itemId);
+        $item = $req->getModel("Item")->getItemShoeById($itemId);
         $catalog = $req->getModel("Catalog")->getCatalogById($item["catalog_id"]);
 
         if ($req->hasFormData()) {
@@ -62,6 +62,10 @@ class ItemController extends z_controller
 
             return $res->success();
         }
+
+        App\Helper\Breadcrumbs::append("{$item['brand_name']} {$item['catalog_name']}", "/catalog/show/" . $item['catalog_id']);
+        App\Helper\Breadcrumbs::append("Edit", "/catalog/show/" . $itemId);
+
 
         return $res->render("item/itemShoeEdit", [
             "item" => $item,

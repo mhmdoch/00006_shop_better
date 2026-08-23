@@ -1,16 +1,6 @@
 @extends($layout)
 
 @section("content")
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-            <li class="breadcrumb-item"><a href="/catalog">Katalog</a></li>
-            <li class="breadcrumb-item"><a href="/catalog/show/<?= e($opt["catalog"]["id"]) ?>"><?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?></a></li>
-            <li class="breadcrumb-item active" aria-current="page">Variante bearbeiten</li>
-        </ol>
-    </nav>
-
-
     <div id="edit_item_shoe"></div>
 
     <script>
@@ -47,14 +37,6 @@
                 value: <?= json_encode($opt["item"]["price"] ?? "") ?>,
                 required: true
             });
-            item_shoe_edit_form.createField({
-                name: "stock",
-                type: "number",
-                text: "Bestand",
-                value: <?= json_encode($opt["item"]["stock"] ?? "") ?>,
-                required: true
-            });
-
         });
     </script>
 @endsection

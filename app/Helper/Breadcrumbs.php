@@ -20,7 +20,7 @@ class Breadcrumbs
 
         $urlParts = array_slice(request()->getUrlParts(), 0, 3);
 
-        $urlParts = array_diff($urlParts, ["show"]);
+        $urlParts = array_diff($urlParts, ["show", "itemShoeEdit"]);
 
         $currentUrl = "/";
         foreach ($urlParts as $part) {

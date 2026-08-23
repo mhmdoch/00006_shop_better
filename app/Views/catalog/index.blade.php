@@ -25,7 +25,7 @@ $catalogCount = count($opt["catalogs"]);
             <div class="row pl-3">
                 <h5>Filter</h5>
                 <!-- 
-                    catalog/paginate/all/0/all/name/ASC/10/0 
+                    catalog/index/all/0/all/name/ASC/10/0 
                     ($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset)
                     -->
             </div>
@@ -123,24 +123,24 @@ $catalogCount = count($opt["catalogs"]);
 <nav aria-label="Page navigation example">
     <ul class="pagination  justify-content-center">
         <li class="page-item">
-            <a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/1' aria-label="Previous">
+            <a class="page-link" href='/catalog/index/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/1' aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Previous</span>
             </a>
         </li>
 
         <?php for ($i = $opt["pagination"]["pageCurrent"] - $opt["pagination"]["pageNeighboorsLeft"]; $i < $opt["pagination"]["pageCurrent"]; $i++): ?>
-            <li class="page-item"><a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
+            <li class="page-item"><a class="page-link" href='/catalog/index/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>'><?= $i ?></a></li>
         <?php endfor; ?>
 
-        <li class="page-item active"><span class="page-link" deactivated href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><strong><?= $opt["pagination"]["pageCurrent"] ?></strong></span></li>
+        <li class="page-item active"><span class="page-link" deactivated href='/catalog/index/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><strong><?= $opt["pagination"]["pageCurrent"] ?></strong></span></li>
 
         <?php for ($i = $opt["pagination"]["pageCurrent"] + 1; $i <= $opt["pagination"]["pageCurrent"] + $opt["pagination"]["pageNeighboorsRight"]; $i++): ?>
-            <li class="page-item"><a class="page-link" href="/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>"><?= $i ?></a></li>
+            <li class="page-item"><a class="page-link" href="/catalog/index/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $i ?>"><?= $i ?></a></li>
         <?php endfor; ?>
 
         <li class="page-item">
-            <a class="page-link" href='/catalog/paginate/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageLast"] ?>' aria-label="Next">
+            <a class="page-link" href='/catalog/index/<?= $opt["settings"]["type"] ?>/<?= $opt["settings"]["brandId"] ?>/<?= $opt["settings"]["name"] ?>/<?= $opt["settings"]["sortKey"] ?>/<?= $opt["settings"]["orderBy"] ?>/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageLast"] ?>' aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
             </a>
@@ -200,7 +200,7 @@ $catalogCount = count($opt["catalogs"]);
         ];
 
         var url =
-            '/catalog/paginate/' +
+            '/catalog/index/' +
             parameters.map(encodeURIComponent).join('/') +
             "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
         // How it works
