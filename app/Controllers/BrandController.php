@@ -88,7 +88,7 @@ class BrandController extends z_controller
 
         $sortColumns = [
             "name" => "catalog.name",
-            "price" => "highest_price",
+            "price" => "lowest_price",
         ];
 
         $sortDir = $sortColumns[$sortKey] ?? "catalog.name";
@@ -108,8 +108,6 @@ class BrandController extends z_controller
         $settings['price'] = $price;
         $settings['limit'] = $pageLimit;
         $settings['pageCurrent'] = $pageNumber;
-
-
 
         $catalogIds = array_column($catalogs, "id");
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);

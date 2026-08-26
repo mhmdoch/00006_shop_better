@@ -15,7 +15,7 @@
         </div>
         <div class="bg-box rounded p-4 mt-4">
             <a href="/brand/show/"></a>
-            <a href="/brand/edit/" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
+            <a href="/brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
         </div>
     </main>
 

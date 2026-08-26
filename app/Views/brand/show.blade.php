@@ -31,13 +31,13 @@ $catalogCount = count($opt["catalogs"]);
                                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" id="selectName" aria-describedby="selectName">
                     </div>
                 </div>
                                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Maximaler Preis</label>
-                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" id="selectPrice" aria-describedby="selectPrice">
                     </div>
                 </div>
 
@@ -47,8 +47,8 @@ $catalogCount = count($opt["catalogs"]);
                         <label for="exampleInputEmail1">Sortieren</label>
                         <select class="form-control" name="selectSort" id="selectSort">
                             <!-- <option selected value="all" data-direction="ASC">alle</option> -->
-                            <option value="type" data-direction="ASC">Preis (aufsteigend)</option>
-                            <option value="type" data-direction="DESC">Preis (absteigend)</option>
+                            <option value="price" data-direction="ASC">Preis (aufsteigend)</option>
+                            <option value="price" data-direction="DESC">Preis (absteigend)</option>
                             <option selected value="name" data-direction="ASC">Name aufsteigend</option>
                             <option value="name" data-direction="DESC">Name absteigend</option>
                         </select>
@@ -137,12 +137,15 @@ $catalogCount = count($opt["catalogs"]);
 
     function applyFilters() {
         var nameValue = $('#selectName').val();
-        var priceValue = $('#filterByPrice').val();
+        var priceValue = $('#selectPrice').val();
         var sortByTable = $('#selectSort').val();
         var sortOrderTable = $('#selectSort option:selected').data('direction');
 
         if (nameValue === '') {
             nameValue = 'all';
+        }
+        if (priceValue === '') {
+            priceValue = 999999999;
         }
 
         var parameters = [
@@ -153,7 +156,7 @@ $catalogCount = count($opt["catalogs"]);
         ];
 
         var url =
-            '/brand/show/<?= $opt["brand"]["id"] ?>' +
+            '/brand/show/<?= $opt["brand"]["id"] ?>/' +
             parameters.map(encodeURIComponent).join('/') +
             "/<?= $opt["settings"]["limit"] ?>/<?= $opt["settings"]["pageCurrent"] ?>";
 
@@ -162,7 +165,7 @@ $catalogCount = count($opt["catalogs"]);
     }
 
     $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
-    $('#selectName').on('input', applyFilters);
+    $('#selectName, #selectPrice').on('input', applyFilters);
 </script>
     
 @endsection

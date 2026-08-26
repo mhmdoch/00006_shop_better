@@ -11,6 +11,7 @@ $catalogCount = count($opt["catalogs"]);
 ?>
 
 
+<form id="catalogsFilterForm"></form>
 
 
 

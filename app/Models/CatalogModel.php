@@ -46,7 +46,7 @@ class CatalogModel extends z_model
                                     AND catalog.brand_id = ?
                                     AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%')) 
                                     GROUP BY catalog.id 
-                                    HAVING MAX(i.`price`) <= ?
+                                    HAVING MIN(i.`price`) <= ?
                                     ORDER BY {$sortDir} {$orderBy}
                                     LIMIT ? OFFSET ?";
         return $this->exec($sql, "issdii", $brandId, $name, $name, $price, $pageLimit, $pageOffset)->resultToArray();
