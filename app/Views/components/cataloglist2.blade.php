@@ -1,13 +1,9 @@
-@props([
-    "catalogs",
-    "opt",
-])
+@props(["opt"])
 
 
 <?php
 $cardsPerRow = 3;
 $cardsPerRowCurrent = 0;
-$catalogCount = count($opt["catalogs"]);
 ?>
 
 
@@ -55,5 +51,3 @@ $catalogCount = count($opt["catalogs"]);
 
 </div>
 <?php } ?>
-
-

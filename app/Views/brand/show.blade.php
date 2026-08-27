@@ -59,7 +59,7 @@ $catalogCount = count($opt["catalogs"]);
     </main>
 </div>
 
-    <x-cataloglist2 :catalogs="$opt['catalogs']" :opt="$opt"></x-cataloglist>
+    <x-cataloglist2 :opt="$opt" />
 
 
     </main>
