@@ -5,7 +5,10 @@ class ItemModel extends z_model
 
     public function getItemById($itemId): array
     {
-        $sql = "SELECT * FROM `item` WHERE `id` = ?";
+        $sql = "SELECT `item`.*, `catalog`.`itemable_type`
+                FROM `item`
+                JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                WHERE `item`.`id` = ?";
         return $this->exec($sql, "i", $itemId)->resultToLine();
     }
 

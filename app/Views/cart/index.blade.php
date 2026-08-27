@@ -19,7 +19,7 @@
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th>Schuh</th>
+                            <th>Artikel</th>
                             <th>Größe</th>
                             <th>Farbe</th>
                             <th class="text-right">Preis</th>
@@ -35,8 +35,13 @@
                                         <?= e($cartItem["brand_name"]) ?> <?= e($cartItem["catalog_name"]) ?>
                                     </a>
                                 </td>
-                                <td><?= e($cartItem["size"]) ?></td>
-                                <td><?= e($cartItem["color"]) ?></td>
+                                <?php if ($cartItem["itemable_type"] === "shoe"): ?>
+                                    <td><?= e($cartItem["size"]) ?></td>
+                                    <td><?= e($cartItem["color"]) ?></td>
+                                <?php else: ?>
+                                    <td>-</td>
+                                    <td>-</td>
+                                <?php endif; ?>
                                 <td class="text-right">
                                     <?= e(number_format((float) $cartItem["price"], 2, ",", ".")) ?> €
                                 </td>

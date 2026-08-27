@@ -32,12 +32,6 @@ class CartController extends z_controller
         }
 
         $itemId = (int) $req->getParameters(0, 1);
-        $item = $req->getModel("Item")->getItemById($itemId);
-
-        if (empty($item) || (int) $item["active"] !== 1 || (int) $item["stock"] < 1) {
-            return $res->rerouteUrl("cart");
-        }
-
         $req->getModel("Cart")->addItem($user->userId, $itemId);
 
         return $res->rerouteUrl("cart");

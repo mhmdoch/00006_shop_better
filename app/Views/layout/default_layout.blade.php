@@ -26,9 +26,7 @@
                         <a class="nav-link" href="/brand/">Marken</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $opt["root"] ?>cart">
-                            <span class="bi bi-cart3"></span> Warenkorb
-                        </a>
+                        <a class="nav-link" href="<?= $opt["root"] ?>cart">Warenkorb</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Pricing</a>

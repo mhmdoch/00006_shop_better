@@ -31,6 +31,7 @@ class CartModel extends z_model
                     `item`.`stock`,
                     `catalog`.`id` AS `catalog_id`,
                     `catalog`.`name` AS `catalog_name`,
+                    `catalog`.`itemable_type`,
                     `brand`.`name` AS `brand_name`
                 FROM `cart`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
