@@ -165,7 +165,13 @@ $catalogCount = count($opt["catalogs"]);
     }
 
     $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
-    $('#selectName, #selectPrice').on('input', applyFilters);
+
+
+    let timer;
+    $('#selectName, #selectPrice').on('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(applyFilters, 1000);
+    });
 </script>
     
 @endsection
