@@ -77,6 +77,8 @@ class CatalogController extends z_controller
         $sizes = [];
         $colors = [];
         $currentSize = "all";
+        $currentColor = "all";
+        $selectedItem = null;
 
         if ($catalog["itemable_type"] === "shoe") {
             $sizes = array_values(array_unique(array_column($items, "size")));
@@ -93,6 +95,21 @@ class CatalogController extends z_controller
 
             $colors = array_values(array_unique(array_column($itemsForColors, "color")));
             sort($colors, SORT_NATURAL);
+
+            $currentColor = (string) $req->getGet("color", "all");
+            if ($currentSize === "all" || !in_array($currentColor, $colors, true)) {
+                $currentColor = "all";
+            }
+
+            if ($currentColor !== "all") {
+                $selectedItems = array_values(array_filter($itemsForColors, function ($item) use ($currentColor) {
+                    return $item["color"] === $currentColor;
+                }));
+
+                if (count($selectedItems) === 1) {
+                    $selectedItem = $selectedItems[0];
+                }
+            }
         }
 
         App\Helper\Breadcrumbs::append("{$catalog['brand_name']} {$catalog['name']}", "/catalog/show/" . $catalogId);
@@ -103,6 +120,8 @@ class CatalogController extends z_controller
             "sizes" => $sizes,
             "colors" => $colors,
             "currentSize" => $currentSize,
+            "currentColor" => $currentColor,
+            "selectedItem" => $selectedItem,
         ]);
     }
 }
