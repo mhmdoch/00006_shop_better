@@ -13,6 +13,34 @@
         <div class="bg-box rounded p-4 mt-4">
             <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
         </div>
+
+        <?php if ($opt["catalog"]["itemable_type"] === "shoe"): ?>
+            <div class="bg-box rounded p-4 mt-4">
+                <p class="font-weight-bold mb-2">Größe wählen</p>
+                <div class="d-flex flex-wrap mb-3">
+                    <a href="<?= $opt["root"] ?>catalog/show/<?= e($opt["catalog"]["id"]) ?>"
+                       class="btn <?= $opt["currentSize"] === "all" ? "btn-secondary" : "btn-outline-secondary" ?> mr-2 mb-2">
+                        Alle
+                    </a>
+                    <?php foreach ($opt["sizes"] as $size): ?>
+                        <a href="<?= $opt["root"] ?>catalog/show/<?= e($opt["catalog"]["id"]) ?>?size=<?= rawurlencode($size) ?>"
+                           class="btn <?= $opt["currentSize"] === $size ? "btn-secondary" : "btn-outline-secondary" ?> mr-2 mb-2">
+                            <?= e($size) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+
+                <p class="font-weight-bold mb-2">Farbe wählen</p>
+                <div class="d-flex flex-wrap">
+                    <?php foreach ($opt["colors"] as $color): ?>
+                        <button type="button" class="btn btn-outline-secondary mr-2 mb-2">
+                            <?= e($color) ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="bg-box rounded p-4 mt-4">
             <a href="/brand/show/"></a>
             <a href="/brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>

@@ -74,11 +74,35 @@ class CatalogController extends z_controller
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
 
+        $sizes = [];
+        $colors = [];
+        $currentSize = "all";
+
+        if ($catalog["itemable_type"] === "shoe") {
+            $sizes = array_values(array_unique(array_column($items, "size")));
+            sort($sizes, SORT_NATURAL);
+
+            $currentSize = (string) $req->getGet("size", "all");
+            if ($currentSize !== "all" && !in_array($currentSize, $sizes, true)) {
+                $currentSize = "all";
+            }
+
+            $itemsForColors = array_filter($items, function ($item) use ($currentSize) {
+                return $currentSize === "all" || $item["size"] === $currentSize;
+            });
+
+            $colors = array_values(array_unique(array_column($itemsForColors, "color")));
+            sort($colors, SORT_NATURAL);
+        }
+
         App\Helper\Breadcrumbs::append("{$catalog['brand_name']} {$catalog['name']}", "/catalog/show/" . $catalogId);
 
         return $res->render("catalog/show", [
             "catalog" => $catalog,
             "items" => $items,
+            "sizes" => $sizes,
+            "colors" => $colors,
+            "currentSize" => $currentSize,
         ]);
     }
 }
