@@ -12,7 +12,7 @@ class CartController extends z_controller
             $cartItems = $req->getModel("Cart")->getItemsByUserId($user->userId);
 
             foreach ($cartItems as $cartItem) {
-                $total += (float) $cartItem["price"] * (int) $cartItem["quantity"];
+                $total += $cartItem["price"] * $cartItem["quantity"];
             }
         }
 
@@ -28,12 +28,32 @@ class CartController extends z_controller
         $user = user();
 
         if (!$user->isLoggedIn) {
-            return $res->rerouteUrl("login");
+            return $res->render("cart/index", [
+                "cartItems" => [],
+                "total" => 0,
+            ]);
         }
 
-        $itemId = (int) $req->getParameters(0, 1);
-        $req->getModel("Cart")->addItem($user->userId, $itemId);
+        $itemId = $req->getParameters(0, 1);
+        $cart = $req->getModel("Cart")->getCartByUserId($user->userId);
 
-        return $res->rerouteUrl("cart");
+        if (empty($cart)) {
+            $req->getModel("Cart")->createCart($user->userId);
+            $cart = $req->getModel("Cart")->getCartByUserId($user->userId);
+        }
+
+        $req->getModel("Cart")->addItem($cart["id"], $itemId);
+
+        $cartItems = $req->getModel("Cart")->getItemsByUserId($user->userId);
+        $total = 0;
+
+        foreach ($cartItems as $cartItem) {
+            $total += $cartItem["price"] * $cartItem["quantity"];
+        }
+
+        return $res->render("cart/index", [
+            "cartItems" => $cartItems,
+            "total" => $total,
+        ]);
     }
 }

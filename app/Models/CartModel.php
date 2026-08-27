@@ -2,21 +2,25 @@
 
 class CartModel extends z_model
 {
-    public function addItem($userId, $itemId): void
+    public function getCartByUserId($userId): array
     {
-        $sql = "INSERT IGNORE INTO `cart` (`user_id`) VALUES (?)";
-        $this->exec($sql, "i", $userId);
-
         $sql = "SELECT `id` FROM `cart` WHERE `user_id` = ?";
-        $cart = $this->exec($sql, "i", $userId)->resultToLine();
+        return $this->exec($sql, "i", $userId)->resultToLine();
+    }
 
-        if (empty($cart)) {
-            return;
-        }
+    public function createCart($userId): void
+    {
+        $sql = "INSERT INTO `cart` (`user_id`) VALUES (?)";
+        $this->exec($sql, "i", $userId);
+    }
 
+    public function addItem($cartId, $itemId): void
+    {
         $sql = "INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`)
-                VALUES (?, ?, 1)";
-        $this->exec($sql, "ii", $cart["id"], $itemId);
+                SELECT ?, `id`, 1
+                FROM `item`
+                WHERE `id` = ? AND `active` = 1";
+        $this->exec($sql, "ii", $cartId, $itemId);
     }
 
     public function getItemsByUserId($userId): array
@@ -39,6 +43,7 @@ class CartModel extends z_model
                 JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
                 JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
                 WHERE `cart`.`user_id` = ?
+                AND `item`.`active` = 1
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $userId)->resultToArray();

@@ -84,7 +84,7 @@ class CatalogController extends z_controller
             $sizes = array_values(array_unique(array_column($items, "size")));
             sort($sizes, SORT_NATURAL);
 
-            $currentSize = (string) $req->getGet("size", "all");
+            $currentSize = $req->getGet("size", "all");
             if ($currentSize !== "all" && !in_array($currentSize, $sizes, true)) {
                 $currentSize = "all";
             }
@@ -96,7 +96,7 @@ class CatalogController extends z_controller
             $colors = array_values(array_unique(array_column($itemsForColors, "color")));
             sort($colors, SORT_NATURAL);
 
-            $currentColor = (string) $req->getGet("color", "all");
+            $currentColor = $req->getGet("color", "all");
             if ($currentSize === "all" || !in_array($currentColor, $colors, true)) {
                 $currentColor = "all";
             }
