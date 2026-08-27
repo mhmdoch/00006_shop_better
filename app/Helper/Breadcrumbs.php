@@ -39,6 +39,7 @@ class Breadcrumbs
 
         $translations = [
             "brand" => "Marken",
+            "cart" => "Warenkorb",
             //"show" => "Details",
         ];
 

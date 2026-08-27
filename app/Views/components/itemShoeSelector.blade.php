@@ -49,5 +49,14 @@
                 <?php endif; ?>
             </span>
         </div>
+
+        <a
+            href="<?= (int) $opt["selectedItem"]["stock"] === 0 ? "#" : $opt["root"] . "cart/add/" . rawurlencode($opt["selectedItem"]["id"]) ?>"
+            class="btn cart-button btn-block mt-3 <?= (int) $opt["selectedItem"]["stock"] === 0 ? "disabled" : "" ?>"
+            data-item-id="<?= e($opt["selectedItem"]["id"]) ?>"
+            <?= (int) $opt["selectedItem"]["stock"] === 0 ? 'aria-disabled="true"' : "" ?>
+        >
+            <?= (int) $opt["selectedItem"]["stock"] === 0 ? "Nicht verfügbar" : "In den Warenkorb" ?>
+        </a>
     <?php endif; ?>
 </div>

@@ -64,6 +64,18 @@ a:hover {
 
 }
 
+.cart-button {
+    color: #212529;
+    background-color: rgb(0, 255, 200);
+    border-color: rgb(0, 255, 200);
+}
+
+.cart-button:hover {
+    color: #212529;
+    background-color: rgb(169, 255, 236);
+    border-color: rgb(169, 255, 236);
+}
+
 .brand-kicker {
     color: #6c757d;
     font-size: 0.75rem;

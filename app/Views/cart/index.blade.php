@@ -1,0 +1,62 @@
+@extends($layout)
+
+@section("content")
+    <div class="bg-box rounded p-4">
+        <h1 class="h3 mb-0">Warenkorb</h1>
+    </div>
+
+    <?php if (!$opt["user"]->isLoggedIn): ?>
+        <div class="alert alert-info mt-4">
+            Bitte melde dich an, um deinen Warenkorb anzusehen.
+        </div>
+    <?php elseif (empty($opt["cartItems"])): ?>
+        <div class="bg-box rounded p-4 mt-4">
+            Dein Warenkorb ist leer.
+        </div>
+    <?php else: ?>
+        <div class="bg-box rounded p-4 mt-4">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Schuh</th>
+                            <th>Größe</th>
+                            <th>Farbe</th>
+                            <th class="text-right">Preis</th>
+                            <th class="text-right">Menge</th>
+                            <th class="text-right">Summe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($opt["cartItems"] as $cartItem): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?= $opt["root"] ?>catalog/show/<?= e($cartItem["catalog_id"]) ?>">
+                                        <?= e($cartItem["brand_name"]) ?> <?= e($cartItem["catalog_name"]) ?>
+                                    </a>
+                                </td>
+                                <td><?= e($cartItem["size"]) ?></td>
+                                <td><?= e($cartItem["color"]) ?></td>
+                                <td class="text-right">
+                                    <?= e(number_format((float) $cartItem["price"], 2, ",", ".")) ?> €
+                                </td>
+                                <td class="text-right"><?= e($cartItem["quantity"]) ?></td>
+                                <td class="text-right">
+                                    <?= e(number_format((float) $cartItem["price"] * (int) $cartItem["quantity"], 2, ",", ".")) ?> €
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="5" class="text-right">Gesamt</th>
+                            <th class="text-right">
+                                <?= e(number_format((float) $opt["total"], 2, ",", ".")) ?> €
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    <?php endif; ?>
+@endsection
