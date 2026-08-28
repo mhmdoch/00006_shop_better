@@ -24,17 +24,6 @@ class CartController extends z_controller
         $cart = $req->getModel("Cart")->assertCartExists();
 
         $req->getModel("Cart")->addItem($cart["id"], $itemId);
-
-        $cartItems = $req->getModel("Cart")->getItems();
-        $total = 0;
-
-        foreach ($cartItems as $cartItem) {
-            $total += $cartItem["price"] * $cartItem["quantity"];
-        }
-
-        return $res->render("cart/index", [
-            "cartItems" => $cartItems,
-            "total" => $total,
-        ]);
+        return $res->rerouteUrl("cart");
     }
 }

@@ -80,7 +80,7 @@ class CartModel extends z_model
     public function getAmountItemsByCartId(int $cartId): ?int {
         $sql = "SELECT COUNT(*) AS `amount`
                 FROM `cart_item`
-                WHERE `cart_item`.`cart_id` = ? AND `item`.`active` = 1";
+                WHERE `cart_item`.`cart_id` = ?";
         return $this->exec($sql, "i", $cartId)->resultToLine()["amount"] ?? null;
     }
 
