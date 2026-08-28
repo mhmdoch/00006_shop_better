@@ -5,11 +5,7 @@
         <h1 class="h3 mb-0">Warenkorb</h1>
     </div>
 
-    <?php if (!$opt["user"]->isLoggedIn): ?>
-        <div class="alert alert-info mt-4">
-            Bitte melde dich an, um deinen Warenkorb anzusehen.
-        </div>
-    <?php elseif (empty($opt["cartItems"])): ?>
+    <?php if (empty($opt["cartItems"])): ?>
         <div class="bg-box rounded p-4 mt-4">
             Dein Warenkorb ist leer.
         </div>
