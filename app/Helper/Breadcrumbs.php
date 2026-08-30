@@ -41,10 +41,10 @@ class Breadcrumbs
             "brand" => "Marken",
             "cart" => "Warenkorb",
             "order" => "Bestellungen",
+            "own" => "Meine Bestellungen",
             //"show" => "Details",
         ];
 
         return $translations[$path] ?? ucfirst($path);
     }
 }
-

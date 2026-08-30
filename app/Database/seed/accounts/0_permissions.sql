@@ -13,10 +13,14 @@ INSERT INTO `z_role_permission` (`role`, `name`) VALUES
 -- Support
 (2, 'support'),
 (2, 'dashboard'),
+(2, 'order.create'),
+(2, 'order.own'),
 
 -- Customer
 (3, 'customer'),
 (3, 'dashboard'),
+(3, 'order.create'),
+(3, 'order.own'),
 
 -- Customer: Only after setup
 (4, 'customer.isSetup');

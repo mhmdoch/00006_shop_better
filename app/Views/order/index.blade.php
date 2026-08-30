@@ -2,7 +2,7 @@
 
 @section("content")
     <div class="bg-box rounded p-4">
-        <h1 class="h3 mb-0">Bestellungen</h1>
+        <h1 class="h3 mb-0"><?= e($opt["title"]) ?></h1>
     </div>
 
     <?php if (empty($opt["orders"])): ?>
@@ -16,7 +16,9 @@
                     <thead>
                         <tr>
                             <th>Bestellnummer</th>
-                            <th>Kunde</th>
+                            <?php if ($opt["showCustomer"]): ?>
+                                <th>Kunde</th>
+                            <?php endif; ?>
                             <th>Lieferadresse</th>
                             <th class="text-right">Artikel</th>
                             <th class="text-right">Gesamt</th>
@@ -32,7 +34,9 @@
                                         <?= e($order["order_number"]) ?>
                                     </a>
                                 </td>
-                                <td><?= e($order["email"] ?? "Gast") ?></td>
+                                <?php if ($opt["showCustomer"]): ?>
+                                    <td><?= e($order["email"] ?? "Gast") ?></td>
+                                <?php endif; ?>
                                 <td>
                                     <?= e($order["recipient"]) ?><br>
                                     <?= e($order["address_line_1"]) ?>

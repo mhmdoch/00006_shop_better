@@ -58,6 +58,12 @@
                     </tfoot>
                 </table>
             </div>
+
+            <div class="text-right mt-4">
+                <a href="<?= $opt["root"] ?>order/create" class="btn btn-primary">
+                    Zur Kasse
+                </a>
+            </div>
         </div>
     <?php endif; ?>
 @endsection

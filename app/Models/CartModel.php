@@ -55,16 +55,24 @@ class CartModel extends z_model
     }
 
     public function getCartByUserId(int $userId): ?array {
-        $sql = "SELECT *
+        $sql = "SELECT `cart`.*
                 FROM `cart`
-                WHERE `user_id` = ?
-                ORDER BY `id` DESC
+                LEFT JOIN `order` ON `order`.`cart_id` = `cart`.`id`
+                WHERE `cart`.`user_id` = ?
+                AND `order`.`id` IS NULL
+                ORDER BY `cart`.`id` DESC
                 LIMIT 1";
         return $this->exec($sql, "i", $userId)->resultToLine();
     }
 
     public function getCartByAnonId(string $anonId): ?array {
-        $sql = "SELECT * FROM `cart` WHERE `anon_id` = ?";
+        $sql = "SELECT `cart`.*
+                FROM `cart`
+                LEFT JOIN `order` ON `order`.`cart_id` = `cart`.`id`
+                WHERE `cart`.`anon_id` = ?
+                AND `order`.`id` IS NULL
+                ORDER BY `cart`.`id` DESC
+                LIMIT 1";
         return $this->exec($sql, "s", $anonId)->resultToLine();
     }
 

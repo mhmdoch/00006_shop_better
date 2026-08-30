@@ -28,9 +28,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= $opt["root"] ?>cart">Warenkorb</a>
                     </li>
+                    <?php if ($opt["user"]->checkPermission("order.own")): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $opt["root"] ?>order/own">Meine Bestellungen</a>
+                        </li>
+                    <?php endif; ?>
                     <?php if ($opt["user"]->checkPermission("order.index")): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $opt["root"] ?>order">Bestellungen</a>
+                            <a class="nav-link" href="<?= $opt["root"] ?>order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
