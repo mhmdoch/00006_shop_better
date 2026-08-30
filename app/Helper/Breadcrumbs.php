@@ -40,11 +40,11 @@ class Breadcrumbs
         $translations = [
             "brand" => "Marken",
             "cart" => "Warenkorb",
+            "order" => "Bestellungen",
             //"show" => "Details",
         ];
 
         return $translations[$path] ?? ucfirst($path);
     }
 }
-
 

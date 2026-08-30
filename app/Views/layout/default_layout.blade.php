@@ -28,6 +28,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= $opt["root"] ?>cart">Warenkorb</a>
                     </li>
+                    <?php if ($opt["user"]->checkPermission("order.index")): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $opt["root"] ?>order">Bestellungen</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Pricing</a>
                     </li>
