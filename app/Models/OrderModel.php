@@ -18,7 +18,7 @@ class OrderModel extends z_model
                     `status`
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
 
-        return $this->exec(
+        $orderId = $this->exec(
             $sql,
             "isssssss",
             $cartId,
@@ -30,6 +30,15 @@ class OrderModel extends z_model
             $addressForm->getValue("city"),
             $addressForm->getValue("country"),
         )->getInsertId();
+
+        $sql = "UPDATE `item`
+                JOIN `cart_item` ON `cart_item`.`item_id` = `item`.`id`
+                SET `item`.`stock` = `item`.`stock` - `cart_item`.`quantity`
+                WHERE `cart_item`.`cart_id` = ?";
+
+        $this->exec($sql, "i", $cartId);
+
+        return $orderId;
     }
 
     public function getOrders(): array
