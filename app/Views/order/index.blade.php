@@ -27,7 +27,11 @@
                     <tbody>
                         <?php foreach ($opt["orders"] as $order): ?>
                             <tr>
-                                <td><?= e($order["order_number"]) ?></td>
+                                <td>
+                                    <a href="<?= $opt["root"] ?>order/show/<?= e($order["id"]) ?>">
+                                        <?= e($order["order_number"]) ?>
+                                    </a>
+                                </td>
                                 <td><?= e($order["email"] ?? "Gast") ?></td>
                                 <td>
                                     <?= e($order["recipient"]) ?><br>

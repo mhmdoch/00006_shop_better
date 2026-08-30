@@ -7,7 +7,7 @@ CREATE TABLE `address` (
   `address_line_2` VARCHAR(255) DEFAULT NULL,
   `postal_code` VARCHAR(20) NOT NULL,
   `city` VARCHAR(100) NOT NULL,
-  `country_code` CHAR(2) NOT NULL DEFAULT 'DE',
+  `country` VARCHAR(100) NOT NULL,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 

@@ -1,22 +1,22 @@
 -- Saved addresses
-INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country_code`, `created`) VALUES
-(1, 'Zuhause', 'Alexander Admin', 'Musterstraße 12', NULL, '10115', 'Berlin', 'DE', '2026-01-10 09:00:00');
+INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `created`) VALUES
+(1, 'Zuhause', 'Alexander Admin', 'Musterstraße 12', NULL, '10115', 'Berlin', 'Deutschland', '2026-01-10 09:00:00');
 SET @admin_home_address_id = LAST_INSERT_ID();
 
-INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country_code`, `created`) VALUES
-(1, 'Büro', 'Alexander Admin', 'Handelsweg 8', '3. Etage', '20095', 'Hamburg', 'DE', '2026-05-18 10:30:00');
+INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `created`) VALUES
+(1, 'Büro', 'Alexander Admin', 'Handelsweg 8', '3. Etage', '20095', 'Hamburg', 'Deutschland', '2026-05-18 10:30:00');
 SET @admin_office_address_id = LAST_INSERT_ID();
 
-INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country_code`, `created`) VALUES
-(2, 'Zuhause', 'Sabine Support', 'Rosenweg 24', NULL, '50667', 'Köln', 'DE', '2026-02-02 12:00:00');
+INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `created`) VALUES
+(2, 'Zuhause', 'Sabine Support', 'Rosenweg 24', NULL, '50667', 'Köln', 'Deutschland', '2026-02-02 12:00:00');
 SET @support_home_address_id = LAST_INSERT_ID();
 
-INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country_code`, `created`) VALUES
-(3, 'Zuhause', 'Carla Customer', 'Gartenstraße 5', NULL, '01067', 'Dresden', 'DE', '2026-03-12 16:15:00');
+INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `created`) VALUES
+(3, 'Zuhause', 'Carla Customer', 'Gartenstraße 5', NULL, '01067', 'Dresden', 'Deutschland', '2026-03-12 16:15:00');
 SET @customer_home_address_id = LAST_INSERT_ID();
 
-INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country_code`, `created`) VALUES
-(3, 'Familie', 'Carla Customer', 'Seestraße 41', 'bei Familie Beispiel', '04109', 'Leipzig', 'DE', '2026-07-20 14:45:00');
+INSERT INTO `address` (`user_id`, `label`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `created`) VALUES
+(3, 'Familie', 'Carla Customer', 'Seestraße 41', 'bei Familie Beispiel', '04109', 'Leipzig', 'Deutschland', '2026-07-20 14:45:00');
 SET @customer_family_address_id = LAST_INSERT_ID();
 
 -- Admin: order 1
