@@ -68,12 +68,42 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Status</span>
-                    <span><?= $opt["order"]["status"] === "completed" ? "Erledigt" : e($opt["order"]["status"]) ?></span>
+                    <span><?= e($opt["order"]["status"]) ?></span>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Bestellt am</span>
                     <span><?= e(date("d.m.Y H:i", strtotime($opt["order"]["created"]))) ?></span>
                 </div>
+
+                <?php if ($opt["canEditStatus"]): ?>
+                    <hr>
+                    <div id="order_status_form"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            var order_status_form = Z.Forms.create({
+                                dom: "order_status_form",
+                                hidehints: true
+                            });
+
+                            order_status_form.createField({
+                                name: "status",
+                                type: "select",
+                                text: "Status ändern",
+                                value: <?= json_encode($opt["order"]["status"]) ?>,
+                                food: <?= $opt["statuses"] ?>.map((status) => ({
+                                    text: status
+                                })),
+                                required: true
+                            });
+
+                            order_status_form.buttonSubmit.innerHTML = "Status speichern";
+                            order_status_form.saveHook = () => {
+                                window.location.reload();
+                            };
+                        });
+                    </script>
+                <?php endif; ?>
             </div>
 
             <div class="bg-box rounded p-4 mt-4">

@@ -117,4 +117,13 @@ class OrderModel extends z_model
 
         return $this->exec($sql, "i", $orderId)->resultToArray();
     }
+
+    public function updateStatus(int $orderId, string $status): void
+    {
+        $sql = "UPDATE `order`
+                SET `status` = ?
+                WHERE `id` = ?";
+
+        $this->exec($sql, "si", $status, $orderId);
+    }
 }

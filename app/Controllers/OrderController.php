@@ -75,7 +75,34 @@ class OrderController extends z_controller
     public function action_show(Request $req, Response $res)
     {
         $orderId = $req->getParameters(0, 1);
-        $order = $req->getModel("Order")->getOrderById($orderId);
+        $orderModel = $req->getModel("Order");
+        $statuses = [
+            "pending",
+            "confirmed",
+            "paid",
+            "shipped",
+            "completed",
+            "cancelled",
+        ];
+
+        if ($req->hasFormData()) {
+            $req->checkPermission("order.index");
+
+            $statusForm = $req->validateForm([
+                (new FormField("status"))
+                    ->required()
+                    ->in($statuses),
+            ]);
+
+            if ($statusForm->hasErrors) {
+                return $res->formErrors($statusForm->errors);
+            }
+
+            $orderModel->updateStatus((int) $orderId, $statusForm->getValue("status"));
+            return $res->success();
+        }
+
+        $order = $orderModel->getOrderById($orderId);
 
         $user = $req->getRequestingUser();
         $isOwner = $user->isLoggedIn && $user->userId == $order["user_id"];
@@ -84,7 +111,7 @@ class OrderController extends z_controller
             $req->checkPermission("order.index");
         }
 
-        $orderItems = $req->getModel("Order")->getItemsByOrderId($orderId);
+        $orderItems = $orderModel->getItemsByOrderId($orderId);
 
         $total = 0;
         foreach ($orderItems as $orderItem) {
@@ -97,6 +124,8 @@ class OrderController extends z_controller
             "order" => $order,
             "orderItems" => $orderItems,
             "total" => $total,
+            "canEditStatus" => $req->checkPermission("order.index", true),
+            "statuses" => json_encode($statuses),
         ]);
     }
 }

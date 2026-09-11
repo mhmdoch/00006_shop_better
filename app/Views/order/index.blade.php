@@ -50,7 +50,7 @@
                                     <?= e(number_format((float) $order["total"], 2, ",", ".")) ?> €
                                 </td>
                                 <td>
-                                    <?= $order["status"] === "completed" ? "Erledigt" : e($order["status"]) ?>
+                                    <?= e($order["status"]) ?>
                                 </td>
                                 <td><?= e(date("d.m.Y H:i", strtotime($order["created"]))) ?></td>
                             </tr>
