@@ -6,6 +6,10 @@ body {
     background-color: rgba(153, 170, 180, 0.3);
 }
 
+.notification {
+    color: #dc3545;
+}
+
 .bg-box {
     background-color: rgba(153, 170, 180, 0.3);
 }

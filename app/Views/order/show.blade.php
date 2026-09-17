@@ -17,6 +17,7 @@
                                 <th>Farbe</th>
                                 <th class="text-right">Preis</th>
                                 <th class="text-right">Menge</th>
+                                <th class="text-right">USt.</th>
                                 <th class="text-right">Summe</th>
                             </tr>
                         </thead>
@@ -39,6 +40,8 @@
                                         <?= e(number_format((float) $orderItem["price"], 2, ",", ".")) ?> €
                                     </td>
                                     <td class="text-right"><?= e($orderItem["quantity"]) ?></td>
+                                                                        <td class="text-right"><?= bcmul($orderItem["taxrate"], 100, 0) ?> %</td>
+
                                     <td class="text-right">
                                         <?= e(number_format((float) $orderItem["price"] * (int) $orderItem["quantity"], 2, ",", ".")) ?> €
                                     </td>
@@ -47,12 +50,25 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="5" class="text-right">Gesamt</th>
-                                <th class="text-right">
-                                    <?= e(number_format((float) $opt["total"], 2, ",", ".")) ?> €
-                                </th>
+                                <th  colspan="6" class="text-right">Zwischensumme</th><th  class="text-right"><?= e($totalSum) ?> €</th></tr>
+                            <tr>
+                                <th colspan="7" class="text-right"></th>
                             </tr>
-                        </tfoot>
+                            <tr>
+                                <td colspan="4" class="text-right small">Steuersatz:</td>
+                                <td class="text-right small">Brutto:</td>
+                                <td class="text-right small">Netto:</td>
+                                <td class="text-right small">Steuer:</td>
+                            </tr>     
+                            <?php foreach ($opt["taxPot"] as $cartItem): ?>
+                                <tr>
+                                    <td colspan="4" class="text-right small"><?= $cartItem["taxrate"] * 100 ?> %</td>
+                                    <td class="text-right small"><?= $cartItem["gross"] ?> €</td>
+                                    <td class="text-right small"><?= $cartItem["net"] ?> €</td>
+                                    <td class="text-right small"><?= $cartItem["tax"] ?> €</td>
+                                </tr>
+                        <?php endforeach; ?>
+                    </tfoot>
                     </table>
                 </div>
             </div>

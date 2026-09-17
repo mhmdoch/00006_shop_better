@@ -40,6 +40,7 @@ CREATE TABLE `item` (
   `piece_count` INT UNSIGNED DEFAULT NULL,
   `release_date` DATE DEFAULT NULL,
   `price` DECIMAL(12,2) NOT NULL,
+  `taxrate` DECIMAL(5,2) NOT NULL DEFAULT 0.19,
   `stock` INT UNSIGNED NOT NULL DEFAULT 0,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
 

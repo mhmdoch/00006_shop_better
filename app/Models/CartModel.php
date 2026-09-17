@@ -104,6 +104,7 @@ class CartModel extends z_model
                     `item`.`color`,
                     `item`.`price`,
                     `item`.`stock`,
+                    `item`.`taxrate` AS `taxrate`,
                     `catalog`.`id` AS `catalog_id`,
                     `catalog`.`name` AS `catalog_name`,
                     `catalog`.`itemable_type`,
@@ -118,5 +119,44 @@ class CartModel extends z_model
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $cart["id"])->resultToArray();
+    }
+
+    public function deleteCartItemById(int $cartItemId): void
+    {
+        $sql = "DELETE FROM `cart_item` WHERE `id` = ?";
+        $this->exec($sql, "i", $cartItemId);
+    }
+
+    public function raiseCartItemById(int $cartItemId): void
+    {
+        $currentItem = $this->exec("SELECT `cart_item`.`quantity`, `item`.`stock` FROM `cart_item` JOIN `item` ON `item`.`id` = `cart_item`.`item_id` WHERE `cart_item`.`id` = ?", "i", $cartItemId)->resultToLine();
+
+        // currentItem["quantity"] auslesen
+        // gucken, ob  das item menge + 1 vorhanden ist, sonst return
+
+        if ($currentItem && ($currentItem["quantity"] + 1) > $currentItem["stock"]) {
+            // Handle the case where the quantity cannot be increased
+            
+            return;
+        }
+
+        $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `id` = ?";
+        $this->exec($sql, "i", $cartItemId);
+    }
+    public function reduceCartItemById(int $cartItemId): void
+    {
+        $currentItem = $this->exec("SELECT `quantity` FROM `cart_item` WHERE `id` = ?", "i", $cartItemId)->resultToLine();
+        if ($currentItem && $currentItem["quantity"] <= 1) 
+            {
+                $this->deleteCartItemById($cartItemId);
+            } else {
+                $sql = "UPDATE `cart_item` SET `quantity` = `quantity` - 1 WHERE `id` = ?";
+                $this->exec($sql, "i", $cartItemId);
+            }
+    }
+
+    public function getCartItemQuantityById(int $cartItemId): ?int {
+        $sql = "SELECT `quantity` FROM `cart_item` WHERE `id` = ?";
+        return $this->exec($sql, "i", $cartItemId)->resultToLine()["quantity"] ?? null;
     }
 }

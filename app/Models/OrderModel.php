@@ -2,8 +2,30 @@
 
 class OrderModel extends z_model
 {
-    public function createOrder($cartId, $addressForm): int
+     public function createOrder($cartId, $addressForm): int
     {
+
+        $cartItemList = [];
+
+        $cartItemListSQL = "SELECT `item_id`, `quantity` FROM `cart_item` WHERE `cart_id` = ?";
+
+        $cartItemListSQLResult = $this->exec($cartItemListSQL, "i", $cartId)->resultToArray();
+
+        foreach ($cartItemListSQLResult as $cartItem) {
+            $cartItemList[] = [
+                "item_id" => $cartItem["item_id"],
+                "quantity" => $cartItem["quantity"]
+            ];
+
+            $itemSQL = "SELECT `stock` FROM `item` WHERE `id` = ?";
+
+            $item = $this->exec($itemSQL, "i", $cartItem["item_id"])->resultToLine();
+
+            if ($item["stock"] < $cartItem["quantity"]) {
+                throw new Exception("Lagerbestand reicht nicht aus.");
+            }
+        }
+
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
 
         $sql = "INSERT INTO `order` (
@@ -40,6 +62,7 @@ class OrderModel extends z_model
 
         return $orderId;
     }
+
 
     public function getOrders(): array
     {
@@ -103,6 +126,7 @@ class OrderModel extends z_model
                     `item`.`size`,
                     `item`.`color`,
                     `item`.`price`,
+                    `item`.`taxrate` AS `taxrate`,
                     `catalog`.`id` AS `catalog_id`,
                     `catalog`.`name` AS `catalog_name`,
                     `catalog`.`itemable_type`,

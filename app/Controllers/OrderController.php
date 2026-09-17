@@ -31,8 +31,46 @@ class OrderController extends z_controller
 
             return $res->success([
                 "orderId" => $orderId,
+
             ]);
         }
+
+
+        $orderItems = $cartItems;
+
+        $grossPot = [];
+        $totalSum = 0;
+
+        foreach ($orderItems as $orderItem) {
+            $taxrate = $orderItem["taxrate"];
+            $grossPrice = $orderItem["price"];
+            $quantity = $orderItem["quantity"];
+
+            $orderItemFullPrice = bcmul($grossPrice, $quantity, 2);
+            $totalSum = bcadd($totalSum, $orderItemFullPrice, 2);
+
+
+            if (!isset($grossPot[$taxrate])) {
+                $grossPot[$taxrate] = '0.00';
+            }
+
+            $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $orderItemFullPrice, 2);
+        }
+
+        $taxPot = [];
+        foreach ($grossPot as $taxrate => $grossAmount) {
+            $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
+            $taxAmount = bcsub($grossAmount, $netAmount, 2);
+            $taxPot[$taxrate] = [
+                'gross' => $grossAmount,
+                'net' => $netAmount,
+                'tax' => $taxAmount,
+                'taxrate' => $taxrate,
+                ];}
+
+
+      
+
 
         $total = 0;
         foreach ($cartItems as $cartItem) {
@@ -41,7 +79,10 @@ class OrderController extends z_controller
 
         return $res->render("order/create", [
             "cartItems" => $cartItems,
+            "orderItems" => $orderItems,
             "total" => $total,
+            "totalSum" => $totalSum,
+            "taxPot" => $taxPot
         ]);
     }
 
@@ -113,9 +154,47 @@ class OrderController extends z_controller
 
         $orderItems = $orderModel->getItemsByOrderId($orderId);
 
+        $grossPot = [];
+        $totalSum = 0;
+
+        foreach ($orderItems as $orderItem) {
+            $taxrate = $orderItem["taxrate"];
+            $grossPrice = $orderItem["price"];
+            $quantity = $orderItem["quantity"];
+
+            $orderItemFullPrice = bcmul($grossPrice, $quantity, 2);
+            $totalSum = bcadd($totalSum, $orderItemFullPrice, 2);
+
+
+            if (!isset($grossPot[$taxrate])) {
+                $grossPot[$taxrate] = '0.00';
+            }
+
+            $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $orderItemFullPrice, 2);
+        }
+
+        $taxPot = [];
+        foreach ($grossPot as $taxrate => $grossAmount) {
+            $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
+            $taxAmount = bcsub($grossAmount, $netAmount, 2);
+            $taxPot[$taxrate] = [
+                'gross' => $grossAmount,
+                'net' => $netAmount,
+                'tax' => $taxAmount,
+                'taxrate' => $taxrate,
+                ];}
+
+
+      
+
+
         $total = 0;
         foreach ($orderItems as $orderItem) {
             $total += $orderItem["price"] * $orderItem["quantity"];
+        }
+
+        if ($order["user_id"] === $user->userId) {
+            App\Helper\Breadcrumbs::append("Meine Bestellungen", "/order/own/");
         }
 
         App\Helper\Breadcrumbs::append($order["order_number"], "/order/show/" . $orderId);
@@ -126,6 +205,8 @@ class OrderController extends z_controller
             "total" => $total,
             "canEditStatus" => $req->checkPermission("order.index", true),
             "statuses" => json_encode($statuses),
+            "taxPot" => $taxPot,
+            "totalSum" => $totalSum,
         ]);
     }
 }
