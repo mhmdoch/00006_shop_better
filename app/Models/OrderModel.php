@@ -7,9 +7,39 @@ class OrderModel extends z_model
         // Get the current stock
         // shoes 4, apples, 10
 
+        $cartItemList = [];
+
+        $sql = "SELECT `ci`.`item_id` AS `item_id`, 
+                       `ci`.`quantity` AS `quantity`, 
+                       `i`.`stock` AS `stock`
+                FROM `cart_item` AS `ci` 
+                JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
+                WHERE `ci`.`cart_id` = ?";
+
+        $cartItems = $this->exec($sql, "i", $cartId)->resultToArray();
+
+        foreach ($cartItems as $cartItem) {
+            if ($cartItem["stock"] < $cartItem["quantity"]) {
+                throw new Exception("Lagerbestand reicht nicht aus.");
+            }
+
+            $cartItemList[$cartItem["item_id"]] = [
+                "quantity" => $cartItem["quantity"],
+                "stock"    => $cartItem["stock"]
+            ];
+        }
+
         // Reduce stock with one update query and a where
         // shoes = shoes - 3 WHERE shoes = 4
         // apples = apples - 5 WHERE apples = 10
+
+        foreach ($cartItemList as $itemId => $cartItem) {
+            $sql = "UPDATE `item`
+                    SET `stock` = `stock` - ?
+                    WHERE `id` = ? AND `stock` >= ?";
+
+            $this->exec($sql, "iii", $cartItem["quantity"], $itemId, $cartItem["quantity"]);
+        }
 
         // Check if actually all stocks were reduced
         // select shoes, apples
@@ -18,68 +48,34 @@ class OrderModel extends z_model
 
         // Do a normal order flow with simple code and foreach, no transaction
 
-        $sql = "START TRANSACTION; 
-                SELECT COUNT(*) AS `total_items` 
-                FROM `cart_item` 
-                WHERE `cart_id` = ?;
+        $orderItemList = [];
 
-                SELECT `ci`.`item_id` AS `item_id`, 
-                        `ci`.`quantity` AS `quantity`, 
-                        `i`.`stock` AS `stock`
+        $sql = "SELECT `ci`.`item_id` AS `item_id`, 
+                       `ci`.`quantity` AS `quantity`, 
+                       `i`.`stock` AS `stock`
                 FROM `cart_item` AS `ci` 
                 JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
-                WHERE `ci`.`cart_id` = ?
-                FOR UPDATE;
+                WHERE `ci`.`cart_id` = ?";
 
-                UPDATE `item` AS `i`
-                JOIN `cart_item` AS `ci` ON `i`.`id` = `ci`.`item_id`
-                SET `i`.`stock` = `i`.`stock` - `ci`.`quantity`
-                WHERE `ci`.`cart_id` = ? 
-                    AND NOT EXISTS (
-                    SELECT 1
-                    FROM `cart_item` AS `ci2`
-                    JOIN `item` AS `i2` ON `i2`.`id` = `ci2`.`item_id`
-                    WHERE `ci2`.`card_id` = ?
-                    AND `i2`.`stock` < `ci2`.`quantity`
-                );
-                COMMIT;";
+        $orderItems = $this->exec($sql, "i", $cartId)->resultToArray();
 
-        $itemsInCart = $this->exec($sql, "i", $cartId)->resultToArray();
+        // getting a new list of the items with changed stock
 
-        //dann gucken, wieviele zeilen verändert wurden und das mit total_items vergleichen
-
-
-
-
-        $cartItemList = [];
-
-        // ich hole mir die Cart Items
-        $cartItemListSQL = "SELECT `item_id`, `quantity` FROM `cart_item` WHERE `cart_id` = ?";
-        $cartItemListSQLResult = $this->exec($cartItemListSQL, "i", $cartId)->resultToArray();
-        
-
-    
-
-        // ich gehe die Cart Items der Reihe nach durch und prüfe, ob der Lagerbestand ausreicht
-        foreach ($cartItemListSQLResult as $cartItem) {
-            $cartItemList[] = [
-                "item_id" => $cartItem["item_id"],
-                "quantity" => $cartItem["quantity"]
+        foreach ($orderItems as $orderItem) {
+            $orderItemList[$orderItem["item_id"]] = [
+                "quantity" => $orderItem["quantity"],
+                "stock"    => $orderItem["stock"]
             ];
+        }
 
-            // hier hole ich mir den Lagerbestand des jeweiligen Items
-            $itemSQL = "SELECT `stock` FROM `item` WHERE `id` = ?";
-            $item = $this->exec($itemSQL, "i", $cartItem["item_id"])->resultToLine();
-
-            // wenn der Lagerbestand kleiner ist als die Menge im Warenkorb, werfe ich eine Exception
-            if ($item["stock"] < $cartItem["quantity"]) {
-                throw new Exception("Lagerbestand reicht nicht aus.");
-            }
+        foreach ($orderItemList as $itemId => $orderItem) {
+                if ($orderItem['stock'] != $cartItemList[$itemId]['stock'] - $orderItem['quantity']) {
+                    throw new Exception("Lagerbestand reicht nicht aus.");
+                }
         }
 
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
 
-        // da der Lagerbestand ausreicht, kann ich die Bestellung erstellen und den Lagerbestand reduzieren
         $sql = "INSERT INTO `order` (
                     `cart_id`,
                     `order_number`,
@@ -104,17 +100,8 @@ class OrderModel extends z_model
             $addressForm->getValue("country"),
         )->getInsertId();
 
-        // hier reduziere ich den Lagerbestand der Items, die in der Bestellung enthalten sind
-        $sql = "UPDATE `item`
-                JOIN `cart_item` ON `cart_item`.`item_id` = `item`.`id`
-                SET `item`.`stock` = `item`.`stock` - `cart_item`.`quantity`
-                WHERE `cart_item`.`cart_id` = ?";
-                    // AND item.stock >= cart_item.quantity
-                    // mit foreach drum rum
-
-        $this->exec($sql, "i", $cartId);
-
         return $orderId;
+
     }
 
 
