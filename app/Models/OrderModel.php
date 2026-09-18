@@ -5,22 +5,60 @@ class OrderModel extends z_model
      public function createOrder($cartId, $addressForm): int
     {
 
+        $sql = "START TRANSACTION; 
+                SELECT COUNT(*) AS `total_items` 
+                FROM `cart_item` 
+                WHERE `cart_id` = ?;
+
+                SELECT `ci`.`item_id` AS `item_id`, 
+                        `ci`.`quantity` AS `quantity`, 
+                        `i`.`stock` AS `stock`
+                FROM `cart_item` AS `ci` 
+                JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
+                WHERE `ci`.`cart_id` = ?
+                FOR UPDATE;
+
+                UPDATE `item` AS `i`
+                JOIN `cart_item` AS `ci` ON `i`.`id` = `ci`.`item_id`
+                SET `i`.`stock` = `i`.`stock` - `ci`.`quantity`
+                WHERE `ci`.`cart_id` = ? 
+                    AND NOT EXISTS (
+                    SELECT 1
+                    FROM `cart_item` AS `ci2`
+                    JOIN `item` AS `i2` ON `i2`.`id` = `ci2`.`item_id`
+                    WHERE `ci2`.`card_id` = ?
+                    AND `i2`.`stock` < `ci2`.`quantity`
+                );
+                COMMIT;";
+
+        $itemsInCart = $this->exec($sql, "i", $cartId)->resultToArray();
+
+        //dann gucken, wieviele zeilen verändert wurden und das mit total_items vergleichen
+
+
+
+
         $cartItemList = [];
 
+        // ich hole mir die Cart Items
         $cartItemListSQL = "SELECT `item_id`, `quantity` FROM `cart_item` WHERE `cart_id` = ?";
-
         $cartItemListSQLResult = $this->exec($cartItemListSQL, "i", $cartId)->resultToArray();
+        
 
+    
+
+        // ich gehe die Cart Items der Reihe nach durch und prüfe, ob der Lagerbestand ausreicht
         foreach ($cartItemListSQLResult as $cartItem) {
             $cartItemList[] = [
                 "item_id" => $cartItem["item_id"],
                 "quantity" => $cartItem["quantity"]
             ];
 
+            // hier hole ich mir den Lagerbestand des jeweiligen Items
             $itemSQL = "SELECT `stock` FROM `item` WHERE `id` = ?";
-
             $item = $this->exec($itemSQL, "i", $cartItem["item_id"])->resultToLine();
 
+            // wenn der Lagerbestand kleiner ist als die Menge im Warenkorb, werfe ich eine Exception
             if ($item["stock"] < $cartItem["quantity"]) {
                 throw new Exception("Lagerbestand reicht nicht aus.");
             }
@@ -28,6 +66,7 @@ class OrderModel extends z_model
 
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
 
+        // da der Lagerbestand ausreicht, kann ich die Bestellung erstellen und den Lagerbestand reduzieren
         $sql = "INSERT INTO `order` (
                     `cart_id`,
                     `order_number`,
@@ -39,7 +78,6 @@ class OrderModel extends z_model
                     `country`,
                     `status`
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
-
         $orderId = $this->exec(
             $sql,
             "isssssss",
@@ -53,10 +91,13 @@ class OrderModel extends z_model
             $addressForm->getValue("country"),
         )->getInsertId();
 
+        // hier reduziere ich den Lagerbestand der Items, die in der Bestellung enthalten sind
         $sql = "UPDATE `item`
                 JOIN `cart_item` ON `cart_item`.`item_id` = `item`.`id`
                 SET `item`.`stock` = `item`.`stock` - `cart_item`.`quantity`
                 WHERE `cart_item`.`cart_id` = ?";
+                    // AND item.stock >= cart_item.quantity
+                    // mit foreach drum rum
 
         $this->exec($sql, "i", $cartId);
 

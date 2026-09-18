@@ -31,10 +31,24 @@
                 required: true
             });
             item_shoe_edit_form.createField({
+                name: "taxrate",
+                type: "number",
+                text: "Steuersatz",
+                value: <?= json_encode($opt["item"]["taxrate"] ?? "") ?>,
+                required: true
+            });
+            item_shoe_edit_form.createField({
                 name: "price",
                 type: "number",
                 text: "Preis",
                 value: <?= json_encode($opt["item"]["price"] ?? "") ?>,
+                required: true
+            });
+            item_shoe_edit_form.createField({
+                name: "stock",
+                type: "number",
+                text: "Bestand",
+                value: <?= json_encode($opt["item"]["stock"] ?? "") ?>,
                 required: true
             });
         });

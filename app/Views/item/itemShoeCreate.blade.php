@@ -38,6 +38,12 @@
                 required: true
             });
             item_shoe_create_form.createField({
+                name: "taxrate",
+                type: "number",
+                text: "Steuersatz",
+                required: true
+            });
+            item_shoe_create_form.createField({
                 name: "price",
                 type: "number",
                 text: "Preis",

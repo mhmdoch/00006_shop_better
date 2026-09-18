@@ -15,6 +15,7 @@ class ItemController extends z_controller
                 (new FormField("sku"))->required(),
                 (new FormField("size"))->required(),
                 (new FormField("color"))->required(),
+                (new FormField("taxrate"))->required(),
                 (new FormField("price"))->required(),
                 (new FormField("stock"))->required()
             ]);
@@ -47,6 +48,7 @@ class ItemController extends z_controller
                 (new FormField("sku"))->required(),
                 (new FormField("size"))->required(),
                 (new FormField("color"))->required(),
+                (new FormField("taxrate"))->required(),
                 (new FormField("price"))->required(),
                 (new FormField("stock"))->required()
             ]);
