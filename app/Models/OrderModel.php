@@ -2,8 +2,21 @@
 
 class OrderModel extends z_model
 {
-     public function createOrder($cartId, $addressForm): int
+    public function createOrder($cartId, $addressForm): int
     {
+        // Get the current stock
+        // shoes 4, apples, 10
+
+        // Reduce stock with one update query and a where
+        // shoes = shoes - 3 WHERE shoes = 4
+        // apples = apples - 5 WHERE apples = 10
+
+        // Check if actually all stocks were reduced
+        // select shoes, apples
+        // shoes = 1, apples = 5
+        // if not, throw exception
+
+        // Do a normal order flow with simple code and foreach, no transaction
 
         $sql = "START TRANSACTION; 
                 SELECT COUNT(*) AS `total_items` 
