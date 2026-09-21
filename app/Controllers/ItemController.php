@@ -24,7 +24,7 @@ class ItemController extends z_controller
                 return $res->formErrors($formResult->errors);
             }
 
-            $itemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $catalogId]);
+             $itemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $catalogId]);
             $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "aktiviert"]);
 
             return $res->success();
@@ -55,6 +55,35 @@ class ItemController extends z_controller
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
+            }
+
+            $itemChanges = [];
+
+            foreach (["sku", "size", "color", "taxrate", "price"] as $field) {
+                $newValue = $formResult->getValue($field);
+                $oldValue = $item[$field];
+
+                if ($newValue != $oldValue) {
+                    $itemChanges[$field] = [
+                        "old" => $oldValue,
+                        "new" => $newValue
+                    ];
+                }
+            }
+
+            $newStock = $formResult->getValue("stock");
+            $oldStock = $item["stock"];
+
+            if (empty($itemChanges) && $newStock != $oldStock) {
+                $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
+
+                if ($newStock > $oldStock) {
+                    $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "stock erhöht"]);
+                } else {
+                    $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "stock reduziert"]);
+                }
+
+                return $res->success();
             }
 
             $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]]);

@@ -59,8 +59,11 @@ $catalogCount = count($opt["catalogs"]);
     </main>
 </div>
 
-    <x-cataloglist2 :opt="$opt" />
+<form id="catalogsFilterForm"></form>
 
+<div id="catalogsContainer">
+    <x-cataloglistitem :catalogs="$opt['catalogs']" :brand="$opt['brand']" :settings="$opt['settings']" :opt="$opt"/>
+</div>
 
     </main>
 

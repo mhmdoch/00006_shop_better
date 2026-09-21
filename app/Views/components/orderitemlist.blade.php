@@ -1,8 +1,4 @@
   @props(["orderedItems", "totalSum", "taxPot", "root", "cartIndex"])
-
-    @if($cartIndex)
-        aggaa
-    @endif
   
   <div class="bg-box rounded p-4 mt-4">
                 <div class="table-responsive">

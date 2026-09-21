@@ -11,7 +11,7 @@
         </div>
         <?php foreach ($opt["brands"] as $brand) { ?>
             <div class="bg-box rounded p-4 mt-4">
-                <a href="/brand/show/<?= e($brand["id"]) ?>"><?= $brand["name"] ?></a>
+                <a href="/brand/show/<?= e($brand["id"]) ?>"><?= e($brand["name"]) ?></a>
                 <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
                     <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
                 <?php endif; ?>

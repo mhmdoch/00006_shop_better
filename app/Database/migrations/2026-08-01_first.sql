@@ -56,6 +56,6 @@ CREATE TABLE `log_active` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `active_type` ENUM('catalog', 'item', 'brand') NOT NULL,
   `active_id` INT NOT NULL,
-  `action` ENUM('aktiviert', 'deaktiviert', 'gelöscht') NOT NULL,
+  `action` ENUM('aktiviert', 'deaktiviert', 'gelöscht', 'stock erhöht', 'stock reduziert') NOT NULL,
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );

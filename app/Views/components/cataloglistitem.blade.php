@@ -1,10 +1,17 @@
-@props([
-    "catalog",
-    "opt",
-])
+  @props(["catalogs", "brands", "settings", "pagination"])
+
+<?php
+$cardsPerRow = 3;
+$cardsPerRowCurrent = 0;
+$catalogCount = count($catalogs);
+?>
 
 
+      <?php foreach ($catalogs as $catalog) { ?>
 
+        <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
+            <div class="card-deck">
+            <?php } ?>
 
             <a href="/catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
                 <img src="<?php $opt["generateResourceLink"]("assets/img/{$catalog["itemable_type"]}.png"); ?>" class="card-img-top">
@@ -22,3 +29,20 @@
                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
             </a>
+            <?php $cardsPerRowCurrent++; ?>
+
+            <?php if ($cardsPerRowCurrent % $cardsPerRow === 0) { ?>
+            </div>
+        <?php } ?>
+    <?php } ?>
+
+
+    <?php if ($cardsPerRowCurrent % $cardsPerRow !== 0) { ?>
+        <?php $cardsPerRowMissing = $cardsPerRow - ($cardsPerRowCurrent % $cardsPerRow); ?>
+
+        <?php for ($i = 0; $i < $cardsPerRowMissing; $i++) { ?>
+            <div class="card mb-4 invisible" aria-hidden="true"></div>
+        <?php } ?>
+
+</div>
+<?php } ?>
