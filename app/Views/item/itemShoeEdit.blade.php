@@ -1,7 +1,44 @@
 @extends($layout)
 
 @section("content")
-    <div id="edit_item_shoe"></div>
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="bg-box rounded p-4 mb-4">
+                <p class="brand-kicker mb-1">Schuhvariante</p>
+                <h1 class="h2 mb-2"><?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?></h1>
+                <p class="text-muted mb-0">Produkt ID: <?= e($opt["catalog"]["id"]) ?> | Varianten ID: <?= e($opt["item"]["id"]) ?> </p>
+            </div>
+
+            <div class="bg-box rounded p-4 mb-4">
+                <h5>Variantendaten:</h5>
+                <hr>
+                <div id="edit_item_shoe"></div>
+            </div>
+        </main>
+
+        <aside class="col-lg-4">
+            <div class="bg-box rounded p-4 mb-4">
+                <h5>Produkt</h5>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span>Marke</span>
+                    <span><?= e($opt["catalog"]["brand_name"]) ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Modell</span>
+                    <span><?= e($opt["catalog"]["name"]) ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Produkt ID:</span>
+                    <span><?= e($opt["catalog"]["id"]) ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Varianten ID:</span>
+                    <span><?= e($opt["item"]["id"]) ?></span>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -33,7 +70,7 @@
             item_shoe_edit_form.createField({
                 name: "taxrate",
                 type: "number",
-                text: "Steuersatz",
+                text: "Steuersatz (%)",
                 value: <?= json_encode($opt["item"]["taxrate"] ?? "") ?>,
                 required: true
             });
@@ -51,6 +88,7 @@
                 value: <?= json_encode($opt["item"]["stock"] ?? "") ?>,
                 required: true
             });
+            item_shoe_edit_form.buttonSubmit.textContent = "Speichern";
         });
     </script>
 @endsection

@@ -1,16 +1,6 @@
 @extends($layout)
 
 @section("content")
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-            <li class="breadcrumb-item"><a href="/brand">Marken</a></li>
-
-            <li class="breadcrumb-item active" aria-current="page">Hinzufügen</li>
-        </ol>
-    </nav>
-
-
     <div id="create_brand"></div>
 
     <script>

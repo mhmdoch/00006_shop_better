@@ -11,7 +11,7 @@
         </div>
         <?php foreach ($opt["brands"] as $brand) { ?>
             <div class="bg-box rounded p-4 mt-4">
-                <a href="/brand/show/<?= e($brand["id"]) ?>"><?= e($brand["name"]) ?></a>
+                <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>"><?= e($brand["name"]) ?></a>
                 <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
                     <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
                 <?php endif; ?>
@@ -33,19 +33,19 @@
             <div class="bg-box rounded p-4 mb-4">
                 <h5>Verwaltung</h5>
                 <hr>
-                <div> - <a href="/brand/">Index</a></div>
-                <div> - <a href="/brand/inactive">Inaktive</a></div>
+                <div> - <a href="<?php echo $opt["root"]; ?>brand/">Index</a></div>
+                <div> - <a href="<?php echo $opt["root"]; ?>brand/inactive">Inaktive</a></div>
                 <div class="mt-2"> - <a href="/brand/create">Hinzufügen</a></div>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
 
         <div class="bg-box rounded p-4">
             <h5>Von A-Z</h5>
             <hr>
-            <div>- <a href="/brand">Alle</a></div>
+            <div>- <a href="<?php echo $opt["root"]; ?>brand">Alle</a></div>
             <?php foreach ($opt["brandsAZ"] as $brand) { ?>
                 <div>
-                    - <a href="/brand/az/<?= rawurlencode($brand["firstLetter"]) ?>">
+                    - <a href="<?php echo $opt["root"]; ?>brand/az/<?= rawurlencode($brand["firstLetter"]) ?>">
                         <?= e($brand["firstLetter"]) ?> (<?= e($brand["amount"]) ?>)
                     </a>
                 </div>
@@ -57,8 +57,6 @@
 <script>
     $(document).ready(function() {
         $("#brandIndexContainer").on("click", ".delete-brand", function() {
-            // der Link wird hier eh nicht ausgeführt, aber damit verhindere ich hier an der Stelle
-            // dass der Cursor wieder zum Seitenanfang geht
             event.preventDefault();
 
             if (!confirm("ACHTUNG: Marke wirklich löschen? Dies hat Auswirkungen auf zugehörige Produkte und deren Varianten.")) {

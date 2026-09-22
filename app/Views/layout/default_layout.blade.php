@@ -13,24 +13,24 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container navbar-container">
 
-            <a class="navbar-brand" href="#">dAShop</a>
+            <a class="navbar-brand" href="<?php echo $opt["root"]; ?>">dAShop</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/catalog/index/all/0/all/name/ASC/15/0">Katalog <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="<?php echo $opt["root"]; ?>catalog/index/all/0/all/name/ASC/15/0">Katalog <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/brand/">Marken</a>
+                        <a class="nav-link" href="<?php echo $opt["root"]; ?>brand/">Marken</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= $opt["root"] ?>cart">Warenkorb</a>
+                        <a class="nav-link" href="<?php echo $opt["root"]; ?>cart">Warenkorb</a>
                     </li>
                     <?php if ($opt["user"]->checkPermission("order.own")): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $opt["root"] ?>order/own">Meine Bestellungen</a>
+                            <a class="nav-link" href="<?php echo $opt["root"]; ?>order/own">Meine Bestellungen</a>
                         </li>
                     <?php endif; ?>
                     <?php if ($opt["user"]->checkPermission("order.index")): ?>
@@ -39,16 +39,16 @@
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link" href="<?php echo $opt["root"]; ?>">Pricing</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="<?php echo $opt["root"]; ?>" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Dropdown link
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Action</a>
+                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Another action</a>
+                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Something else here</a>
                         </div>
                     </li>
                 </ul>

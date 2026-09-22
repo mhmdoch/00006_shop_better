@@ -1,16 +1,6 @@
 @extends($layout)
 
 @section("content")
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">dAShop</a></li>
-            <li class="breadcrumb-item"><a href="/catalog">Katalog</a></li>
-            <li class="breadcrumb-item"><a href="/catalog/show/<?= e($opt["catalog"]["id"]) ?>"><?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?></a></li>
-            <li class="breadcrumb-item active" aria-current="page">LEGO-Set hinzufügen</li>
-        </ol>
-    </nav>
-
-
     <div id="create_item_lego"></div>
 
     <script>

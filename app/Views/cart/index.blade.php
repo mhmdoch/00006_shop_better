@@ -14,15 +14,13 @@
     <?php else: ?>
         
 
-            <x-orderitemlist :orderedItems="$opt['cartItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :cartIndex="true"/>
+    <x-orderitemlist :orderedItems="$opt['cartItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :cartIndex="true"/>
 
 
 
         <script>
     $(document).ready(function() {
         $(".cartItemList").on("click", ".delete-cartItem", function(event) {
-            // der Link wird hier eh nicht ausgeführt, aber damit verhindere ich hier an der Stelle
-            // dass der Cursor wieder zum Seitenanfang geht
             event.preventDefault();
 
             var id = $(this).data("id");

@@ -19,8 +19,8 @@
         <?php endif; ?>
 
         <div class="bg-box rounded p-4 mt-4">
-            <a href="/brand/show/"></a>
-            <a href="/brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
+            <a href="<?php echo $opt["root"]; ?>brand/show/"></a>
+            <a href="<?php echo $opt["root"]; ?>brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
         </div>
     </main>
 
@@ -43,9 +43,9 @@
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
                 <div class="d-flex justify-content-between mt-2">
                     <span> <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
-                            <a href="/item/itemShoeCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
+                            <a href="<?php echo $opt["root"]; ?>item/itemShoeCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
                         <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
-                            <a href="/item/itemLegoCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
+                            <a href="<?php echo $opt["root"]; ?>item/itemLegoCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>
                         <?php } ?></span>
                     <span></span>
                 </div>
@@ -64,7 +64,7 @@ Data from a model:
         <li>
             <?= e($item["color"]) ?> <?= e($item["size"]) ?> <?= e($item["price"]) ?>
             <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
-                <a href="/item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a>
+                <a href="<?php echo $opt["root"]; ?>item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a>
             <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
 
             <?php } ?>

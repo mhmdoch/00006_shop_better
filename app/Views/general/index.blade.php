@@ -10,6 +10,6 @@ Hi
 
 <?= bcadd($a, $b, 17); ?>
 
-
+<?php var_dump($opt["root"]); ?>
 
 @endsection

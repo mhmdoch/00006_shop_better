@@ -64,7 +64,7 @@ a:hover {
     font-size: 0.8rem;
     height: 24px;
     line-height: 1.0;
-    color: rgb(0, 255, 200);
+    color: #212529;
 
 }
 
@@ -87,3 +87,7 @@ a:hover {
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
+
+
+
+

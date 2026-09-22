@@ -77,7 +77,7 @@ $catalogCount = count($opt["catalogs"]);
                         <span>Status</span>
                         <span><?= (e($opt["brand"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
 
                 <div class="d-flex justify-content-between">
                     <span>Produkte</span>
@@ -159,7 +159,7 @@ $catalogCount = count($opt["catalogs"]);
         ];
 
         var url =
-            '/brand/show/<?= $opt["brand"]["id"] ?>/' +
+            '<?php echo $opt["root"]; ?>brand/show/<?= $opt["brand"]["id"] ?>/' +
             parameters.map(encodeURIComponent).join('/') +
             "/<?= $opt["settings"]["limit"] ?>/<?= $opt["settings"]["pageCurrent"] ?>";
 
