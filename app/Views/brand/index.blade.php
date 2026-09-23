@@ -13,7 +13,7 @@
             <div class="bg-box rounded p-4 mt-4">
                 <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>"><?= e($brand["name"]) ?></a>
                 <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
-                    <a href="/brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
+                    <a href="<?php echo $opt["root"]; ?>brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
                 <?php endif; ?>
                 <?php if ($opt["user"]->checkPermission("brand.delete")): ?>
                     <?php if (! e($brand["active"] === 0)): ?>
@@ -35,7 +35,7 @@
                 <hr>
                 <div> - <a href="<?php echo $opt["root"]; ?>brand/">Index</a></div>
                 <div> - <a href="<?php echo $opt["root"]; ?>brand/inactive">Inaktive</a></div>
-                <div class="mt-2"> - <a href="/brand/create">Hinzufügen</a></div>
+                <div class="mt-2"> - <a href="<?php echo $opt["root"]; ?>brand/create">Hinzufügen</a></div>
             </div>
         <?php endif; ?>
 

@@ -13,7 +13,7 @@ $catalogCount = count($catalogs);
             <div class="card-deck">
             <?php } ?>
 
-            <a href="/catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
+            <a href="<?php echo $opt["root"]; ?>catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
                 <img src="<?php $opt["generateResourceLink"]("assets/img/{$catalog["itemable_type"]}.png"); ?>" class="card-img-top">
                 <div class="card-body">
                     <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>

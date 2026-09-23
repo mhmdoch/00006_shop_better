@@ -19,6 +19,8 @@ CREATE TABLE `cart_item` (
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
 
+  UNIQUE (`cart_id`, `item_id`),
+
   INDEX `idx_cart_item_cart` (`cart_id`),
   INDEX `idx_cart_item_item` (`item_id`),
 

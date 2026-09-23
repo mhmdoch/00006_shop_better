@@ -78,11 +78,19 @@ class CartModel extends z_model
 
     public function addItem($cartId, $itemId): void
     {
-        $sql = "INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`)
-                SELECT ?, `id`, 1
-                FROM `item`
-                WHERE `id` = ? AND `active` = 1";
-        $this->exec($sql, "ii", $cartId, $itemId);
+        $sql = "SELECT `quantity` FROM `cart_item` WHERE `cart_id` = ? AND `item_id` = ?";
+        $alreadyExisting = $this->exec($sql, "ii", $cartId, $itemId)->resultToLine();
+
+        if ($alreadyExisting === null) {
+            $sql = "INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`)
+                        SELECT ?, `id`, 1
+                        FROM `item`
+                        WHERE `id` = ? AND `active` = 1";
+            $this->exec($sql, "ii", $cartId, $itemId);
+        } else {
+            $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `cart_id` = ? AND `item_id` = ?";
+            $this->exec($sql, "ii", $cartId, $itemId);
+        }        
     }
 
     public function getAmountItemsByCartId(int $cartId): ?int {

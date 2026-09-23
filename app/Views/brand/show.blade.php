@@ -63,6 +63,72 @@ $catalogCount = count($opt["catalogs"]);
 
 <div id="catalogsContainer">
     <x-cataloglistitem :catalogs="$opt['catalogs']" :brand="$opt['brand']" :settings="$opt['settings']" :opt="$opt"/>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination  justify-content-center">
+        <li class="page-item">
+            <a class="page-link" 
+                    href='<?php echo $opt["root"] . "brand/show/" .
+                    $opt["settings"]["brandId"] . "/" .
+                    $opt["settings"]["name"] . "/" .
+                    $opt["settings"]["price"] . "/" .
+                    $opt["settings"]["sortKey"] . "/" .
+                    $opt["settings"]["orderBy"] . "/" .
+                    $opt["settings"]["limit"] ?>/1' aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+
+        <?php for ($i = $opt["pagination"]["pageCurrent"] - $opt["pagination"]["pageNeighboorsLeft"]; $i < $opt["pagination"]["pageCurrent"]; $i++): ?>
+            <li class="page-item">
+                <a class="page-link" 
+                    href='<?php echo $opt["root"] . "brand/show/" .
+                    $opt["settings"]["brandId"] . "/" .
+                    $opt["settings"]["name"] . "/" .
+                    $opt["settings"]["price"] . "/" .
+                    $opt["settings"]["sortKey"] . "/" .
+                    $opt["settings"]["orderBy"] . "/" .
+                    $opt["settings"]["limit"] . "/" . $i ?>'><?= $i ?></a></li>
+        <?php endfor; ?>
+
+        <li class="page-item active">
+            <span class="page-link" deactivated href='<?php echo $opt["root"] . "brand/show/" .
+                    $opt["settings"]["brandId"] . "/" .
+                    $opt["settings"]["name"] . "/" .
+                    $opt["settings"]["price"] . "/" .
+                    $opt["settings"]["sortKey"] . "/" .
+                    $opt["settings"]["orderBy"] . "/" .
+                    $opt["settings"]["limit"] . "/" .
+                    $opt["pagination"]["pageCurrent"] ?>'><strong><?= $opt["pagination"]["pageCurrent"] ?></strong></span></li>
+
+        <?php for ($i = $opt["pagination"]["pageCurrent"] + 1; $i <= $opt["pagination"]["pageCurrent"] + $opt["pagination"]["pageNeighboorsRight"]; $i++): ?>
+            <li class="page-item">
+                <a class="page-link" href='<?php echo $opt["root"] . "brand/show/" .
+                    $opt["settings"]["brandId"] . "/" .
+                    $opt["settings"]["name"] . "/" .
+                    $opt["settings"]["price"] . "/" .
+                    $opt["settings"]["sortKey"] . "/" .
+                    $opt["settings"]["orderBy"] . "/" .
+                    $opt["settings"]["limit"] . "/" . $i ?>'><?= $i ?></a></li>
+        <?php endfor; ?>
+
+        <li class="page-item">
+            <a class="page-link" href='<?php echo $opt["root"] . "brand/show/" .
+                    $opt["settings"]["brandId"] . "/" .
+                    $opt["settings"]["name"] . "/" .
+                    $opt["settings"]["price"] . "/" .
+                    $opt["settings"]["sortKey"] . "/" .
+                    $opt["settings"]["orderBy"] . "/" .
+                    $opt["settings"]["limit"] . "/" .
+                    $opt["pagination"]["pageLast"] ?>' aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 </div>
 
     </main>
@@ -81,7 +147,7 @@ $catalogCount = count($opt["catalogs"]);
 
                 <div class="d-flex justify-content-between">
                     <span>Produkte</span>
-                    <span><?= count($opt["catalogs"]) ?></span>
+                    <span><?= $opt["settings"]['catalogsAmount'] ?></span>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Varianten</span>
@@ -161,7 +227,7 @@ $catalogCount = count($opt["catalogs"]);
         var url =
             '<?php echo $opt["root"]; ?>brand/show/<?= $opt["brand"]["id"] ?>/' +
             parameters.map(encodeURIComponent).join('/') +
-            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["settings"]["pageCurrent"] ?>";
+            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
 
         $("#catalogsContainer").load(url + " #catalogsContainer > *");
         window.history.pushState({}, "", url);
@@ -169,6 +235,13 @@ $catalogCount = count($opt["catalogs"]);
 
     $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
 
+    $('#catalogsContainer').on('click', '.pagination a', function (event) {
+        event.preventDefault();
+
+        var url = this.href;
+        $('#catalogsContainer').load(url + ' #catalogsContainer > *');
+        window.history.pushState({}, "", url);
+    });
 
     let timer;
     $('#selectName, #selectPrice').on('input', function () {

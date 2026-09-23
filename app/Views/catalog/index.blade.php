@@ -83,7 +83,7 @@ $catalogCount = count($opt["catalogs"]);
 
 <x-cataloglistitem :catalogs="$opt['catalogs']" :brands="$opt['brands']" :settings="$opt['settings']" :pagination="$opt['pagination']" :opt="$opt"/>
 
-  
+
 
 <nav aria-label="Page navigation example">
     <ul class="pagination  justify-content-center">
@@ -168,21 +168,20 @@ $catalogCount = count($opt["catalogs"]);
             '<?php echo $opt["root"]; ?>catalog/index/' +
             parameters.map(encodeURIComponent).join('/') +
             "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
-        // How it works
-        // ----------------------
-        // var parameters = ['shoe', '12', 'Air Max'];
-        // var encodedParameters = parameters.map(function(parameter) {
-        //     return encodeURIComponent(parameter);
-        // });
-        // var path = encodedParameters.join('/');
-        // console.log(path);
-        // "shoe/12/Air%20Max"
 
         $("#catalogsContainer").load(url + " #catalogsContainer > *");
         window.history.pushState({}, "", url);
     }
 
     $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
+
+    $('#catalogsContainer').on('click', '.pagination a', function (event) {
+        event.preventDefault();
+
+        var url = this.href;
+        $('#catalogsContainer').load(url + ' #catalogsContainer > *');
+        window.history.pushState({}, "", url);
+    });
 
     let timer;
     $('#selectName').on('input', function () {

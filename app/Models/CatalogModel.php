@@ -52,6 +52,26 @@ class CatalogModel extends z_model
         return $this->exec($sql, "issdii", $brandId, $name, $name, $price, $pageLimit, $pageOffset)->resultToArray();
     }
 
+    public function getCatalogsForBrandShowAmount($brandId, $name, $price): int
+    {
+        $sql = "SELECT COUNT(*) AS amount
+                FROM `catalog`
+                JOIN `brand` ON catalog.brand_id = brand.id
+                WHERE catalog.active = 1
+                    AND catalog.brand_id = ?
+                    AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%'))
+                    AND EXISTS (
+                        SELECT 1 FROM `item` AS i
+                        WHERE i.catalog_id = catalog.id
+                            AND i.active = 1
+                            AND i.price <= ?
+                    )";
+
+        $result = $this->exec($sql, "issd", $brandId, $name, $name, $price)->resultToLine();
+
+        return (int) ($result['amount'] ?? 0);
+    }
+
     public function getCatalogsByFiltersAmount($type, $brandId, $name): int
     {
         $sql = "SELECT COUNT(*) AS amount

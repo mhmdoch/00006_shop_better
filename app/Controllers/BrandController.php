@@ -58,37 +58,50 @@ class BrandController extends z_controller
     public function action_show(Request $req, Response $res)
     {
         $brandId = $req->getParameters(0, 1);
-
         $brand = $req->getModel("Brand")->getBrandById($brandId);
         $catalogs = $req->getModel("Catalog")->getCatalogsByBrand($brandId);
 
-        
         $name = $req->getParameters(1, 1) ?: "all";
         $price = $req->getParameters(2, 1) ?: 999999999;
-        $sortKey = $req->getParameters(3, 1) ?: "name";
 
-        $sortColumns = [
-            "name" => "catalog.name",
-            "price" => "lowest_price",
-        ];
 
-        $sortDir = $sortColumns[$sortKey] ?? "catalog.name";
+        $sortKey = (string) $req->getParameters(3, 1);
+        $sortDir =  \App\Helper\AppHelper::paginationSortKey($sortKey);
+        $orderBy = $req->getParameters(4, 1);
+        $orderBy = \App\Helper\AppHelper::paginationOrderBy($orderBy);
+        $pageLimit = $req->getParameters(5, 1);
+        $pageLimit = \App\Helper\AppHelper::paginationLimit($pageLimit);
 
-        $orderBy = $req->getParameters(4, 1) ?: "ASC";
-        if (!in_array($orderBy, ["ASC", "DESC"], true)) {
-            $orderBy = "ASC";
-        }
-        $pageLimit = $req->getParameters(5, 1) ?: 6;
-        $pageNumber = $req->getParameters(6, 1) ?: 1;
-        $pageOffset = (int) $pageLimit * ($pageNumber - 1);
+        $catalogsAmount = $req->getModel("Catalog")->getCatalogsForBrandShowAmount($brandId, $name, $price);
+        $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
+
+        $pageNumber = (int) \App\Helper\AppHelper::paginationPageNumber($req->getParameters(6, 1), $pagination['pageLast']);
+
+        $pageOffset = (int) $pageLimit * ((int) $pageNumber - 1);
 
         $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset);
 
-
         $settings['name'] = $name;
-        $settings['price'] = $price;
+        $settings['sortKey'] = $sortKey;
+        $settings['orderBy'] = $orderBy;
         $settings['limit'] = $pageLimit;
         $settings['pageCurrent'] = $pageNumber;
+        $pagination['pageCurrent'] = $pageNumber;
+
+        $settings['catalogsAmount'] = $catalogsAmount;
+
+        $pagesAvailableLeft = $pageNumber - 1;
+
+        $pagesAvailableRight = $pagination['pageLast'] - $pageNumber;
+
+        $settings['pageNeighboorsAmount'] = 3;
+        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
+        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
+
+        $settings['type'] = "all";
+        $settings['brandId'] = $brandId;
+        $settings['price'] = $price;
+
 
         $catalogIds = array_column($catalogs, "id");
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
@@ -102,6 +115,8 @@ class BrandController extends z_controller
             "items" => $items,
             "logActive" => $logActive,
             "settings" => $settings,
+            "pagination" => $pagination,
+
         ]);
     }
 
