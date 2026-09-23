@@ -35,7 +35,7 @@ class AppHelper
 
     public static function paginationSortKey($sortKey)
     {
-        if (!in_array($sortKey, ["type", "brand", "name"], true)) {
+        if (!in_array($sortKey, ["type", "brand", "name", "price"], true)) {
             $sortKey = "all";
         }
         $sortColumns = [

@@ -25,11 +25,7 @@ class CatalogController extends z_controller
         $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
         $pageNumber = \App\Helper\AppHelper::paginationPageNumber($pageNumber, $pagination['pageLast']);
 
-
-
-
         $brands = $req->getModel("Brand")->getBrands();
-
 
         $pageOffset = (int) $pageLimit * ($pageNumber - 1);
 

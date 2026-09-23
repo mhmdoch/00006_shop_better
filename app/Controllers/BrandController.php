@@ -64,7 +64,6 @@ class BrandController extends z_controller
         $name = $req->getParameters(1, 1) ?: "all";
         $price = $req->getParameters(2, 1) ?: 999999999;
 
-
         $sortKey = (string) $req->getParameters(3, 1);
         $sortDir =  \App\Helper\AppHelper::paginationSortKey($sortKey);
         $orderBy = $req->getParameters(4, 1);
@@ -80,7 +79,8 @@ class BrandController extends z_controller
         $pageOffset = (int) $pageLimit * ((int) $pageNumber - 1);
 
         $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset);
-
+        $catalogsAll = $req->getModel("Catalog")->getCatalogsForBrandShowNoFilter($brandId, $name, $price);
+        
         $settings['name'] = $name;
         $settings['sortKey'] = $sortKey;
         $settings['orderBy'] = $orderBy;
@@ -103,8 +103,11 @@ class BrandController extends z_controller
         $settings['price'] = $price;
 
 
-        $catalogIds = array_column($catalogs, "id");
+        $catalogIds = array_column($catalogsAll, "id");
+
+
         $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
+
         $logActive = $req->getModel("LogActive")->getLogByidAndType($brandId, "brand");
 
         App\Helper\Breadcrumbs::append("{$brand['name']}", "/brand/show/" . $brandId);
