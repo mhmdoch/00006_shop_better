@@ -38,19 +38,6 @@
                             <a class="nav-link" href="<?= $opt["root"] ?>order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $opt["root"]; ?>">Pricing</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="<?php echo $opt["root"]; ?>" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown link
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Action</a>
-                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Another action</a>
-                            <a class="dropdown-item" href="<?php echo $opt["root"]; ?>">Something else here</a>
-                        </div>
-                    </li>
                 </ul>
             </div>
             <div>

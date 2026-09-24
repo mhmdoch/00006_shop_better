@@ -7,7 +7,12 @@
 <div class="row">
     <main class="col-lg-8" id="brandIndexContainer">
         <div class="bg-box rounded p-4">
-            <h3><?= $opt["catalog"]["brand_name"] ?> <?= $opt["catalog"]["name"] ?></h3>
+            <h3>
+                <?= $opt["catalog"]["brand_name"] ?> <?= $opt["catalog"]["name"] ?>
+                <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
+                    <a href="<?php echo $opt["root"]; ?>brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
+                <?php endif; ?>
+            </h3>
         </div>
 
         <div class="bg-box rounded p-4 mt-4">
@@ -18,10 +23,10 @@
             <x-itemShoeSelector :opt="$opt" />
         <?php endif; ?>
 
+        <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
         <div class="bg-box rounded p-4 mt-4">
-            <a href="<?php echo $opt["root"]; ?>brand/show/"></a>
-            <a href="<?php echo $opt["root"]; ?>brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
         </div>
+        <?php endif; ?>
     </main>
 
     <aside class="col-lg-4">
