@@ -78,9 +78,13 @@ class ItemController extends z_controller
                 $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
 
                 if ($newStock > $oldStock) {
-                    $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "stock erhöht"]);
+                    $res->insertDatabase("log_active",
+                                            new FormResult(),
+                                            ["active_type" => "item", "active_id" => $itemId, "action" => "stock erhöht"]);
                 } else {
-                    $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "stock reduziert"]);
+                    $res->insertDatabase("log_active",
+                                            new FormResult(),
+                                            ["active_type" => "item", "active_id" => $itemId, "action" => "stock reduziert"]);
                 }
 
                 return $res->success();
@@ -88,8 +92,12 @@ class ItemController extends z_controller
 
             $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]]);
             $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["active" => 0]);
-            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $newItemId, "action" => "aktiviert"]);
-            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "deaktiviert"]);
+            $res->insertDatabase("log_active",
+                                    new FormResult(),
+                                    ["active_type" => "item", "active_id" => $newItemId, "action" => "aktiviert"]);
+            $res->insertDatabase("log_active",
+                                    new FormResult(),
+                                    ["active_type" => "item", "active_id" => $itemId, "action" => "deaktiviert"]);
 
             return $res->success();
         }
@@ -129,7 +137,9 @@ class ItemController extends z_controller
             }
 
             $itemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $catalogId]);
-            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "aktiviert"]);
+            $res->insertDatabase("log_active",
+                                    new FormResult(),
+                                    ["active_type" => "item", "active_id" => $itemId, "action" => "aktiviert"]);
 
             return $res->success();
         }

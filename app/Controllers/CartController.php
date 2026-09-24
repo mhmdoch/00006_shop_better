@@ -36,11 +36,6 @@ class CartController extends z_controller
                 'taxrate' => $taxrate,
                 ];}
 
-
-      
-
-
-
         if ($req->isAction("delete-cartItem")) {
             //$req->checkPermission("brand.delete");
             $cartItemId = $req->getPost("cartItemId");

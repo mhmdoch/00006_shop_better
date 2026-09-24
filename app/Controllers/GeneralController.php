@@ -17,10 +17,6 @@ class GeneralController extends z_controller
     {
         new App\Helper\AppHelper();
 
-        // $sideBarElements = $req->getModel("Category")->getNavCategories();
-        // $menuCategory = $req->getParameters(-2, 1) ?: "";
-        //  $req->store["sideBarElements"] = $sideBarElements;
-        // $req->store["menuCategory"] = $menuCategory;
         return true;
     }
 

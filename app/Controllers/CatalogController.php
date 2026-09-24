@@ -1,5 +1,7 @@
 <?php
 
+use \App\Helper\Pagination;
+
 class CatalogController extends z_controller
 {
 
@@ -7,29 +9,39 @@ class CatalogController extends z_controller
     {
 
         $catalogsType = $req->getParameters(0, 1);
-        $catalogsType =  \App\Helper\AppHelper::paginationCatalogType($catalogsType);
+        $catalogsType =  Pagination::paginationCatalogType($catalogsType);
 
         $brandId = $req->getParameters(1, 1) ?: 0;
         $name = $req->getParameters(2, 1) ?: "all";
 
         $sortKey = $req->getParameters(3, 1);
-        $sortDir =  \App\Helper\AppHelper::paginationSortKey($sortKey);
+        $sortDir =  Pagination::paginationSortKey($sortKey);
+    
         $orderBy = $req->getParameters(4, 1);
-        $orderBy = \App\Helper\AppHelper::paginationOrderBy($orderBy);
+        $orderBy = Pagination::paginationOrderBy($orderBy);
+
         $pageLimit = $req->getParameters(5, 1);
-        $pageLimit = \App\Helper\AppHelper::paginationLimit($pageLimit);
+        $pageLimit = Pagination::paginationLimit($pageLimit);
 
 
         $pageNumber = $req->getParameters(6, 1);
-        $catalogsAmount = $req->getModel("Catalog")->getCatalogsByFiltersAmount($catalogsType, $brandId, $name);
+        $catalogsAmount = $req->getModel("Catalog")->getCatalogsByFiltersAmount(
+                                                                            $catalogsType, 
+                                                                            $brandId, 
+                                                                            $name
+                                                                            );
         $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
-        $pageNumber = \App\Helper\AppHelper::paginationPageNumber($pageNumber, $pagination['pageLast']);
+        $pageNumber = Pagination::paginationPageNumber($pageNumber, $pagination['pageLast']);
 
         $brands = $req->getModel("Brand")->getBrands();
 
         $pageOffset = (int) $pageLimit * ($pageNumber - 1);
 
-        $catalogs = $req->getModel("Catalog")->getCatalogsByFilters($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset);
+        $catalogs = $req->getModel("Catalog")->getCatalogsByFilters(
+            $catalogsType,
+            $brandId,
+            $name, $orderBy, $sortDir, $pageLimit, $pageOffset
+            );
 
         $settings['type'] = $catalogsType;
         $settings['brandId'] = $brandId;
@@ -45,8 +57,10 @@ class CatalogController extends z_controller
         $pagesAvailableLeft = $pageNumber - 1;
         $pagesAvailableRight = $pagination['pageLast'] - $pageNumber;
 
-        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
-        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
+        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) ?
+                                                $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
+        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount']) ?
+                                                $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
 
 
 

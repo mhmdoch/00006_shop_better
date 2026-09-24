@@ -25,7 +25,34 @@
 
         <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
         <div class="bg-box rounded p-4 mt-4">
-        </div>
+            <h4>Varianten:</h4>
+
+            <div class="table-responsive">
+                <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
+                    <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="w-5">Farbe</th>
+                                    <th style="width:5%">Größe</th>
+                                    <th style="width:15%">Preis</th>
+                                    <th style="width:5%">Anzahl</th>
+                                    <th style="width:5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="cartItemList">
+                                <?php foreach ($opt["items"] as $item) { ?>
+                                    <tr>
+                                        <td><?= e($item["color"]) ?></td>
+                                        <td class="text-right"><?= e($item["size"]) ?></td>
+                                        <td class="text-right"><?= e($item["price"]) ?> €</td>
+                                        <td class="text-right"><?= e($item["stock"]) ?></td>
+                                        <td class="text-right"><a href="<?php echo $opt["root"]; ?>item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                    </table>
+                <?php } ?>
+            </div>
         <?php endif; ?>
     </main>
 
@@ -60,20 +87,4 @@
     </aside>
 </div>
 
-Data from a model:
-<ul>
-    <li>
-        <?= $opt["catalog"]["name"] ?> </li>
-
-    <?php foreach ($opt["items"] as $item) { ?>
-        <li>
-            <?= e($item["color"]) ?> <?= e($item["size"]) ?> <?= e($item["price"]) ?>
-            <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
-                <a href="<?php echo $opt["root"]; ?>item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a>
-            <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
-
-            <?php } ?>
-        </li>
-    <?php } ?>
-</ul>
 @endsection

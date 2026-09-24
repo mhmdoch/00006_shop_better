@@ -88,6 +88,11 @@ a:hover {
     text-transform: uppercase;
 }
 
+.page-item a {
+    color: rgb(0, 153, 120);
+}
 
-
-
+.page-item .page-link[deactivated] {
+    background-color: rgb(0, 153, 120);
+    border: 1px solid white;
+}

@@ -18,7 +18,7 @@
 
 
 
-        <script>
+<script>
     $(document).ready(function() {
         $(".cartItemList").on("click", ".delete-cartItem", function(event) {
             event.preventDefault();

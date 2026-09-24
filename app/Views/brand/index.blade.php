@@ -56,7 +56,7 @@
 
 <script>
     $(document).ready(function() {
-        $("#brandIndexContainer").on("click", ".delete-brand", function() {
+        $("#brandIndexContainer").on("click", ".delete-brand", function(event) {
             event.preventDefault();
 
             if (!confirm("ACHTUNG: Marke wirklich löschen? Dies hat Auswirkungen auf zugehörige Produkte und deren Varianten.")) {

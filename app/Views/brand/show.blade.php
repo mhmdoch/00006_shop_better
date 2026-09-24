@@ -21,10 +21,6 @@ $catalogCount = count($opt["catalogs"]);
         <div class="bg-box rounded p-4 mb-4">
             <div class="row pl-3">
                 <h5>Filter</h5>
-                <!-- 
-                    catalog/paginate/all/0/all/name/ASC/10/0 
-                    ($catalogsType, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset)
-                    -->
             </div>
             <hr>
             <div class="row pl-1">

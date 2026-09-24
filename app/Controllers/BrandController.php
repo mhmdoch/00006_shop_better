@@ -1,5 +1,8 @@
 <?php
 
+use \App\Helper\Pagination;
+
+
 class BrandController extends z_controller
 {
 
@@ -64,21 +67,29 @@ class BrandController extends z_controller
         $name = $req->getParameters(1, 1) ?: "all";
         $price = $req->getParameters(2, 1) ?: 999999999;
 
-        $sortKey = (string) $req->getParameters(3, 1);
-        $sortDir =  \App\Helper\AppHelper::paginationSortKey($sortKey);
+        $sortKey = (string) $req->getParameters(3, 1) ?: "name";
+        $sortDir =  Pagination::paginationSortKey($sortKey);
         $orderBy = $req->getParameters(4, 1);
-        $orderBy = \App\Helper\AppHelper::paginationOrderBy($orderBy);
+        $orderBy = Pagination::paginationOrderBy($orderBy);
         $pageLimit = $req->getParameters(5, 1);
-        $pageLimit = \App\Helper\AppHelper::paginationLimit($pageLimit);
+        $pageLimit = Pagination::paginationLimit($pageLimit);
 
         $catalogsAmount = $req->getModel("Catalog")->getCatalogsForBrandShowAmount($brandId, $name, $price);
         $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
 
-        $pageNumber = (int) \App\Helper\AppHelper::paginationPageNumber($req->getParameters(6, 1), $pagination['pageLast']);
+        $pageNumber = (int) Pagination::paginationPageNumber($req->getParameters(6, 1), $pagination['pageLast']);
 
         $pageOffset = (int) $pageLimit * ((int) $pageNumber - 1);
 
-        $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset);
+        $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow(
+                                                                    $brandId,
+                                                                    $name,
+                                                                    $price,
+                                                                    $orderBy,
+                                                                    $sortDir,
+                                                                    $pageLimit,
+                                                                    $pageOffset
+                                                                    );
         $catalogsAll = $req->getModel("Catalog")->getCatalogsForBrandShowNoFilter($brandId, $name, $price);
         
         $settings['name'] = $name;
@@ -95,8 +106,10 @@ class BrandController extends z_controller
         $pagesAvailableRight = $pagination['pageLast'] - $pageNumber;
 
         $settings['pageNeighboorsAmount'] = 3;
-        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
-        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount']) ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
+        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount'])
+                                                    ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
+        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount'])
+                                                    ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
 
         $settings['type'] = "all";
         $settings['brandId'] = $brandId;
@@ -138,7 +151,13 @@ class BrandController extends z_controller
             }
 
             $brandId = $res->insertDatabase("brand", $formResult);
-            $res->insertDatabase("log_active", new FormResult(), ["active_type" => "brand", "active_id" => $brandId, "action" => "aktiviert"]);
+            $res->insertDatabase(
+                            "log_active",
+                            new FormResult(),
+                            ["active_type" => "brand",
+                            "active_id" => $brandId,
+                            "action" => "aktiviert"]
+                            );
 
 
             return $res->success();
