@@ -144,7 +144,6 @@ class CartModel extends z_model
 
         if ($currentItem && ($currentItem["quantity"] + 1) > $currentItem["stock"]) {
             // Handle the case where the quantity cannot be increased
-            
             return;
         }
 

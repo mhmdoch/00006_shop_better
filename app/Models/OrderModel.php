@@ -105,6 +105,25 @@ class OrderModel extends z_model
     }
 
 
+    public function restockOrder($orderId): void
+    {
+        $sql = "SELECT `cart_item`.`item_id`, `cart_item`.`quantity`
+                FROM `order`
+                JOIN `cart_item` ON `cart_item`.`cart_id` = `order`.`cart_id`
+                WHERE `order`.`id` = ?";
+
+        $cartItems = $this->exec($sql, "i", $orderId)->resultToArray();
+
+        foreach ($cartItems as $cartItem) {
+            $sql = "UPDATE `item`
+                    SET `stock` = `stock` + ?
+                    WHERE `id` = ?";
+
+            $this->exec($sql, "ii", $cartItem["quantity"], $cartItem["item_id"]);
+        }
+    }
+
+
     public function getOrders(): array
     {
         $sql = "SELECT

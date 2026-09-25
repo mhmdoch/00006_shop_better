@@ -29,7 +29,9 @@
 
                 <?php if ($opt["canEditStatus"]): ?>
                     <hr>
-                    <div id="order_status_form"></div>
+                    <?php if (!in_array($opt["order"]["status"], ["completed", "cancelled"])) { ?>
+                        <div id="order_status_form"></div>
+                    <?php } ?>
 
                     <script>
                         $(document).ready(function() {

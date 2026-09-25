@@ -39,7 +39,7 @@ class BrandModel extends z_model
         $sql = "UPDATE `brand` SET `active` = 0 WHERE `id` = ?";
         $this->exec($sql, "i", $brandId);
 
-        $log = "INSERT INTO `log_active` (`active_type`, `active_id`, `action`) VALUES ('brand', ?, 'gelöscht')";
-        $this->exec($log, "i", $brandId);
+        $log = "INSERT INTO `log_active` (`active_type`, `active_id`, `action`, userId) VALUES ('brand', ?, 'gelöscht', ?)";
+        $this->exec($log, "ii", $brandId, user()->userId);
     }
 }

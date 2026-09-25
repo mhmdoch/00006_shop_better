@@ -116,15 +116,11 @@ class OrderController extends z_controller
     public function action_show(Request $req, Response $res)
     {
         $orderId = $req->getParameters(0, 1);
-        $orderModel = $req->getModel("Order");
-        $statuses = [
-            "pending",
-            "confirmed",
-            "paid",
-            "shipped",
-            "completed",
-            "cancelled",
-        ];
+
+        $order = $req->getModel("Order")->getOrderById($orderId);
+
+        $stateMachine = new \App\Helper\OrderState();
+        $statuses = $stateMachine->orderStateNext($order["status"]);
 
         if ($req->hasFormData()) {
             $req->checkPermission("order.index");
@@ -139,11 +135,25 @@ class OrderController extends z_controller
                 return $res->formErrors($statusForm->errors);
             }
 
-            $orderModel->updateStatus((int) $orderId, $statusForm->getValue("status"));
+            if ($statusForm->getValue("status") == "cancelled") {
+                $res->getModel("Order")->restockOrder($orderId);
+            }
+
+            $res->insertDatabase(
+                "log_active",
+                new FormResult(),
+                [
+                    "userId" => user()->userId,
+                    "active_type" => "order",
+                    "active_id" => $orderId,
+                    "action" => $statusForm->getValue("status"),
+                ]
+            );
+            $req->getModel("Order")->updateStatus((int) $orderId, $statusForm->getValue("status"));
+
             return $res->success();
         }
 
-        $order = $orderModel->getOrderById($orderId);
 
         $user = $req->getRequestingUser();
         $isOwner = $user->isLoggedIn && $user->userId == $order["user_id"];
@@ -152,7 +162,7 @@ class OrderController extends z_controller
             $req->checkPermission("order.index");
         }
 
-        $orderItems = $orderModel->getItemsByOrderId($orderId);
+        $orderItems = $req->getModel("Order")->getItemsByOrderId($orderId);
 
         $grossPot = [];
         $totalSum = 0;

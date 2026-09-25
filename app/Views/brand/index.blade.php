@@ -11,18 +11,20 @@
         </div>
         <?php foreach ($opt["brands"] as $brand) { ?>
             <div class="bg-box rounded p-4 mt-4">
-                <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>"><?= e($brand["name"]) ?></a>
+                <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>">
+                    <?= e($brand["name"]) ?>
+                </a>
                 <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
                     <a href="<?php echo $opt["root"]; ?>brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
                 <?php endif; ?>
                 <?php if ($opt["user"]->checkPermission("brand.delete")): ?>
-                    <?php if (! e($brand["active"] === 0)): ?>
+                    <?php if ($brand["active"]) { ?>
                         <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
-                    <?php else: ?>
+                    <?php } else { ?>
+                        <!--{{ $brand["active"] }}-->
+                        <?= (($brand["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?>
 
-                        <?= (e($brand["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?>
-
-                    <?php endif; ?>
+                    <?php } ?>
                 <?php endif; ?>
             </div>
         <?php } ?>
@@ -33,8 +35,8 @@
             <div class="bg-box rounded p-4 mb-4">
                 <h5>Verwaltung</h5>
                 <hr>
-                <div> - <a href="<?php echo $opt["root"]; ?>brand/">Index</a></div>
-                <div> - <a href="<?php echo $opt["root"]; ?>brand/inactive">Inaktive</a></div>
+                <div> - <a href="<?= $opt["root"]; ?>brand/">Index</a></div>
+                <div> - <a href="<?= $opt["root"]; ?>brand/inactive">Inaktive</a></div>
                 <div class="mt-2"> - <a href="<?php echo $opt["root"]; ?>brand/create">Hinzufügen</a></div>
             </div>
         <?php endif; ?>

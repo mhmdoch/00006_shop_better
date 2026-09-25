@@ -1,13 +1,13 @@
-INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'brand', `id`, 'aktiviert', '2026-07-01 07:00:00'
+INSERT INTO `log_active` (`userId`, `active_type`, `active_id`, `action`, `date`)
+SELECT 1, 'brand', `id`, 'aktiviert', '2026-07-01 07:00:00'
 FROM `brand`;
 
-INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'catalog', `id`, 'aktiviert', '2026-07-01 08:00:00'
+INSERT INTO `log_active` (`userId`, `active_type`, `active_id`, `action`, `date`)
+SELECT 1, 'catalog', `id`, 'aktiviert', '2026-07-01 08:00:00'
 FROM `catalog`;
 
-INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'item', `id`, 'aktiviert', '2026-07-01 09:00:00'
+INSERT INTO `log_active` (`userId`, `active_type`, `active_id`, `action`, `date`)
+SELECT 1, 'item', `id`, 'aktiviert', '2026-07-01 09:00:00'
 FROM `item`;
 
 UPDATE `item`
@@ -24,7 +24,7 @@ WHERE `sku` IN (
   'TB110073001-EU46'
 );
 
-INSERT INTO `log_active` (`active_type`, `active_id`, `action`, `date`)
-SELECT 'item', `id`, 'deaktiviert', '2026-07-20 12:00:00'
+INSERT INTO `log_active` (`userId`, `active_type`, `active_id`, `action`, `date`)
+SELECT 1, 'item', `id`, 'deaktiviert', '2026-07-20 12:00:00'
 FROM `item`
 WHERE `active` = 0;

@@ -154,7 +154,9 @@ class BrandController extends z_controller
             $res->insertDatabase(
                             "log_active",
                             new FormResult(),
-                            ["active_type" => "brand",
+                            [
+                            "userId" => user()->userId,
+                            "active_type" => "brand",
                             "active_id" => $brandId,
                             "action" => "aktiviert"]
                             );
