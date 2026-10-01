@@ -8,9 +8,9 @@
     <main class="col-lg-8" id="brandIndexContainer">
         <div class="bg-box rounded p-4">
             <h3>
-                <?= $opt["catalog"]["brand_name"] ?> <?= $opt["catalog"]["name"] ?>
+                <?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?>
                 <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
-                    <a href="<?php echo $opt["root"]; ?>brand/edit/<?= $opt["catalog"]["id"] ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
+                    <a href="<?php echo $opt["root"]; ?>brand/edit/<?= e($opt["catalog"]["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
                 <?php endif; ?>
             </h3>
         </div>

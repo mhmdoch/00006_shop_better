@@ -89,7 +89,7 @@ $catalogCount = count($opt["catalogs"]);
                 <div class="d-flex justify-content-between">
                     <span>Webseite</span>
                     <span>
-                        <?php if (filter_var($opt["brand"]["website"], FILTER_VALIDATE_URL) !== false) { ?>
+                        <?php if (filter_var(e($opt["brand"]["website"]), FILTER_VALIDATE_URL) !== false) { ?>
 
                             <a href="<?= e($opt["brand"]["website"]) ?>" target="_blank">Link</a>
                         <?php } else { ?> - <?php } ?>
@@ -103,8 +103,8 @@ $catalogCount = count($opt["catalogs"]);
 
                     <?php foreach ($opt["logActive"] as $log) { ?>
                         <div class="d-flex justify-content-between">
-                            <span><?= $log["date"] ?></span>
-                            <span><?= $log["action"] ?></span>
+                            <span><?= e($log["date"]) ?></span>
+                            <span><?= e($log["action"]) ?></span>
                         </div>
                     <?php } ?>
                 </div>
@@ -120,12 +120,12 @@ $catalogCount = count($opt["catalogs"]);
     var filterByName = filterForm.createField({
         name: "filterByName",
         type: "hidden",
-        value: "<?= $opt['settings']['name'] ?>" ?? 'all',
+        value: "<?= e($opt['settings']['name']) ?>" ?? 'all',
     });
     var filterByPrice = filterForm.createField({
         name: "filterByPrice",
         type: "hidden",
-        value: "<?= $opt['settings']['price'] ?>" ?? 'all',
+        value: "<?= e($opt['settings']['price']) ?>" ?? 'all',
     });
     var sortBy = filterForm.createField({
         name: "sortBy",
@@ -158,9 +158,9 @@ $catalogCount = count($opt["catalogs"]);
         ];
 
         var url =
-            '<?php echo $opt["root"]; ?>brand/show/<?= $opt["brand"]["id"] ?>/' +
+            '<?php echo e($opt["root"]); ?>brand/show/<?= e($opt["brand"]["id"]) ?>/' +
             parameters.map(encodeURIComponent).join('/') +
-            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
+            "/<?= e($opt["settings"]["limit"]) ?>/<?= e($opt["pagination"]["pageCurrent"]) ?>";
 
         $("#catalogsContainer").load(url + " #catalogsContainer > *");
         window.history.pushState({}, "", url);

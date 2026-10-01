@@ -47,7 +47,7 @@ $catalogCount = count($opt["catalogs"]);
                         <select class="form-control" name="selectBrand" id="selectBrand">
                             <option selected value="0">alle</option>
                             <?php foreach ($opt["brands"] as $brand) { ?>
-                                <option value="<?= $brand['id'] ?>"><?= $brand['name'] ?></option>
+                                <option value="<?= e($brand['id']) ?>"><?= e($brand['name']) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -98,17 +98,17 @@ $catalogCount = count($opt["catalogs"]);
     var filterByType = filterForm.createField({
         name: "filterByType",
         type: "hidden",
-        value: "<?= $opt['settings']['type'] ?>" ?? 'all',
+        value: "<?= e($opt['settings']['type']) ?>" ?? 'all',
     });
     var filterByBrand = filterForm.createField({
         name: "filterByBrand",
         type: "hidden",
-        value: "<?= $opt['settings']['brandId'] ?>" ?? '0',
+        value: "<?= e($opt['settings']['brandId']) ?>" ?? '0',
     });
     var filterByName = filterForm.createField({
         name: "filterByName",
         type: "hidden",
-        value: "<?= $opt['settings']['name'] ?>" ?? 'all',
+        value: "<?= e($opt['settings']['name']) ?>" ?? 'all',
     });
     var sortBy = filterForm.createField({
         name: "sortBy",
@@ -142,7 +142,7 @@ $catalogCount = count($opt["catalogs"]);
         var url =
             '<?php echo $opt["root"]; ?>catalog/index/' +
             parameters.map(encodeURIComponent).join('/') +
-            "/<?= $opt["settings"]["limit"] ?>/<?= $opt["pagination"]["pageCurrent"] ?>";
+            "/<?= e($opt["settings"]["limit"]) ?>/<?= e($opt["pagination"]["pageCurrent"]) ?>";
 
         $("#catalogsContainer").load(url + " #catalogsContainer > *");
         window.history.pushState({}, "", url);
