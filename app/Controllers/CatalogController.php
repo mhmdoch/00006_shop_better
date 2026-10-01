@@ -1,9 +1,59 @@
 <?php
 
 use \App\Helper\Pagination;
+use \App\Helper\CategoryHelper;
 
 class CatalogController extends z_controller
 {
+
+    public function action_create(Request $req, Response $res)
+    {
+        $req->checkPermission("catalog.create");
+
+        if ($req->hasFormData()) {
+            $formResult = $req->validateForm([
+                (new FormField("brand_id"))->required()->length(1, 255),
+                (new FormField("name"))->required(),
+                (new FormField("itemable_type"))->required(),
+                (new FormField("description"))->required()->length(5, 500),
+                (new FormField("gender"))->length(1, 100),
+                (new FormField("titlethumb"))->file(
+                    FILE_SIZE_20MB,
+                    ["jpg", "jpeg", "png"]
+                ),
+                (new FormField("active"))->length(1, 500),
+            ]);
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            $catalogId = $res->insertDatabase("catalog", $formResult);
+
+            $res->insertDatabase(
+                            "log_active",
+                            new FormResult(),
+                            [
+                            "userId" => user()->userId,
+                            "active_type" => "catalog",
+                            "active_id" => $catalogId,
+                            "action" => "aktiviert"]
+                            );
+
+
+            return $res->success();
+        }
+            $brands = $req->getModel("Brand")->getBrands();
+
+        return $res->render("catalog/create", [
+            "brands" => $brands,
+            "itemableTypes" => CategoryHelper::itemableTypes(),
+            "isActive" => CategoryHelper::isActive(),
+            "genders" => CategoryHelper::gender(),
+        ]);
+    }
+
+
 
     public function action_index(Request $req, Response $res)
     {
