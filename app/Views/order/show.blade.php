@@ -26,6 +26,18 @@
                     <span>Bestellt am</span>
                     <span><?= e(date("d.m.Y H:i", strtotime($opt["order"]["created"]))) ?></span>
                 </div>
+                <hr>
+
+                <?php foreach ($opt["logs"] AS $log): ?>
+                <div class="d-flex justify-content-between">
+                    <span><?= e($log["userEmail"]) ?></span>
+                    <span><?= e($log["action"]) ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>am</span>
+                    <span><?= e(date("d.m.Y H:i", strtotime($log["date"]))) ?></span>
+                </div>
+                <?php endforeach; ?>
 
                 <?php if ($opt["canEditStatus"]): ?>
                     <hr>

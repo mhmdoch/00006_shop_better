@@ -183,6 +183,9 @@ class OrderController extends z_controller
             $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $orderItemFullPrice, 2);
         }
 
+
+        $logs = $req->getModel("LogActive")->getLogByidAndType($orderId, "order");
+
         $taxPot = [];
         foreach ($grossPot as $taxrate => $grossAmount) {
             $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
@@ -217,6 +220,7 @@ class OrderController extends z_controller
             "statuses" => json_encode($statuses),
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,
+            'logs' => $logs,
         ]);
     }
 }

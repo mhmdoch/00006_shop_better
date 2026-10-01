@@ -35,7 +35,7 @@
                                     <td class="text-right">
                                         <?= e($orderItem["quantity"]) ?>
                                     @if($cartIndex)
-                                        <a href="#" class="raise-cartItem fa-solid fa-square-plus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 erhöhen"></a> <a href="#" class="reduce-cartItem fa-solid fa-square-minus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 verringern"></a>                                  
+                                        <a href="#" class="raise-cartItem fa-solid fa-square-plus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 erhöhen"></a> <a href="#" class="reduce-cartItem fa-solid fa-square-minus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 verringern"></a>
                                     @endif
                                     </td>
                                     <td class="text-right"><?= bcmul($orderItem["taxrate"], 100, 0) ?> %</td>
