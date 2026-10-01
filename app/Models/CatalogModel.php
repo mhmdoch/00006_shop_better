@@ -16,7 +16,19 @@ class CatalogModel extends z_model
 
     public function getCatalogById($catalogId): array
     {
-        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name` FROM `catalog` JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id` WHERE `catalog`.`id` = ?";
+        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name` 
+                FROM `catalog` 
+                JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id` 
+                WHERE `catalog`.`id` = ?";
+        return $this->exec($sql, "i", $catalogId)->resultToLine();
+    }
+
+    public function getCatalogPictureByCatalogId($catalogId): ?array
+    {
+        $sql = "SELECT `catalog`.titlethumb AS thumbid, z_file.reference AS reference, z_file.extension AS extension
+                FROM `catalog`
+                JOIN `z_file` ON `catalog`.titlethumb = `z_file`.`id`
+                WHERE `catalog`.`id` = ?";
         return $this->exec($sql, "i", $catalogId)->resultToLine();
     }
 

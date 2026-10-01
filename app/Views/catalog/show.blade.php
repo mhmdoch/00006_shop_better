@@ -16,7 +16,11 @@
         </div>
 
         <div class="bg-box rounded p-4 mt-4">
-            <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
+            <?php if (isset($opt["titlethumb"]["reference"])) { ?>
+                <img src="<?php $opt["generateResourceLink"]("uploads/{$opt["titlethumb"]["reference"]}.{$opt["titlethumb"]["extension"]}"); ?>" class="card-img-top">
+            <?php } else { ?>
+                <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
+            <?php } ?>
         </div>
 
         <?php if ($opt["catalog"]["itemable_type"] === "shoe"): ?>

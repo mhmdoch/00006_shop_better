@@ -129,6 +129,8 @@ class CatalogController extends z_controller
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
 
+        $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
+
         $sizes = [];
         $colors = [];
         $currentSize = "all";
@@ -177,6 +179,7 @@ class CatalogController extends z_controller
             "currentSize" => $currentSize,
             "currentColor" => $currentColor,
             "selectedItem" => $selectedItem,
+            "titlethumb" => $titlethumb,
         ]);
     }
 }
