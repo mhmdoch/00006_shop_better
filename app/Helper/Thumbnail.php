@@ -33,6 +33,5 @@ class Thumbnail
 
         imagedestroy($oldImage);
         imagedestroy($newImage);
-
     }
 }
