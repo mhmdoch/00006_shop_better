@@ -2,6 +2,7 @@
 
 use \App\Helper\Pagination;
 use \App\Helper\CategoryHelper;
+use \App\Helper\Thumbnail;
 
 class CatalogController extends z_controller
 {
@@ -43,7 +44,8 @@ class CatalogController extends z_controller
 
             return $res->success();
         }
-            $brands = $req->getModel("Brand")->getBrands();
+
+        $brands = $req->getModel("Brand")->getBrands();
 
         return $res->render("catalog/create", [
             "brands" => $brands,
@@ -54,10 +56,50 @@ class CatalogController extends z_controller
     }
 
 
+    public function action_edit(Request $req, Response $res)
+    {
+        $req->checkPermission("catalog.edit");
+
+        $catalogId = $req->getParameters(0, 1);
+        $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
+
+        if ($req->hasFormData()) {
+                    $formResult = $req->validateForm([
+                        (new FormField("brand_id"))->required()->length(1, 255),
+                        (new FormField("name"))->required(),
+                        (new FormField("itemable_type"))->required(),
+                        (new FormField("description"))->required()->length(5, 500),
+                        (new FormField("gender"))->length(1, 100),
+                        (new FormField("titlethumb"))->file(
+                            FILE_SIZE_20MB,
+                            ["jpg", "jpeg", "png"]
+                        ),
+                        (new FormField("active"))->length(1, 500),
+                    ]);
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            $res->updateDatabase("catalog", "id", "i", $catalogId, $formResult);
+            return $res->success();
+        }
+
+        $brands = $req->getModel("Brand")->getBrands();
+
+        return $res->render("catalog/edit", [
+            "brands" => $brands,
+            "catalog" => $catalog,
+            "itemableTypes" => CategoryHelper::itemableTypes(),
+            "isActive" => CategoryHelper::isActive(),
+            "genders" => CategoryHelper::gender(),
+        ]);
+    }
+
+
 
     public function action_index(Request $req, Response $res)
     {
-
         $catalogsType = $req->getParameters(0, 1);
         $catalogsType =  Pagination::paginationCatalogType($catalogsType);
 
@@ -124,12 +166,23 @@ class CatalogController extends z_controller
 
     public function action_show(Request $req, Response $res)
     {
+
         $catalogId = $req->getParameters(0, 1);
 
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
 
         $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
+
+   
+
+        $imageFile = $titlethumb["reference"] . "." . $titlethumb["extension"];
+
+        var_dump($imageFile);
+
+        $test = new Thumbnail();
+        $test->thumbalizer($imageFile, 200, 200);
+    
 
         $sizes = [];
         $colors = [];

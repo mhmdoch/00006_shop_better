@@ -1,6 +1,7 @@
 @extends($layout)
 
 @section("content")
+
     <div id="create_brand"></div>
 
     <script>

@@ -10,7 +10,7 @@
             <h3>
                 <?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?>
                 <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
-                    <a href="<?php echo $opt["root"]; ?>brand/edit/<?= e($opt["catalog"]["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
+                    <a href="<?php echo $opt["root"]; ?>catalog/edit/<?= e($opt["catalog"]["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
                 <?php endif; ?>
             </h3>
         </div>
@@ -18,6 +18,9 @@
         <div class="bg-box rounded p-4 mt-4">
             <?php if (isset($opt["titlethumb"]["reference"])) { ?>
                 <img src="<?php $opt["generateResourceLink"]("uploads/{$opt["titlethumb"]["reference"]}.{$opt["titlethumb"]["extension"]}"); ?>" class="card-img-top">
+            
+        
+
             <?php } else { ?>
                 <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
             <?php } ?>
