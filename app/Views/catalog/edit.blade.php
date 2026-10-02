@@ -9,12 +9,39 @@
             </div>
 
             <div class="bg-box rounded p-4 mb-4">
-                <h5>Variantendaten:</h5>
+                <h5>Produktdaten:</h5>
                 <hr>
                 <div id="create_catalog"></div>
             </div>
         </main>
 
+
+
+    <aside class="col-lg-4">
+        <div class="bg-box rounded p-4">
+            <div class="d-flex justify-content-between">
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-2">
+
+                <span>
+
+                <?php if (isset($opt["titlethumb"]["reference"])) { ?>
+                    <img src="<?php $opt["generateResourceLink"]("uploads/thumb_{$opt["titlethumb"]["reference"]}.{$opt["titlethumb"]["extension"]}"); ?>" class="card-img-top">
+                <?php } else { ?>
+                    <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
+                <?php } ?>
+                </span>
+            </div>
+
+        </div>
+    </aside>
+    </div>
+
+
+    
     <script>
         $(document).ready(function() {
             var catalog_create_form = Z.Forms.create({

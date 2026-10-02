@@ -43,10 +43,13 @@ class CatalogController extends z_controller
 
             $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
-            $imageFile = $titlethumb["reference"] . "." . $titlethumb["extension"];
+            $imageFileName = $titlethumb["reference"];
+            $imageFileType = $titlethumb["extension"];
 
             $test = new Thumbnail();
-            $test->thumbalizer($imageFile, 200, 200);
+            $test->thumbalizer($imageFileName, $imageFileType);
+
+
 
             return $res->success();
         }
@@ -88,9 +91,6 @@ class CatalogController extends z_controller
             }
 
             $res->updateDatabase("catalog", "id", "i", $catalogId, $formResult);
-
-
-
             return $res->success();
         }
 
@@ -183,12 +183,9 @@ class CatalogController extends z_controller
 
         $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
-        $imageFile = $titlethumb["reference"] . "." . $titlethumb["extension"];
+   
 
-        $test = new Thumbnail();
-        $test->thumbalizer($imageFile, 200, 200);
-    
-
+  
         $sizes = [];
         $colors = [];
         $currentSize = "all";

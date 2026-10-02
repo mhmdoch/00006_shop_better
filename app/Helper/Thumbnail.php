@@ -5,26 +5,38 @@ namespace App\Helper;
 class Thumbnail
 {
 
-    public function thumbalizer($image, $width = 200, $height = 200) {
+    public function allToJPG($imageFileName, $imageFileType) {
+
+    }
+
+    public function thumbalizer($imageFileName, $imageFileType) {
         $path = 'webroot/uploads/';
-        
-        $source = $path . $image;
-        $destination = $path . "thumb_" . $image;
+
+        $source = $path . $imageFileName . "." . $imageFileType;
+        $destination = $path . "thumb_" . $imageFileName . "." . $imageFileType;
 
         $oldSize = getimagesize($source);
         $oldWidth = $oldSize[0];
         $oldHeight = $oldSize[1];
 
-        $oldImage = imagecreatefromjpeg($source);
-        $newImage = imagecreatetruecolor($width, $height);
+        $newWidth = 300;
+        $newHeight = (int) ($oldHeight * $newWidth / $oldWidth);
+
+        if ($imageFileType == "jpg" || $imageFileType == "jpeg") {
+            $oldImage = imagecreatefromjpeg($source);
+        } else {
+            $oldImage = imagecreatefrompng($source);
+        };
+
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);
 
         imagecopyresampled(
             $newImage,
             $oldImage,
             0, 0,
             0, 0,
-            $width,
-            $height,
+            $newWidth,
+            $newHeight,
             $oldWidth,
             $oldHeight
         );
@@ -33,5 +45,6 @@ class Thumbnail
 
         imagedestroy($oldImage);
         imagedestroy($newImage);
+
     }
 }

@@ -1,7 +1,21 @@
 @extends($layout)
 
 @section("content")
-    <div id="create_catalog"></div>
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="bg-box rounded p-4 mb-4">
+                <p class="brand-kicker mb-1">Erstellen</p>
+                <h1 class="h2 mb-2">Neues Produkt</h1>
+            </div>
+
+            <div class="bg-box rounded p-4 mb-4">
+                <h5>Produktdaten:</h5>
+                <hr>
+                <div id="create_catalog"></div>
+            </div>
+        </main>
+
+
 
     <script>
         $(document).ready(function() {

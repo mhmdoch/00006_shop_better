@@ -14,7 +14,7 @@ $catalogCount = count($opt["catalogs"]);
 <div class="row">
     <main class="col-lg-12">
         <div class="bg-box rounded p-4 mb-4">
-            <h3>Katalog - Übersicht</h3>
+            <h3>Katalog - Übersicht <a href="<?php echo $opt["root"]; ?>catalog/create" class="bi bi-plus" data-id="" title="erstellen"></a></h3>
         </div>
     </main>
 </div>
@@ -84,8 +84,6 @@ $catalogCount = count($opt["catalogs"]);
 <x-cataloglistitem :catalogs="$opt['catalogs']" :brands="$opt['brands']" :settings="$opt['settings']" :pagination="$opt['pagination']" :opt="$opt"/>
 
 <x-paginationLinks :location="$opt['root'] . 'catalog/index/'" :path="$opt['settings']['type'] . '/' . $opt['settings']['brandId'] . '/' . $opt['settings']['name'] . '/' . $opt['settings']['sortKey'] . '/' . $opt['settings']['orderBy'] . '/' . $opt['settings']['limit']" :opt="$opt"/>
-
-
 
 
 </div>
