@@ -74,9 +74,7 @@
                 </div>
             <?php endif; ?>
 
-            <div class="d-flex justify-content-between">
-                <span>Varianten</span>
-                <span><?= count($opt["items"]) ?></span>
+            <d               <span><?= count($opt["items"]) ?></span>
             </div>
 
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
