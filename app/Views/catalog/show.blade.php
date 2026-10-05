@@ -65,11 +65,17 @@
 
     <aside class="col-lg-4">
         <div class="bg-box rounded p-4">
-            <h5>Übersicht</h
+            <h5>Übersicht</h5>
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
                 <div class="d-flex justify-content-between">
                     <span>Status</span>
-                    <span><?= (e($opt["catalog"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:dark     <span><?= count($opt["items"]) ?></span>
+                    <span><?= (e($opt["catalog"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
+                </div>
+            <?php endif; ?>
+
+            <div class="d-flex justify-content-between">
+                <span>Varianten</span>
+                <span><?= count($opt["items"]) ?></span>
             </div>
 
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>

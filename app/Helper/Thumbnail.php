@@ -28,10 +28,10 @@ class Thumbnail
         $newImage = imagecreatetruecolor($newWidth, $newHeight);
 
         imagecopyresampled(
-            $newImage,
-            $oldImage,
-            0, 0,
-            0, 0,
+            $newImage,  // Target Pic
+            $oldImage,  // Source Pic
+            0, 0,       // Target Start X, Y new image
+            0, 0,       // Source Start X, Y old image
             $newWidth,
             $newHeight,
             $oldWidth,
@@ -41,31 +41,104 @@ class Thumbnail
         imagejpeg($newImage, $destination, 100);
 
         imagedestroy($oldImage);
-        imagedestroy($newImage);
+        //imagedestroy($newImage);
 
         if ($source !== $destination && file_exists($source)) {
             unlink($source);
         }
 
-        $thumbWidth = 300;
-        $thumbHeight = (int) ($oldHeight * $thumbWidth / $oldWidth);
-        
-        $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
+        $src_w = imagesx($newImage);
+        $src_h = imagesy($newImage);
+
+        $thumbMaxEdgeLength = 300;
+
+        if ($src_w >= $src_h) {
+            $thumbWidthRatio = $src_w / $thumbMaxEdgeLength;
+
+            $thumbWidth = $thumbMaxEdgeLength;
+            $thumbHeight = $src_h / $thumbWidthRatio;
+        } else {
+            $thumbHeightRatio = $src_h / $thumbMaxEdgeLength;
+
+            $thumbHeight = $thumbMaxEdgeLength;
+            $thumbWidth = $src_w / $thumbHeightRatio;
+        }
+
+        $thumbWidth = (int) $thumbWidth;
+        $thumbHeight = (int) $thumbHeight;
+
+        $newThumbFront = imagecreatetruecolor($thumbWidth, $thumbHeight);
+        $newThumbBackground = imagecreatetruecolor($thumbMaxEdgeLength, $thumbMaxEdgeLength);
 
         imagecopyresampled(
-            $thumb,
-            $oldImage,
+            $newThumbFront,
+            $newImage,
             0, 0,
             0, 0,
             $thumbWidth,
             $thumbHeight,
-            $oldWidth,
-            $oldHeight
+            $src_w,
+            $src_h
         );
 
-        imagejpeg($thumb, $thumbDestination, 100);
+        for ($i = 0; $i < 10; $i++) {
+            imagefilter($newImage, IMG_FILTER_GAUSSIAN_BLUR);
+        }
 
-        $fileSize = filesize($destination);
-        $req->getModel("Catalog")->updateZFile($id, $fileSize);
+        imagecopyresampled(
+            $newThumbBackground,
+            $newImage,
+            0, 0,
+            0, 0,
+            $thumbMaxEdgeLength,
+            $thumbMaxEdgeLength,
+            $src_w,
+            $src_h
+        );
+
+
+        imagecopy(
+            $newThumbBackground,
+            $newThumbFront,
+            (int) (($thumbMaxEdgeLength - $thumbWidth) / 2), (int) (($thumbMaxEdgeLength - $thumbHeight) / 2),
+            0, 0,
+            $thumbWidth,
+            $thumbHeight
+        );
+
+        imagejpeg($newThumbBackground, $thumbDestination, 100);
+
+
+        imagedestroy($newImage);
+        imagedestroy($newThumbFront);
+        imagedestroy($newThumbBackground);
+
+
+
+        // $thumbWidth = 300;
+        // $thumbHeight = (int) ($oldHeight * $thumbWidth / $oldWidth);
+        
+        // $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
+
+        // imagecopyresampled(
+        //     $thumb,
+        //     $oldImage,
+        //     0, 0,
+        //     0, 0,
+        //     $thumbWidth,
+        //     $thumbHeight,
+        //     $oldWidth,
+        //     $oldHeight
+        // );
+
+        // for ($i = 0; $i < 10; $i++) {
+        //     imagefilter($thumb, IMG_FILTER_GAUSSIAN_BLUR);
+        // }
+        
+
+        // imagejpeg($thumb, $thumbDestination, 100);
+
+        // $fileSize = filesize($destination);
+        // $req->getModel("Catalog")->updateZFile($id, $fileSize);
     }
 }
