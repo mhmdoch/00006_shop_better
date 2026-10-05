@@ -14,9 +14,8 @@ $catalogCount = count($catalogs);
             <?php } ?>
 
             <a href="<?php echo $opt["root"]; ?>catalog/show/<?= e($catalog["id"]) ?>" class="card mb-4 rounded">
-                   
                 <?php if (isset($catalog["thumb_reference"])) { ?>
-                    <img src="<?php $opt["generateResourceLink"]("uploads/{$catalog["thumb_reference"]}.{$catalog["thumb_extension"]}"); ?>" class="card-img-top">
+                    <img src="<?php $opt["generateResourceLink"]("uploads/thumb_{$catalog["thumb_reference"]}.{$catalog["thumb_extension"]}"); ?>" class="card-img-top">
                 <?php } else { ?>
                     <img src="<?php $opt["generateResourceLink"]("assets/img/{$catalog["itemable_type"]}.png"); ?>" class="card-img-top">
                 <?php } ?>

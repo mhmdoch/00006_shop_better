@@ -32,10 +32,12 @@ class ItemModel extends z_model
 
         $catalogIdList = implode(', ', $catalogIds);
 
-        $sql = "SELECT *
+        $sql = "SELECT *, zf.reference AS thumb_reference, zf.extension AS thumb_extension
                 FROM `item`
+                JOIN `catalog` ON `item`.`catalog_id` = `catalog`.`id`
+                LEFT JOIN `z_file` AS zf ON `catalog`.`titlethumb` = zf.`id`
                 WHERE `catalog_id` IN ({$catalogIdList})
-                AND `active` = 1";
+                AND item.`active` = 1";
 
         return $this->exec($sql)->resultToArray();
     }

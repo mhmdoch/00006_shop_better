@@ -72,9 +72,9 @@
                     <span>Status</span>
                     <span><?= (e($opt["catalog"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
                 </div>
-            <?php endif; ?>
+            <?php endif;?
 
-            <d               <span><?= count($opt["items"]) ?></span>
+               <span><?= count($opt["items"]) ?></span>
             </div>
 
             <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
