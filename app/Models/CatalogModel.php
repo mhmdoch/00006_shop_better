@@ -3,6 +3,14 @@
 class CatalogModel extends z_model
 {
 
+    public function testpicture(): array
+    {
+        $sql = "SELECT z_file.reference AS reference, z_file.extension AS extension 
+                FROM `z_file` 
+                WHERE `z_file`.`id` = ?";
+        return $this->exec($sql, "i", 1)->resultToLine();
+    }
+
     public function getCatalogs(): array
     {
         $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price
