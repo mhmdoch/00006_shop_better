@@ -33,9 +33,9 @@ class ItemModel extends z_model
         $catalogIdList = implode(', ', $catalogIds);
 
         $sql = "SELECT *
-        FROM `item`
-        WHERE `catalog_id` IN ({$catalogIdList})
-        AND `active` = 1";
+                FROM `item`
+                WHERE `catalog_id` IN ({$catalogIdList})
+                AND `active` = 1";
 
         return $this->exec($sql)->resultToArray();
     }

@@ -34,12 +34,10 @@ class CatalogController extends z_controller
             $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
             $imageAsJPG = new Thumbnail();
-            $newTitleThumb = $imageAsJPG->allToJPG($titlethumb["reference"], $titlethumb["extension"]);
-            $imageFileName = $newTitleThumb["reference"];
-            $imageFileType = $newTitleThumb["extension"];
+            $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
+            
 
-            //$test = new Thumbnail();
-            $imageAsJPG->thumbalizer($imageFileName, $imageFileType);
+
 
             $res->insertDatabase(
                             "log_active",
@@ -50,12 +48,6 @@ class CatalogController extends z_controller
                             "active_id" => $catalogId,
                             "action" => "aktiviert"]
                             );
-
-
-
-
-
-
 
             return $res->success();
         }

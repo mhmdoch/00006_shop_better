@@ -34,9 +34,10 @@ class CatalogModel extends z_model
 
     public function getCatalogsByFilters($type, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset): array
     {
-        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price 
+        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price, zf. reference AS thumb_reference, zf.extension AS thumb_extension    
                             FROM `catalog` 
                             JOIN `brand` ON catalog.brand_id = brand.id 
+                            LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
                             LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
                             WHERE catalog.active = 1 
                                     AND (? = 'all' OR catalog.itemable_type = ?) 
@@ -122,5 +123,11 @@ class CatalogModel extends z_model
                         GROUP BY catalog.id 
                         ORDER BY `name`";
         return $this->exec($sql, "i", $brandId)->resultToArray();
+    }
+
+    public function updateZFile($id, $fileSize): void
+    {
+        $sql = "UPDATE z_file SET type = ?, extension = ?, size = ? WHERE id = ?";
+        $this->exec($sql, "ssii", "image/jpeg", "jpg", $fileSize, $id);
     }
 }

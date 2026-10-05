@@ -4,12 +4,12 @@ namespace App\Helper;
 
 class Thumbnail
 {
-    public function allToJPG($imageFileName, $imageFileType)
-    {
+    public function toJPGwithThumb($imageFileName, $imageFileType, $id, $req): void {
         $path = 'webroot/uploads/';
 
         $source = $path . $imageFileName . "." . $imageFileType;
         $destination = $path . $imageFileName . ".jpg";
+        $thumbDestination = $path . "thumb_" . $imageFileName . ".jpg";
 
 
         $oldSize = getimagesize($source);
@@ -47,49 +47,25 @@ class Thumbnail
             unlink($source);
         }
 
-        return [
-            "reference" => $imageFileName,
-            "extension" => "jpg",
-        ];
-
-    }
-
-    public function thumbalizer($imageFileName, $imageFileType) {
-        $path = 'webroot/uploads/';
-
-        $source = $path . $imageFileName . "." . $imageFileType;
-        $destination = $path . "thumb_" . $imageFileName . "." . $imageFileType;
-
-        $oldSize = getimagesize($source);
-        $oldWidth = $oldSize[0];
-        $oldHeight = $oldSize[1];
-
-        $newWidth = 300;
-        $newHeight = (int) ($oldHeight * $newWidth / $oldWidth);
-
-        if ($imageFileType == "jpg" || $imageFileType == "jpeg") {
-            $oldImage = imagecreatefromjpeg($source);
-        } else {
-            $oldImage = imagecreatefrompng($source);
-        };
-
-        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+        $thumbWidth = 300;
+        $thumbHeight = (int) ($oldHeight * $thumbWidth / $oldWidth);
+        
+        $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
 
         imagecopyresampled(
-            $newImage,
+            $thumb,
             $oldImage,
             0, 0,
             0, 0,
-            $newWidth,
-            $newHeight,
+            $thumbWidth,
+            $thumbHeight,
             $oldWidth,
             $oldHeight
         );
 
-        imagejpeg($newImage, $destination, 100);
+        imagejpeg($thumb, $thumbDestination, 100);
 
-        imagedestroy($oldImage);
-        imagedestroy($newImage);
-
+        $fileSize = filesize($destination);
+        $req->getModel("Catalog")->updateZFile($id, $fileSize);
     }
 }
