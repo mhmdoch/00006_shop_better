@@ -16,7 +16,8 @@ class BrandController extends z_controller
         return $res->render("brand/index", [
             "brands" => $brands,
             "showActivity" => $showActivity,
-            "brandsAZ" => $brandsAZ
+            "brandsAZ" => $brandsAZ,
+            "navMenu" => "brand",
         ]);
     }
 
@@ -35,7 +36,8 @@ class BrandController extends z_controller
         return $res->render("brand/index", [
             "brands" => $brands,
             "showActivity" => $showActivity,
-            "brandsAZ" => $brandsAZ
+            "brandsAZ" => $brandsAZ,
+            "navMenu" => "brand",
         ]);
     }
 
@@ -54,7 +56,8 @@ class BrandController extends z_controller
         return $res->render("brand/index", [
             "brands" => $brands,
             "showActivity" => $showActivity,
-            "brandsAZ" => $brandsAZ
+            "brandsAZ" => $brandsAZ,
+            "navMenu" => "brand",
         ]);
     }
 
@@ -132,7 +135,7 @@ class BrandController extends z_controller
             "logActive" => $logActive,
             "settings" => $settings,
             "pagination" => $pagination,
-
+            "navMenu" => "brand",
         ]);
     }
 
@@ -167,6 +170,7 @@ class BrandController extends z_controller
 
         return $res->render("brand/create", [
             //"userId" => $user->userId,
+            "navMenu" => "brand",
         ]);
     }
 
@@ -193,6 +197,7 @@ class BrandController extends z_controller
 
         return $res->render("brand/edit", [
             "brand" => $brand,
+            "navMenu" => "brand",
         ]);
     }
 

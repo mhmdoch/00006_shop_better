@@ -81,9 +81,11 @@ class Thumbnail
             $src_h
         );
 
-        for ($i = 0; $i < 10; $i++) {
-            imagefilter($newImage, IMG_FILTER_GAUSSIAN_BLUR);
-        }
+        // for ($i = 0; $i < 10; $i++) {
+        //     imagefilter($newImage, IMG_FILTER_GAUSSIAN_BLUR);
+        // }
+        // imagefilter($newImage, IMG_FILTER_BRIGHTNESS, -50);
+
 
         imagecopyresampled(
             $newThumbBackground,
@@ -96,6 +98,10 @@ class Thumbnail
             $src_h
         );
 
+        for ($i = 0; $i < 300; $i++) {
+            imagefilter($newThumbBackground, IMG_FILTER_GAUSSIAN_BLUR);
+        }
+        imagefilter($newThumbBackground, IMG_FILTER_BRIGHTNESS, -50);
 
         imagecopy(
             $newThumbBackground,
@@ -108,37 +114,12 @@ class Thumbnail
 
         imagejpeg($newThumbBackground, $thumbDestination, 100);
 
-
         imagedestroy($newImage);
         imagedestroy($newThumbFront);
         imagedestroy($newThumbBackground);
 
 
-
-        // $thumbWidth = 300;
-        // $thumbHeight = (int) ($oldHeight * $thumbWidth / $oldWidth);
-        
-        // $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
-
-        // imagecopyresampled(
-        //     $thumb,
-        //     $oldImage,
-        //     0, 0,
-        //     0, 0,
-        //     $thumbWidth,
-        //     $thumbHeight,
-        //     $oldWidth,
-        //     $oldHeight
-        // );
-
-        // for ($i = 0; $i < 10; $i++) {
-        //     imagefilter($thumb, IMG_FILTER_GAUSSIAN_BLUR);
-        // }
-        
-
-        // imagejpeg($thumb, $thumbDestination, 100);
-
-        // $fileSize = filesize($destination);
-        // $req->getModel("Catalog")->updateZFile($id, $fileSize);
+        $fileSize = filesize($destination);
+        $req->getModel("Catalog")->updateZFile($id, $fileSize);
     }
 }

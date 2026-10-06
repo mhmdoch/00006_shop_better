@@ -71,6 +71,7 @@ class CartController extends z_controller
             "cartItems" => $cartItems,
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,
+            "navMenu" => "cart",
         ]);
     }
 

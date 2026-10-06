@@ -32,6 +32,7 @@ class ItemController extends z_controller
 
         return $res->render("item/itemShoeCreate", [
             "catalog" => $catalog,
+            "navMenu" => "item",
         ]);
     }
 
@@ -109,6 +110,7 @@ class ItemController extends z_controller
         return $res->render("item/itemShoeEdit", [
             "item" => $item,
             "catalog" => $catalog,
+            "navMenu" => "item",
         ]);
     }
 
@@ -146,6 +148,7 @@ class ItemController extends z_controller
 
         return $res->render("item/itemLegoCreate", [
             "catalog" => $catalog,
+            "navMenu" => "item",
         ]);
     }
 }

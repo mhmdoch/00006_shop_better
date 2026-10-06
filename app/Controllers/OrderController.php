@@ -82,7 +82,8 @@ class OrderController extends z_controller
             "orderItems" => $orderItems,
             "total" => $total,
             "totalSum" => $totalSum,
-            "taxPot" => $taxPot
+            "taxPot" => $taxPot,
+            "navMenu" => "order",
         ]);
     }
 
@@ -96,6 +97,7 @@ class OrderController extends z_controller
             "orders" => $orders,
             "title" => "Bestellungen",
             "showCustomer" => true,
+            "navMenu" => "allorder",
         ]);
     }
 
@@ -110,6 +112,7 @@ class OrderController extends z_controller
             "orders" => $orders,
             "title" => "Meine Bestellungen",
             "showCustomer" => false,
+            "navMenu" => "order",
         ]);
     }
 
@@ -221,6 +224,7 @@ class OrderController extends z_controller
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,
             'logs' => $logs,
+            "navMenu" => "order",
         ]);
     }
 }

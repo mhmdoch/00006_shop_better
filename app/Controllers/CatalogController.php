@@ -7,18 +7,6 @@ use \App\Helper\Thumbnail;
 class CatalogController extends z_controller
 {
 
-    public function action_test(Request $req, Response $res) {
-
-            $titlethumb = $res->getModel("Catalog")->testpicture();
-
-            $imageAsJPG = new Thumbnail();
-            $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], 1, $req);
-
-        return $res->render("catalog/test", [
-
-        ]);
-    }
-
     public function action_create(Request $req, Response $res)
     {
         $req->checkPermission("catalog.create");
@@ -71,6 +59,7 @@ class CatalogController extends z_controller
             "itemableTypes" => CategoryHelper::itemableTypes(),
             "isActive" => CategoryHelper::isActive(),
             "genders" => CategoryHelper::gender(),
+            "navMenu" => "catalog"
         ]);
     }
 
@@ -112,6 +101,7 @@ class CatalogController extends z_controller
             "itemableTypes" => CategoryHelper::itemableTypes(),
             "isActive" => CategoryHelper::isActive(),
             "genders" => CategoryHelper::gender(),
+            "navMenu" => "catalog"
         ]);
     }
 
@@ -179,7 +169,8 @@ class CatalogController extends z_controller
             "catalogs" => $catalogs,
             "brands" => $brands,
             "settings" => $settings,
-            "pagination" => $pagination
+            "pagination" => $pagination,
+            "navMenu" => "catalog",
         ]);
     }
 
@@ -245,6 +236,7 @@ class CatalogController extends z_controller
             "currentColor" => $currentColor,
             "selectedItem" => $selectedItem,
             "titlethumb" => $titlethumb,
+            "navMenu" => "catalog",
         ]);
     }
 }

@@ -19,23 +19,23 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="<?php echo $opt["root"]; ?>catalog/index/all/0/all/name/ASC/15/0">Katalog <span class="sr-only">(current)</span></a>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "catalog" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>catalog/index/all/0/all/name/ASC/15/0">Katalog <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $opt["root"]; ?>brand/">Marken</a>
+                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "brand" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>brand/">Marken</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $opt["root"]; ?>cart">Warenkorb</a>
+                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "cart" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>cart">Warenkorb</a>
                     </li>
                     <?php if ($opt["user"]->checkPermission("order.own")): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo $opt["root"]; ?>order/own">Meine Bestellungen</a>
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "order" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>order/own">Meine Bestellungen</a>
                         </li>
                     <?php endif; ?>
                     <?php if ($opt["user"]->checkPermission("order.index")): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $opt["root"] ?>order">Alle Bestellungen</a>
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>
                 </ul>
