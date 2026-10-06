@@ -5,6 +5,8 @@ ARG USER_UID=1000
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 USER root
+RUN install-php-extensions imagick
+
 RUN usermod -u "${USER_UID}" www-data \
  && groupmod -g "${USER_UID}" www-data \
  && chown -R www-data:www-data /var/www /var/log/apache2 /run/apache2

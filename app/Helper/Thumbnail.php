@@ -81,12 +81,6 @@ class Thumbnail
             $src_h
         );
 
-        // for ($i = 0; $i < 10; $i++) {
-        //     imagefilter($newImage, IMG_FILTER_GAUSSIAN_BLUR);
-        // }
-        // imagefilter($newImage, IMG_FILTER_BRIGHTNESS, -50);
-
-
         imagecopyresampled(
             $newThumbBackground,
             $newImage,
@@ -98,7 +92,7 @@ class Thumbnail
             $src_h
         );
 
-        for ($i = 0; $i < 300; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             imagefilter($newThumbBackground, IMG_FILTER_GAUSSIAN_BLUR);
         }
         imagefilter($newThumbBackground, IMG_FILTER_BRIGHTNESS, -50);

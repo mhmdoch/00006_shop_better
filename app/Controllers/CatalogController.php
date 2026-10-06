@@ -3,9 +3,24 @@
 use \App\Helper\Pagination;
 use \App\Helper\CategoryHelper;
 use \App\Helper\Thumbnail;
+use \App\Helper\Thumbmagick;
 
 class CatalogController extends z_controller
 {
+    public function action_test(Request $req, Response $res)
+    {
+        $titlethumb = $res->getModel("Catalog")->testpicture();
+
+        $path = "webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension'];
+        $image = new Thumbmagick($path);
+        $image->thumbalize($titlethumb['reference'], 1, $req);
+
+        return $res->render("catalog/test", [
+            "titlethumb"=> $titlethumb
+        ]);
+    }
+
+
 
     public function action_create(Request $req, Response $res)
     {
@@ -33,10 +48,12 @@ class CatalogController extends z_controller
 
             $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
-            $imageAsJPG = new Thumbnail();
-            $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
-            
 
+            // $imageAsJPG = new Thumbnail();
+            // $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
+
+            $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
+            $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
 
 
             $res->insertDatabase(
