@@ -18,6 +18,15 @@ class ItemModel extends z_model
         return $this->exec($sql, "i", $catalogId)->resultToArray();
     }
 
+    public function getItemsByCartId($itemId): array
+    {
+        $sql = "SELECT `item`.*, `catalog`.`itemable_type`
+                FROM `item`
+                JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                WHERE `item`.`id` = ?";
+        return $this->exec($sql, "i", $itemId)->resultToLine();
+    }
+
     public function getItemsByCatalogIds(array $catalogIds): array
     {
         $catalogIds = array_values(

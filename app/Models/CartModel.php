@@ -166,4 +166,33 @@ class CartModel extends z_model
         $sql = "SELECT `quantity` FROM `cart_item` WHERE `id` = ?";
         return $this->exec($sql, "i", $cartItemId)->resultToLine()["quantity"] ?? null;
     }
+
+    public function getItemsByCartId(int $cartId): array
+    {
+        $sql = "SELECT
+                    `cart_item`.`id` AS `cart_item_id`,
+                    `cart_item`.`quantity`,
+                    `item`.`id` AS `item_id`,
+                    `item`.`size`,
+                    `item`.`color`,
+                    `item`.`price`,
+                    `item`.`stock`,
+                    `item`.`taxrate`,
+                    `catalog`.`id` AS `catalog_id`,
+                    `catalog`.`name` AS `catalog_name`,
+                    `catalog`.`itemable_type`,
+                    `brand`.`name` AS `brand_name`,
+                    `z_user`.`email` AS `user_email`
+                FROM `cart`
+                JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
+                JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+                LEFT JOIN `z_user` ON `z_user`.`id` = `cart`.`user_id`
+                WHERE `cart`.`id` = ?
+                AND `item`.`active` = 1
+                ORDER BY `cart_item`.`created` ASC";
+
+        return $this->exec($sql, "i", $cartId)->resultToArray();
+    }
 }

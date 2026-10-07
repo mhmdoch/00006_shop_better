@@ -9,33 +9,6 @@ class OrderController extends z_controller
         $cart = $req->getModel("Cart")->assertCartExists();
         $cartItems = $req->getModel("Cart")->getItems();
 
-        if ($req->hasFormData()) {
-            if (empty($cartItems)) {
-                return $res->error();
-            }
-
-            $addressForm = $req->validateForm([
-                (new FormField("recipient"))->required()->length(2, 255),
-                (new FormField("address_line_1"))->required()->length(2, 255),
-                (new FormField("address_line_2"))->length(0, 255),
-                (new FormField("postal_code"))->required()->length(2, 20),
-                (new FormField("city"))->required()->length(2, 100),
-                (new FormField("country"))->required()->length(2, 100),
-            ]);
-
-            if ($addressForm->hasErrors) {
-                return $res->formErrors($addressForm->errors);
-            }
-
-            $orderId = $req->getModel("Order")->createOrder($cart["id"], $addressForm);
-
-            return $res->success([
-                "orderId" => $orderId,
-
-            ]);
-        }
-
-
         $orderItems = $cartItems;
 
         $grossPot = [];
@@ -68,9 +41,51 @@ class OrderController extends z_controller
                 'taxrate' => $taxrate,
                 ];}
 
+        if ($req->hasFormData()) {
+            if (empty($cartItems)) {
+                return $res->error();
+            }
 
-      
+            $addressForm = $req->validateForm([
+                (new FormField("recipient"))->required()->length(2, 255),
+                (new FormField("address_line_1"))->required()->length(2, 255),
+                (new FormField("address_line_2"))->length(0, 255),
+                (new FormField("postal_code"))->required()->length(2, 20),
+                (new FormField("city"))->required()->length(2, 100),
+                (new FormField("country"))->required()->length(2, 100),
+            ]);
 
+            if ($addressForm->hasErrors) {
+                return $res->formErrors($addressForm->errors);
+            }
+
+            $orderId = $req->getModel("Order")->createOrder($cart["id"], $addressForm);
+
+            $order = $req->getModel("Order")->getOrderById($orderId);
+
+            $items = $req->getModel("Cart")->getItemsByCartId($cart["id"]);
+
+            $res->sendEmail(
+                $order["email"],                    // Recipient
+                "Welcome to our service!",          // Subject
+                "email/orderconfirmation",          // View file
+                "en",                               // Language
+                [
+                    "name" => $order["email"],
+                    "order" => $order,
+                    "items" => $items,
+                    "totalSum" => $totalSum,
+                    "taxPot" => $taxPot,
+                ],
+                "mail_layout",                      // Layout file
+            );
+
+
+            return $res->success([
+                "orderId" => $orderId,
+
+            ]);
+        }
 
         $total = 0;
         foreach ($cartItems as $cartItem) {
