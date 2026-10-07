@@ -3,7 +3,7 @@
 
 
 @section("content")
-    <h2>Hallo, {{ $name }}!</h2>
+    <h2>Hallo, {{ $order['recipient'] }}!</h2>
 
     <p>Wir haben Deine Bestellung erhalten!</p>
 
@@ -11,31 +11,30 @@
     <table>
         <tbody>
             <tr>
-                <th scope="row" style="text-align:left;">Empfänger</th>
+                <th tyle="text-align:left;">Empfänger</th>
                 <td>{{ $order['recipient'] }}</td>
             </tr>
             <tr>
-                <th scope="row" style="text-align:left;">Straße / Hausnummer</th>
+                <th style="text-align:left;">Straße / Hausnummer</th>
                 <td>{{ $order['address_line_1'] }}</td>
             </tr>
-            @if(!empty($order['address_line_2']))
-                <tr>
-                    <th scope="row" style="text-align:left;">Adresszusatz</th>
-                    <td>{{ $order['address_line_2'] }}</td>
-                </tr>
-            @endif
             <tr>
-                <th scope="row" style="text-align:left;">PLZ / Ort</th>
+                <th style="text-align:left;">Adresszusatz</th>
+                <td>{{ $order['address_line_2'] }}</td>
+            </tr>
+            <tr>
+                <th style="text-align:left;">PLZ / Ort</th>
                 <td>{{ $order['postal_code'] }} {{ $order['city'] }}</td>
             </tr>
             <tr>
-                <th scope="row" style="text-align:left;">Land</th>
+                <th style="text-align:left;">Land</th>
                 <td>{{ $order['country'] }}</td>
             </tr>
         </tbody>
     </table>
   
-    <p>Hier eine Übersicht:</p>
+    <br>
+    <h3>Bestellung</h3>
     <br>
 
     <x-orderitemlist

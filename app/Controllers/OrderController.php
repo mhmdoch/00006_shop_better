@@ -62,16 +62,14 @@ class OrderController extends z_controller
             $orderId = $req->getModel("Order")->createOrder($cart["id"], $addressForm);
 
             $order = $req->getModel("Order")->getOrderById($orderId);
-
             $items = $req->getModel("Cart")->getItemsByCartId($cart["id"]);
 
             $res->sendEmail(
                 $order["email"],                    // Recipient
-                "Welcome to our service!",          // Subject
+                "Bestellinformationen",             // Subject
                 "email/orderconfirmation",          // View file
                 "en",                               // Language
                 [
-                    "name" => $order["email"],
                     "order" => $order,
                     "items" => $items,
                     "totalSum" => $totalSum,
@@ -172,6 +170,18 @@ class OrderController extends z_controller
                 ]
             );
             $req->getModel("Order")->updateStatus((int) $orderId, $statusForm->getValue("status"));
+
+            $res->sendEmail(
+                $order["email"],
+                "Status deiner Bestellung",
+                "email/orderstatus",
+                "de",
+                [
+                    "order" => $order,
+                    "status" => $statusForm->getValue("status"),
+                ],
+                "mail_layout",
+            );
 
             return $res->success();
         }
