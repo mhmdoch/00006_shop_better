@@ -7,21 +7,6 @@ use \App\Helper\Thumbmagick;
 
 class CatalogController extends z_controller
 {
-    public function action_test(Request $req, Response $res)
-    {
-        $titlethumb = $res->getModel("Catalog")->testpicture();
-
-        $path = "webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension'];
-        $image = new Thumbmagick($path);
-        $image->thumbalize($titlethumb['reference'], 1, $req);
-
-        return $res->render("catalog/test", [
-            "titlethumb"=> $titlethumb
-        ]);
-    }
-
-
-
     public function action_create(Request $req, Response $res)
     {
         $req->checkPermission("catalog.create");
@@ -48,12 +33,13 @@ class CatalogController extends z_controller
 
             $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
+            // picture processing with GD-Image
+                // $imageAsJPG = new Thumbnail();
+                // $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
 
-            // $imageAsJPG = new Thumbnail();
-            // $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
-
-            $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
-            $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
+            // picture processing with Imagick
+                $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
+                $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
 
 
             $res->insertDatabase(
@@ -87,6 +73,10 @@ class CatalogController extends z_controller
 
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
+
+        if ($catalog === null) {
+            return $res->reroute(["error", "404"]);
+        }
 
         if ($req->hasFormData()) {
                     $formResult = $req->validateForm([
@@ -197,6 +187,11 @@ class CatalogController extends z_controller
         $catalogId = $req->getParameters(0, 1);
 
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
+
+        if ($catalog === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
 
         $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);

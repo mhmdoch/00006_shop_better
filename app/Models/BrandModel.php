@@ -28,7 +28,7 @@ class BrandModel extends z_model
         return $this->exec($sql)->resultToArray();
     }
 
-    public function getBrandById($brandId): array
+    public function getBrandById($brandId): ?array
     {
         $sql = "SELECT * FROM `brand` WHERE `id` = ?";
         return $this->exec($sql, "i", $brandId)->resultToLine();

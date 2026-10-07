@@ -43,7 +43,7 @@ class ItemModel extends z_model
     }
 
 
-    public function getItemShoeById($itemId): array
+    public function getItemShoeById($itemId): ?array
     {
         $sql = "SELECT `item`.*, `brand`.`name` AS `brand_name`, `catalog`.`name` AS `catalog_name`, `catalog`.`id` AS `catalog_id`
                 FROM `item`

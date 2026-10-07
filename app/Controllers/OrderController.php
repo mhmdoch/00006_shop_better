@@ -122,6 +122,10 @@ class OrderController extends z_controller
 
         $order = $req->getModel("Order")->getOrderById($orderId);
 
+        if ($order === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         $stateMachine = new \App\Helper\OrderState();
         $statuses = $stateMachine->orderStateNext($order["status"]);
 

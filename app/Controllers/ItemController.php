@@ -42,6 +42,11 @@ class ItemController extends z_controller
 
         $itemId = $req->getParameters(0, 1);
         $item = $req->getModel("Item")->getItemShoeById($itemId);
+
+        if ($item === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         $catalog = $req->getModel("Catalog")->getCatalogById($item["catalog_id"]);
 
         if ($req->hasFormData()) {

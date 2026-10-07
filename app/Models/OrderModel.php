@@ -163,7 +163,7 @@ class OrderModel extends z_model
         return $this->exec($sql, "i", $userId)->resultToArray();
     }
 
-    public function getOrderById($orderId): array
+    public function getOrderById($orderId): ?array
     {
         $sql = "SELECT
                     `order`.*,

@@ -65,6 +65,11 @@ class BrandController extends z_controller
     {
         $brandId = $req->getParameters(0, 1);
         $brand = $req->getModel("Brand")->getBrandById($brandId);
+
+        if ($brand === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         $catalogs = $req->getModel("Catalog")->getCatalogsByBrand($brandId);
 
         $name = $req->getParameters(1, 1) ?: "all";
@@ -85,16 +90,15 @@ class BrandController extends z_controller
         $pageOffset = (int) $pageLimit * ((int) $pageNumber - 1);
 
         $catalogs = $req->getModel("Catalog")->getCatalogsForBrandShow(
-                                                                    $brandId,
-                                                                    $name,
-                                                                    $price,
-                                                                    $orderBy,
-                                                                    $sortDir,
-                                                                    $pageLimit,
-                                                                    $pageOffset
-                                                                    );
-        $catalogsAll = $req->getModel("Catalog")->getCatalogsForBrandShowNoFilter($brandId, $name, $price);
-        
+            $brandId,
+            $name,
+            $price,
+            $orderBy,
+            $sortDir,
+            $pageLimit,
+            $pageOffset
+        );
+
         $settings['name'] = $name;
         $settings['sortKey'] = $sortKey;
         $settings['orderBy'] = $orderBy;
@@ -109,20 +113,27 @@ class BrandController extends z_controller
         $pagesAvailableRight = $pagination['pageLast'] - $pageNumber;
 
         $settings['pageNeighboorsAmount'] = 3;
-        $pagination['pageNeighboorsLeft'] = ($pagesAvailableLeft >= $settings['pageNeighboorsAmount'])
-                                                    ? $settings['pageNeighboorsAmount'] : $pagesAvailableLeft;
-        $pagination['pageNeighboorsRight'] = ($pagesAvailableRight >= $settings['pageNeighboorsAmount'])
-                                                    ? $settings['pageNeighboorsAmount'] : $pagesAvailableRight;
+
+
+        $pagination['pageNeighboorsLeft'] = $pagesAvailableLeft;
+
+        if($pagesAvailableLeft >= $settings['pageNeighboorsAmount']) {
+            $pagination['pageNeighboorsLeft'] = $settings['pageNeighboorsAmount'];
+        }
+
+        $pagination['pageNeighboorsRight'] = $pagesAvailableRight;
+
+        if($pagesAvailableRight >= $settings['pageNeighboorsAmount']) {
+            $pagination['pageNeighboorsRight'] = $settings['pageNeighboorsAmount'];
+        }
 
         $settings['type'] = "all";
         $settings['brandId'] = $brandId;
         $settings['price'] = $price;
 
-
+        $catalogsAll = $req->getModel("Catalog")->getCatalogsForBrandShowNoFilter($brandId, $name, $price);
         $catalogIds = array_column($catalogsAll, "id");
 
-
-        $items = $req->getModel("Item")->getItemsByCatalogIds($catalogIds);
 
         $logActive = $req->getModel("LogActive")->getLogByidAndType($brandId, "brand");
 
@@ -131,7 +142,7 @@ class BrandController extends z_controller
         return $res->render("brand/show", [
             "brand" => $brand,
             "catalogs" => $catalogs,
-            "items" => $items,
+            "items" => $req->getModel("Item")->getItemsByCatalogIds($catalogIds),
             "logActive" => $logActive,
             "settings" => $settings,
             "pagination" => $pagination,
@@ -180,6 +191,10 @@ class BrandController extends z_controller
 
         $brandId = $req->getParameters(0, 1);
         $brand = $req->getModel("Brand")->getBrandById($brandId);
+
+        if ($brand === null) {
+            return $res->reroute(["error", "404"]);
+        }
 
         if ($req->hasFormData()) {
             $formResult = $req->validateForm([

@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Helper;
-use Imagick;
 
+use Exception;
 
-class Thumbmagick extends Imagick
+class Thumbmagick extends \Imagick
 {
+
     public function thumbalize($name, $id, $req): void
     {
         $imageMaxEdgeLength = 1280;
@@ -18,7 +19,7 @@ class Thumbmagick extends Imagick
 
         $newThumbBG = clone $this;
         $newThumbBG->thumbnailImage($thumbMaxEdgeLength, $thumbMaxEdgeLength, false);
-        $newThumbBG->gaussianBlurImage(5, 5);
+        $newThumbBG->gaussianBlurImage(2, 2);
 
         $newThumbFrontWidth = (int) (($thumbMaxEdgeLength - $newThumbFront->getImageWidth()) / 2);
         $newThumbFrontHeight = (int) (($thumbMaxEdgeLength - $newThumbFront->getImageHeight()) / 2);
