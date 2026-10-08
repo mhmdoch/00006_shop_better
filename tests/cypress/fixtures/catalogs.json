@@ -14,6 +14,37 @@
             "LEGO": "Medieval",
             "brand": "adidas"
         }
+    },
+    "variants": {
+        "name": "Classic 2-Eye Bootsschuh",
+        "sizes": 7,
+        "colors": 4,
+        "selected": {
+            "size": "40",
+            "color": "grau",
+            "price": "165,00 €",
+            "stock": "3"
+        },
+        "other_color": {
+            "color": "blau",
+            "price": "155,00 €",
+            "stock": "5"
+        },
+        "other_size": {
+            "size": "41",
+            "colors": 3,
+            "price": "160,00 €",
+            "stock": "4"
+        },
+        "high_stock": {
+            "color": "braun",
+            "price": "155,00 €",
+            "stock": "mehr als 5"
+        },
+        "unavailable": {
+            "color": "schwarz",
+            "price": "165,00 €",
+            "stock": "0"
+        }
     }
 }
-

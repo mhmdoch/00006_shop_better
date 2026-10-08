@@ -1,5 +1,16 @@
 {
     "find": {
-        "name": "adidas"
+        "adidas": "adidas",
+        "asics": "ASICS",
+        "lego": "LEGO",
+        "nike": "Nike",
+        "new_balance": "New Balance"
+    },
+    "filter": {
+        "letter": {
+            "a": "A",
+            "l": "L",
+            "n": "N"
+        }
     }
 }

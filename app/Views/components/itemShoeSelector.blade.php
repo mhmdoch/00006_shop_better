@@ -4,28 +4,31 @@
     <p class="font-weight-bold mb-2">Größe wählen</p>
     <div class="d-flex flex-wrap mb-3">
         <a href="<?= $opt["root"] ?>catalog/show/<?= e($opt["catalog"]["id"]) ?>"
+           data-test="variant_size_all"
            class="btn <?= $opt["currentSize"] === "all" ? "btn-secondary" : "btn-outline-secondary" ?> mr-2 mb-2">
             Alle
         </a>
         <?php foreach ($opt["sizes"] as $size): ?>
             <a href="<?= $opt["root"] ?>catalog/show/<?= e($opt["catalog"]["id"]) ?>?size=<?= rawurlencode($size) ?>"
+               data-test="variant_size"
                class="btn <?= $opt["currentSize"] === $size ? "btn-secondary" : "btn-outline-secondary" ?> mr-2 mb-2">
                 <?= e($size) ?>
             </a>
         <?php endforeach; ?>
     </div>
 
-    <p class="font-weight-bold mb-2">
+    <p class="font-weight-bold mb-2" data-test="variant_color_hint">
         <?= $opt["currentSize"] === "all" ? "Zuerst Größe wählen" : "Farbe wählen" ?>
     </p>
     <div class="d-flex flex-wrap">
         <?php foreach ($opt["colors"] as $color): ?>
             <?php if ($opt["currentSize"] === "all"): ?>
-                <button type="button" class="btn btn-outline-secondary mr-2 mb-2" disabled>
+                <button type="button" class="btn btn-outline-secondary mr-2 mb-2" data-test="variant_color" disabled>
                     <?= e($color) ?>
                 </button>
             <?php else: ?>
                 <a href="<?= $opt["root"] ?>catalog/show/<?= e($opt["catalog"]["id"]) ?>?size=<?= rawurlencode($opt["currentSize"]) ?>&amp;color=<?= rawurlencode($color) ?>"
+                   data-test="variant_color"
                    class="btn <?= $opt["currentColor"] === $color ? "btn-secondary" : "btn-outline-secondary" ?> mr-2 mb-2">
                     <?= e($color) ?>
                 </a>
@@ -37,11 +40,11 @@
         <hr>
         <div class="d-flex justify-content-between">
             <span>Preis</span>
-            <strong><?= e(number_format((float) $opt["selectedItem"]["price"], 2, ",", ".")) ?> €</strong>
+            <strong data-test="variant_price"><?= e(number_format((float) $opt["selectedItem"]["price"], 2, ",", ".")) ?> €</strong>
         </div>
         <div class="d-flex justify-content-between">
             <span>Bestand</span>
-            <span>
+            <span data-test="variant_stock">
                 <?php if ((int) $opt["selectedItem"]["stock"] > 5): ?>
                     mehr als 5
                 <?php else: ?>
@@ -53,6 +56,7 @@
         <a
             href="<?= (int) $opt["selectedItem"]["stock"] === 0 ? "#" : $opt["root"] . "cart/add/" . rawurlencode($opt["selectedItem"]["id"]) ?>"
             class="btn cart-button btn-block mt-3 <?= (int) $opt["selectedItem"]["stock"] === 0 ? "disabled" : "" ?>"
+            data-test="variant_add_to_cart"
             data-item-id="<?= e($opt["selectedItem"]["id"]) ?>"
             <?= (int) $opt["selectedItem"]["stock"] === 0 ? 'aria-disabled="true"' : "" ?>
         >

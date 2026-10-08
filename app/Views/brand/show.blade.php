@@ -2,11 +2,7 @@
 
 @section("content")
 
-<?php
-$cardsPerRow = 3;
-$cardsPerRowCurrent = 0;
-$catalogCount = count($opt["catalogs"]);
-?>
+
 
     <div class="row">
         <main class="col-lg-8">
@@ -23,39 +19,12 @@ $catalogCount = count($opt["catalogs"]);
                 <h5>Filter</h5>
             </div>
             <hr>
-            <div class="row pl-1">
-                                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" id="selectName" aria-describedby="selectName">
-                    </div>
-                </div>
-                                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Maximaler Preis</label>
-                        <input type="text" class="form-control" id="selectPrice" aria-describedby="selectPrice">
-                    </div>
-                </div>
 
+            <form id="catalogsFilterForm"></form>
 
-                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Sortieren</label>
-                        <select class="form-control" name="selectSort" id="selectSort">
-                            <!-- <option selected value="all" data-direction="ASC">alle</option> -->
-                            <option value="price" data-direction="ASC">Preis (aufsteigend)</option>
-                            <option value="price" data-direction="DESC">Preis (absteigend)</option>
-                            <option selected value="name" data-direction="ASC">Name aufsteigend</option>
-                            <option value="name" data-direction="DESC">Name absteigend</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 </div>
-
-<form id="catalogsFilterForm"></form>
 
 <div id="catalogsContainer">
     <x-cataloglistitem :catalogs="$opt['catalogs']" :brand="$opt['brand']" :settings="$opt['settings']" :opt="$opt"/>
@@ -114,41 +83,47 @@ $catalogCount = count($opt["catalogs"]);
 
 <script>
     var filterForm = Z.Forms.create({
-        dom: "catalogsFilterForm"
+        dom: "catalogsFilterForm",
+        hidehints: true
     });
 
     var filterByName = filterForm.createField({
         name: "filterByName",
-        type: "hidden",
-        value: "<?= e($opt['settings']['name']) ?>" ?? 'all',
+        type: "text",
+        attributes: { 'data-test': 'filter_by_name' },
+        text: "Name",
+        width: 4,
+        value: <?= json_encode($opt['settings']['name'] === 'all' ? '' : $opt['settings']['name'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
     });
     var filterByPrice = filterForm.createField({
         name: "filterByPrice",
-        type: "hidden",
-        value: "<?= e($opt['settings']['price']) ?>" ?? 'all',
+        type: "text",
+        attributes: { 'data-test': 'filter_by_price' },
+        text: "Maximaler Preis",
+        width: 4,
+        value: <?= json_encode($opt['settings']['price'] == 999999999 ? '' : (string) $opt['settings']['price']) ?>,
     });
     var sortBy = filterForm.createField({
         name: "sortBy",
-        type: "hidden",
-    });
-    var sortOrder = filterForm.createField({
-        name: "sortOrder",
-        type: "hidden",
+        type: "select",
+        text: "Sortierung",
+        width: 4,
+        food: [
+            { value: 'name:ASC', text: 'Name aufsteigend' },
+            { value: 'name:DESC', text: 'Name absteigend' },
+            { value: 'price:ASC', text: 'Preis aufsteigend' },
+            { value: 'price:DESC', text: 'Preis absteigend' },
+        ],
+        value: "<?= e(($opt['settings']['sortKey'] ?: 'name') . ':' . $opt['settings']['orderBy']) ?>",
     });
     filterForm.buttonSubmit.remove();
 
     function applyFilters() {
-        var nameValue = $('#selectName').val();
-        var priceValue = $('#selectPrice').val();
-        var sortByTable = $('#selectSort').val();
-        var sortOrderTable = $('#selectSort option:selected').data('direction');
-
-        if (nameValue === '') {
-            nameValue = 'all';
-        }
-        if (priceValue === '') {
-            priceValue = 999999999;
-        }
+        var nameValue = filterByName.value.trim() || 'all';
+        var priceValue = filterByPrice.value.trim() || 999999999;
+        var sortValues = (sortBy.value || 'name:ASC').split(':');
+        var sortByTable = sortValues[0];
+        var sortOrderTable = sortValues[1];
 
         var parameters = [
             nameValue,
@@ -166,7 +141,7 @@ $catalogCount = count($opt["catalogs"]);
         window.history.pushState({}, "", url);
     }
 
-    $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
+    sortBy.on('change', applyFilters);
 
     $('#catalogsContainer').on('click', '.pagination a', function (event) {
         event.preventDefault();
@@ -177,10 +152,12 @@ $catalogCount = count($opt["catalogs"]);
     });
 
     let timer;
-    $('#selectName, #selectPrice').on('input', function () {
+    function scheduleFilters() {
         clearTimeout(timer);
         timer = setTimeout(applyFilters, 1000);
-    });
+    }
+    filterByName.on('input', scheduleFilters);
+    filterByPrice.on('input', scheduleFilters);
 </script>
     
 @endsection

@@ -122,7 +122,9 @@ INSERT INTO `item` (`catalog_id`, `sku`, `size`, `color`, `price`, `taxrate`, `s
 (@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU45',  '45', 'grau',  160.00, 0.19,  3),
 (@timberland_classic_2_eye_catalog_id, 'TB025077214-EU46',  '46', 'braun', 165.00, 0.19,  5),
 (@timberland_classic_2_eye_catalog_id, 'TB174036484-EU46',  '46', 'blau',  165.00, 0.19,  3),
-(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU46',  '46', 'grau',  165.00, 0.19,  2);
+(@timberland_classic_2_eye_catalog_id, 'TB0A2GEREL7-EU46',  '46', 'grau',  165.00, 0.19,  2),
+-- Nicht verfügbare Testvariante, nur für Größe 40.
+(@timberland_classic_2_eye_catalog_id, 'TEST-TIMBERLAND-EU40-SCHWARZ', '40', 'schwarz', 165.00, 0.19, 0);
 
 -- Timberland Premium 6-Inch Boot für Herren
 -- Gelb TB110061713, Dunkelgelb TB172066EBL, Braun TB110001214, Schwarz TB110073001
