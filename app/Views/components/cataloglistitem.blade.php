@@ -23,7 +23,7 @@ $catalogCount = count($catalogs);
 
 
 
-                <div class="card-body">
+                <div class="card-body" data-test="catalog_list_card">
                     <p class="card-text mb-1"><small><?= e($catalog['brand_name']) ?></small></p>
                     <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
                     <p class="card-text">

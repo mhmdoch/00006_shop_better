@@ -43,9 +43,9 @@
                 <?php else : ?>
                     <div id="login-error-label" data-test="error"></div>
                     <div class="login-fields">
-                        <input type="email" id="username" data-test="username">
-                        <input type="password" id="password" data-test="password">
-                        <button id="btnLogin" data-test="btn-login">Login</button>
+                        <input type="email" id="username" data-test="usernameNav">
+                        <input type="password" id="password" data-test="passwordNav">
+                        <button id="btnLogin" data-test="btn-loginNav">Login</button>
                     </div>
                     <div class="login-links">
                         <a href="<?= $opt["root"]; ?>login/signup">Registrieren</a>

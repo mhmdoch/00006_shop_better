@@ -210,4 +210,14 @@ class OrderModel extends z_model
 
         $this->exec($sql, "si", $status, $orderId);
     }
+
+    public function deleteLostCartItems(int $itemId): void
+    {
+    $sql = "DELETE FROM `cart_item`
+            LEFT JOIN `order` ON `order`.`cart_id` = `cart_item`.`cart_id`
+            WHERE `cart_item`.`item_id` = ?
+            AND `order`.`id` IS NULL";
+
+    $this->exec($sql, "i", $itemId);
+    }
 }

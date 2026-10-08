@@ -34,7 +34,7 @@ $catalogCount = count($opt["catalogs"]);
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Typ</label>
-                        <select class="form-control" name="selectType" id="selectType">
+                        <select class="form-control" name="selectType" id="selectType" data-test="filter_by_type">
                             <option selected value="all">alle</option>
                             <option value="lego">LEGO</option>
                             <option value="shoe">Schuhe</option>
@@ -44,7 +44,7 @@ $catalogCount = count($opt["catalogs"]);
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Marke</label>
-                        <select class="form-control" name="selectBrand" id="selectBrand">
+                        <select class="form-control" name="selectBrand" id="selectBrand" data-test="filter_by_brand">
                             <option selected value="0">alle</option>
                             <?php foreach ($opt["brands"] as $brand) { ?>
                                 <option value="<?= e($brand['id']) ?>"><?= e($brand['name']) ?></option>
@@ -55,7 +55,7 @@ $catalogCount = count($opt["catalogs"]);
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" id="selectName" aria-describedby="emailHelp" data-test="filter_by_name">
                     </div>
                 </div>
                 <div class="col">

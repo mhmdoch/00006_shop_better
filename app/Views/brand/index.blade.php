@@ -11,7 +11,7 @@
         </div>
         <?php foreach ($opt["brands"] as $brand) { ?>
             <div class="bg-box rounded p-4 mt-4">
-                <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>">
+                <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>" data-test="brand">
                     <?= e($brand["name"]) ?>
                 </a>
                 <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
@@ -47,7 +47,7 @@
             <div>- <a href="<?php echo $opt["root"]; ?>brand">Alle</a></div>
             <?php foreach ($opt["brandsAZ"] as $brand) { ?>
                 <div>
-                    - <a href="<?php echo $opt["root"]; ?>brand/az/<?= rawurlencode($brand["firstLetter"]) ?>">
+                    - <a href="<?php echo $opt["root"]; ?>brand/az/<?= rawurlencode($brand["firstLetter"]) ?>" data-test="a-z-brand">
                         <?= e($brand["firstLetter"]) ?> (<?= e($brand["amount"]) ?>)
                     </a>
                 </div>

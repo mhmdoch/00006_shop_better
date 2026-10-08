@@ -11,13 +11,13 @@
         </li>
 
         <?php for ($i = $opt["pagination"]["pageCurrent"] - e($opt["pagination"]["pageNeighboorsLeft"]); $i < e($opt["pagination"]["pageCurrent"]); $i++): ?>
-            <li class="page-item"><a class="page-link" href='<?php echo e($location) . e($path) ?>/<?= $i ?>'><?= $i ?></a></li>
+            <li class="page-item"><a class="page-link" href='<?php echo e($location) . e($path) ?>/<?= $i ?>' data-test="pagination-neighboors-left"><?= $i ?></a></li>
         <?php endfor; ?>
 
         <li class="page-item active"><span class="page-link" deactivated href='<?php echo e($location) . e($path) ?>/<?= $opt["pagination"]["pageCurrent"] ?>'><strong><?= $opt["pagination"]["pageCurrent"] ?></strong></span></li>
 
         <?php for ($i = $opt["pagination"]["pageCurrent"] + 1; $i <= $opt["pagination"]["pageCurrent"] + e($opt["pagination"]["pageNeighboorsRight"]); $i++): ?>
-            <li class="page-item"><a class="page-link" href="<?php echo e($location) . e($path) ?>/<?= $i ?>"><?= $i ?></a></li>
+            <li class="page-item"><a class="page-link" href="<?php echo e($location) . e($path) ?>/<?= $i ?>" data-test="pagination-neighboors-right"><?= $i ?></a></li>
         <?php endfor; ?>
 
         <li class="page-item">
