@@ -1,10 +1,12 @@
 {
     "filter": {
         "type": {
-            "lego": "LEGO"
+            "lego": "LEGO",
+            "shoe": "shoe"
         },
         "brand": {
-            "adidas": "adidas"
+            "adidas": "adidas",
+            "lego": "lego"
         }
     },
     "result": {

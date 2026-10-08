@@ -5,6 +5,7 @@ describe('Catalog-Index', () => {
 
     beforeEach(() => {
         cy.fixture('catalogs.json').as("catalogs");
+        cy.fixture('logins.json').as("logins");
         cy.visit("/catalog");
     });
 
@@ -39,6 +40,22 @@ describe('Catalog-Index', () => {
         });
     });
 
+    it('filters shoes and should not find "lego"', () => {
+        cy.get('@catalogs').then((catalogs) => {
+            cy.get('@logins').then((logins) => {            
+                cy.query('filter_by_type').select(catalogs.filter.type.shoe);
+                cy.query('pagination-neighboors-right').should("have.length", 1);
+                cy.query('catalog_list_card').not(':contains(catalogs.filter.brand.lego)');
+                cy.query('pagination-neighboors-right').contains('2').click();
+                cy.query('catalog_list_card').contains("Ultra");
+                cy.query('filter_by_name').type("gaga");
+                cy.query('catalog_list_card').should('not.exist');
+                cy.query('usernameNav').type(logins.admin.name);
+                cy.query('passwordNav').type(logins.admin.password);
+                cy.query('btn-loginNav').click();
+            });
+        });
+    });
 });
 
 

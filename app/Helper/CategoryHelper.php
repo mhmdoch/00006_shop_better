@@ -26,7 +26,7 @@ class CategoryHelper
     {
         return [
             ["value" => "shoe", "text" => "Schuhe"],
-            ["value" => "lego", "text" => "Lego"],
+            ["value" => "lego", "text" => "LEGO"],
         ];
     }
 }

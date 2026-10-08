@@ -178,6 +178,14 @@ class CatalogController extends z_controller
             "settings" => $settings,
             "pagination" => $pagination,
             "navMenu" => "catalog",
+            "typeOptions" => array_merge(
+                [["value" => "all", "text" => "alle"]],
+                CategoryHelper::itemableTypes(),
+            ),
+            "brandOptions" => $this->makeFood(
+                $req->getModel("Brand")->getBrands(),
+                "id", "name",
+            ),
         ]);
     }
 

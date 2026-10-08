@@ -30,7 +30,10 @@ $catalogCount = count($opt["catalogs"]);
                     -->
             </div>
             <hr>
-            <div class="row pl-1">
+
+            <form id="catalogsFilterForm"></form>
+
+            <!-- <div class="row pl-1">
                 <div class="col">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Typ</label>
@@ -62,7 +65,7 @@ $catalogCount = count($opt["catalogs"]);
                     <div class="form-group">
                         <label for="exampleInputEmail1">Sortieren</label>
                         <select class="form-control" name="selectSort" id="selectSort">
-                            <!-- <option selected value="all" data-direction="ASC">alle</option> -->
+                          
                             <option value="type" data-direction="ASC">Typ (aufsteigend)</option>
                             <option value="type" data-direction="DESC">Typ (absteigend)</option>
                             <option value="brand" data-direction="ASC">Marke (aufsteigend)</option>
@@ -72,12 +75,10 @@ $catalogCount = count($opt["catalogs"]);
                         </select>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </main>
 </div>
-<form id="catalogsFilterForm"></form>
-
 
 <div id="catalogsContainer">
 
@@ -90,40 +91,60 @@ $catalogCount = count($opt["catalogs"]);
 
 <script>
     var filterForm = Z.Forms.create({
-        dom: "catalogsFilterForm"
+        dom: "catalogsFilterForm",
+        hidehints: true
     });
 
     var filterByType = filterForm.createField({
         name: "filterByType",
-        type: "hidden",
+        type: "select",
+        attributes: { 'data-test': 'filter_by_type' },
+        text: "Typ",
+        width: 3,
+        food: <?= json_encode($opt['typeOptions']) ?>,
         value: "<?= e($opt['settings']['type']) ?>" ?? 'all',
     });
     var filterByBrand = filterForm.createField({
         name: "filterByBrand",
-        type: "hidden",
+        type: "select",
+        attributes: { 'data-test': 'filter_by_brand' },
+        text: "Marke",
+        width: 3,
+        food: <?= $opt['brandOptions'] ?>,
         value: "<?= e($opt['settings']['brandId']) ?>" ?? '0',
     });
     var filterByName = filterForm.createField({
         name: "filterByName",
-        type: "hidden",
-        value: "<?= e($opt['settings']['name']) ?>" ?? 'all',
+        type: "text",
+        attributes: { 'data-test': 'filter_by_name' },
+        text: "Name",
+        width: 3,
+        value: "<?= ($opt['settings']['name'] === 'all' ? '' : $opt['settings']['name']) ?>",
     });
     var sortBy = filterForm.createField({
         name: "sortBy",
-        type: "hidden",
-    });
-    var sortOrder = filterForm.createField({
-        name: "sortOrder",
-        type: "hidden",
+        type: "select",
+        text: "Sortierung",
+        width: 3,
+        food: [
+            { value: 'name:ASC', text: 'Name aufsteigend' },
+            { value: 'name:DESC', text: 'Name absteigend' },
+            { value: 'type:ASC', text: 'Typ aufsteigend' },
+            { value: 'type:DESC', text: 'Typ absteigend' },
+            { value: 'brand:ASC', text: 'Marke aufsteigend' },
+            { value: 'brand:DESC', text: 'Marke absteigend' },
+        ],
+        value: "<?= e(($opt['settings']['sortKey'] ?: 'name') . ':' . $opt['settings']['orderBy']) ?>",
     });
     filterForm.buttonSubmit.remove();
 
     function applyFilters() {
-        var typeValue = $('#selectType').val();
-        var brandValue = $('#selectBrand').val();
-        var nameValue = $('#selectName').val().trim();
-        var sortByTable = $('#selectSort').val();
-        var sortOrderTable = $('#selectSort option:selected').data('direction');
+        var typeValue = filterByType.value || 'all';
+        var brandValue = filterByBrand.value || '0';
+        var nameValue = filterByName.value.trim();
+        var sortValues = (sortBy.value || 'name:ASC').split(':');
+        var sortByTable = sortValues[0];
+        var sortOrderTable = sortValues[1];
 
         if (nameValue === '') {
             nameValue = 'all';
@@ -146,7 +167,9 @@ $catalogCount = count($opt["catalogs"]);
         window.history.pushState({}, "", url);
     }
 
-    $('#selectType, #selectBrand, #selectSort').on('change', applyFilters);
+    filterByType.on('change', applyFilters);
+    filterByBrand.on('change', applyFilters);
+    sortBy.on('change', applyFilters);
 
     $('#catalogsContainer').on('click', '.pagination a', function (event) {
         event.preventDefault();
@@ -157,7 +180,7 @@ $catalogCount = count($opt["catalogs"]);
     });
 
     let timer;
-    $('#selectName').on('input', function () {
+    filterByName.on('input', function () {
         clearTimeout(timer);
         timer = setTimeout(applyFilters, 1000);
     });

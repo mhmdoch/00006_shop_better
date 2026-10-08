@@ -11,6 +11,7 @@
 
     "admin": {
         "name": "admin@zubzet.com",
+        "password": "password",
         "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01"
     },
 
