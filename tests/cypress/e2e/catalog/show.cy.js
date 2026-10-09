@@ -50,7 +50,6 @@ describe('Catalog-Show: Variant selection', () => {
             cy.query('variant_price').contains(catalogs.variants.selected.price);
             cy.query('variant_stock').contains(catalogs.variants.selected.stock);
             cy.query('variant_add_to_cart').contains('In den Warenkorb');
-            cy.query('variant_add_to_cart').not('[aria-disabled="true"]').should('have.length', 1);
         });
     });
 

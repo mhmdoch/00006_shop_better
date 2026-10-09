@@ -41,11 +41,11 @@
                         </div>
                     </span>
                 <?php else : ?>
-                    <div id="login-error-label" data-test="error"></div>
+                    <div id="login-error-label-Nav" data-test="errorNav"></div>
                     <div class="login-fields">
-                        <input type="email" id="username" data-test="usernameNav">
-                        <input type="password" id="password" data-test="passwordNav">
-                        <button id="btnLogin" data-test="btn-loginNav">Login</button>
+                        <input type="email" id="usernameNav" data-test="usernameNav">
+                        <input type="password" id="passwordNav" data-test="passwordNav">
+                        <button id="btnLoginNav" data-test="btn-loginNav">Login</button>
                     </div>
                     <div class="login-links">
                         <a href="<?= $opt["root"]; ?>login/signup">Registrieren</a>
@@ -54,14 +54,14 @@
                     </div>
                     <script>
                         function login() {
-                            Z.Presets.Login("username", "password", "login-error-label");
+                            Z.Presets.Login("usernameNav", "passwordNav", "login-error-label-Nav");
                         }
 
-                        $("#btnLogin").click(() => {
+                        $("#btnLoginNav").click(() => {
                             login();
                         });
 
-                        $("#username, #password").keyup((e) => {
+                        $("#usernameNav, #passwordNav").keyup((e) => {
                             if (e.keyCode == 13) login();
                         });
                     </script>
