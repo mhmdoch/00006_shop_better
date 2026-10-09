@@ -30,7 +30,7 @@
                         <?php foreach ($opt["orders"] as $order): ?>
                             <tr>
                                 <td>
-                                    <a href="<?= $opt["root"] ?>order/show/<?= e($order["id"]) ?>">
+                                    <a href="<?= $opt["root"] ?>order/show/<?= e($order["id"]) ?>" data-test="order-element-link">
                                         <?= e($order["order_number"]) ?>
                                     </a>
                                 </td>

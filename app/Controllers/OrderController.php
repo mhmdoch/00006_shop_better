@@ -1,5 +1,7 @@
 <?php
 
+use \App\Helper\OrderState;
+
 class OrderController extends z_controller
 {
     public function action_create(Request $req, Response $res)
@@ -11,35 +13,9 @@ class OrderController extends z_controller
 
         $orderItems = $cartItems;
 
-        $grossPot = [];
-        $totalSum = 0;
-
-        foreach ($orderItems as $orderItem) {
-            $taxrate = $orderItem["taxrate"];
-            $grossPrice = $orderItem["price"];
-            $quantity = $orderItem["quantity"];
-
-            $orderItemFullPrice = bcmul($grossPrice, $quantity, 2);
-            $totalSum = bcadd($totalSum, $orderItemFullPrice, 2);
-
-
-            if (!isset($grossPot[$taxrate])) {
-                $grossPot[$taxrate] = '0.00';
-            }
-
-            $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $orderItemFullPrice, 2);
-        }
-
-        $taxPot = [];
-        foreach ($grossPot as $taxrate => $grossAmount) {
-            $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
-            $taxAmount = bcsub($grossAmount, $netAmount, 2);
-            $taxPot[$taxrate] = [
-                'gross' => $grossAmount,
-                'net' => $netAmount,
-                'tax' => $taxAmount,
-                'taxrate' => $taxrate,
-                ];}
+        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $taxPot = $priceTaxes['taxPot'];
+        $totalSum = $priceTaxes['totalSum'];
 
         if ($req->hasFormData()) {
             if (empty($cartItems)) {
@@ -196,42 +172,12 @@ class OrderController extends z_controller
 
         $orderItems = $req->getModel("Order")->getItemsByOrderId($orderId);
 
-        $grossPot = [];
-        $totalSum = 0;
-
-        foreach ($orderItems as $orderItem) {
-            $taxrate = $orderItem["taxrate"];
-            $grossPrice = $orderItem["price"];
-            $quantity = $orderItem["quantity"];
-
-            $orderItemFullPrice = bcmul($grossPrice, $quantity, 2);
-            $totalSum = bcadd($totalSum, $orderItemFullPrice, 2);
-
-
-            if (!isset($grossPot[$taxrate])) {
-                $grossPot[$taxrate] = '0.00';
-            }
-
-            $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $orderItemFullPrice, 2);
-        }
+        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $taxPot = $priceTaxes['taxPot'];
+        $totalSum = $priceTaxes['totalSum'];
 
 
         $logs = $req->getModel("LogActive")->getLogByidAndType($orderId, "order");
-
-        $taxPot = [];
-        foreach ($grossPot as $taxrate => $grossAmount) {
-            $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
-            $taxAmount = bcsub($grossAmount, $netAmount, 2);
-            $taxPot[$taxrate] = [
-                'gross' => $grossAmount,
-                'net' => $netAmount,
-                'tax' => $taxAmount,
-                'taxrate' => $taxrate,
-                ];}
-
-
-      
-
 
         $total = 0;
         foreach ($orderItems as $orderItem) {

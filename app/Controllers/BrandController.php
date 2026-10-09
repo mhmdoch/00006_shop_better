@@ -155,10 +155,7 @@ class BrandController extends z_controller
         $req->checkPermission("brand.create");
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("name"))->required()->length(3, 255),
-                (new FormField("website"))->length(5, 500)
-            ]);
+            $formResult = $req->validateForm($this->brandFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -197,10 +194,7 @@ class BrandController extends z_controller
         }
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("name"))->required()->length(3, 255),
-                (new FormField("website"))->length(5, 500)
-            ]);
+            $formResult = $req->validateForm($this->brandFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -214,6 +208,14 @@ class BrandController extends z_controller
             "brand" => $brand,
             "navMenu" => "brand",
         ]);
+    }
+
+    private function brandFormFields(): array
+    {
+        return [
+            (new FormField("name"))->required()->length(3, 255),
+            (new FormField("website"))->length(5, 500),
+        ];
     }
 
     private function handleDeleteBrand(Request $req, Response $res) {

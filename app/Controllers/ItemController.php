@@ -11,14 +11,7 @@ class ItemController extends z_controller
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("sku"))->required(),
-                (new FormField("size"))->required(),
-                (new FormField("color"))->required(),
-                (new FormField("taxrate"))->required(),
-                (new FormField("price"))->required(),
-                (new FormField("stock"))->required()
-            ]);
+            $formResult = $req->validateForm($this->shoeFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -50,14 +43,7 @@ class ItemController extends z_controller
         $catalog = $req->getModel("Catalog")->getCatalogById($item["catalog_id"]);
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("sku"))->required(),
-                (new FormField("size"))->required(),
-                (new FormField("color"))->required(),
-                (new FormField("taxrate"))->required(),
-                (new FormField("price"))->required(),
-                (new FormField("stock"))->required()
-            ]);
+            $formResult = $req->validateForm($this->shoeFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -133,17 +119,7 @@ class ItemController extends z_controller
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("sku"))->required(),
-                (new FormField("name"))->required(),
-                (new FormField("description"))->required(),
-                (new FormField("set_number"))->required(),
-                (new FormField("theme"))->required(),
-                (new FormField("piece_count"))->required(),
-                (new FormField("release_date"))->required(),
-                (new FormField("price"))->required(),
-                (new FormField("stock"))->required()
-            ]);
+            $formResult = $req->validateForm($this->legoFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -161,5 +137,32 @@ class ItemController extends z_controller
             "catalog" => $catalog,
             "navMenu" => "item",
         ]);
+    }
+
+    private function shoeFormFields(): array
+    {
+        return [
+            (new FormField("sku"))->required(),
+            (new FormField("size"))->required(),
+            (new FormField("color"))->required(),
+            (new FormField("taxrate"))->required(),
+            (new FormField("price"))->required(),
+            (new FormField("stock"))->required(),
+        ];
+    }
+
+    private function legoFormFields(): array
+    {
+        return [
+            (new FormField("sku"))->required(),
+            (new FormField("name"))->required(),
+            (new FormField("description"))->required(),
+            (new FormField("set_number"))->required(),
+            (new FormField("theme"))->required(),
+            (new FormField("piece_count"))->required(),
+            (new FormField("release_date"))->required(),
+            (new FormField("price"))->required(),
+            (new FormField("stock"))->required(),
+        ];
     }
 }

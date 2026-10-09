@@ -16,9 +16,9 @@
                         </thead>
                         <tbody class="cartItemList">
                             <?php foreach ($orderedItems as $orderItem): ?>
-                                <tr>
+                                <tr data-test="order-element">
                                     <td>
-                                        <a href="<?= $root ?>catalog/show/<?= e($orderItem["catalog_id"]) ?>">
+                                        <a href="<?= $root ?>catalog/show/<?= e($orderItem["catalog_id"]) ?>" data-test="order-element-link">
                                             <?= e($orderItem["brand_name"]) ?> <?= e($orderItem["catalog_name"]) ?>
                                         </a>
                                     </td>
@@ -35,7 +35,7 @@
                                     <td class="text-right">
                                         <?= e($orderItem["quantity"]) ?>
                                     @if($cartIndex)
-                                        <a href="#" class="raise-cartItem fa-solid fa-square-plus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 erhöhen"></a> <a href="#" class="reduce-cartItem fa-solid fa-square-minus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 verringern"></a>
+                                        <a href="#" class="raise-cartItem fa-solid fa-square-plus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 erhöhen" data-test="order-raise"></a> <a href="#" class="reduce-cartItem fa-solid fa-square-minus" data-id="<?= e($orderItem["cart_item_id"]) ?>" title="Menge um 1 verringern"  data-test="order-reduce"></a>
                                     @endif
                                     </td>
                                     <td class="text-right"><?= bcmul($orderItem["taxrate"], 100, 0) ?> %</td>
@@ -61,9 +61,9 @@
                             <?php foreach ($taxPot as $cartItem): ?>
                                 <tr>
                                     <td colspan="4" class="text-right small"><?= $cartItem["taxrate"] * 100 ?> %</td>
-                                    <td class="text-right small"><?= $cartItem["gross"] ?> €</td>
-                                    <td class="text-right small"><?= $cartItem["net"] ?> €</td>
-                                    <td class="text-right small"><?= $cartItem["tax"] ?> €</td>
+                                    <td class="text-right small" data-test="order_gross"><?= $cartItem["gross"] ?> €</td>
+                                    <td class="text-right small" data-test="order_net"><?= $cartItem["net"] ?> €</td>
+                                    <td class="text-right small" data-test="order_tax"><?= $cartItem["tax"] ?> €</td>
                                 </tr>
                         <?php endforeach; ?>
                     </tfoot>
@@ -72,7 +72,7 @@
 
                 @if($cartIndex)
                     <div class="text-right mt-4">
-                        <a href="{{ $root }}order/create" class="btn btn-primary">
+                        <a href="{{ $root }}order/create" class="btn btn-primary" data-test="order-checkout">
                             Zur Kasse
                         </a>
                     </div>

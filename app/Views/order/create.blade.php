@@ -14,7 +14,7 @@
             <div class="bg-box rounded p-4 mt-4">
                 <h5>Lieferadresse</h5>
                 <hr>
-                <div id="create_order"></div>
+                <div id="create_order" data-test="order-address-form"></div>
             </div>
         </aside>
     </div>

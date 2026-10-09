@@ -1,0 +1,18 @@
+{
+    "filter": {
+        "type": {
+            "lego": "LEGO",
+            "shoe": "shoe"
+        },
+        "brand": {
+            "adidas": "adidas",
+            "lego": "lego"
+        }
+    },
+    "result": {
+        "only": {
+            "LEGO": "Medieval",
+            "brand": "adidas"
+        }
+    }
+}

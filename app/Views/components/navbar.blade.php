@@ -10,7 +10,9 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "catalog" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>catalog/index/all/0/all/name/ASC/15/0">Katalog <span class="sr-only">(current)</span></a>
+                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "catalog" ? "active" : "" ?>"
+                            href="<?php echo $opt["root"]; ?>catalog/index/all/0/all/name/ASC/15/1"
+                            data-test="nav-catalog">Katalog <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?= ($opt["navMenu"] ?? "") == "brand" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>brand/">Marken</a>
@@ -25,7 +27,7 @@
                     <?php endif; ?>
                     <?php if ($opt["user"]->checkPermission("order.index")): ?>
                         <li class="nav-item">
-                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order">Alle Bestellungen</a>
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order" data-test="nav-all-order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -53,16 +55,16 @@
                         <a href="<?= $opt["root"]; ?>login/forgot-password">Passwort vergessen?</a>
                     </div>
                     <script>
-                        function login() {
+                        function loginNav() {
                             Z.Presets.Login("usernameNav", "passwordNav", "login-error-label-Nav");
                         }
 
                         $("#btnLoginNav").click(() => {
-                            login();
+                            loginNav();
                         });
 
                         $("#usernameNav, #passwordNav").keyup((e) => {
-                            if (e.keyCode == 13) login();
+                            if (e.keyCode == 13) loginNav();
                         });
                     </script>
                 <?php endif; ?>

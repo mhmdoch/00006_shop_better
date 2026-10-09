@@ -12,18 +12,7 @@ class CatalogController extends z_controller
         $req->checkPermission("catalog.create");
 
         if ($req->hasFormData()) {
-            $formResult = $req->validateForm([
-                (new FormField("brand_id"))->required()->length(1, 255),
-                (new FormField("name"))->required(),
-                (new FormField("itemable_type"))->required(),
-                (new FormField("description"))->required()->length(5, 500),
-                (new FormField("gender"))->length(1, 100),
-                (new FormField("titlethumb"))->file(
-                    FILE_SIZE_20MB,
-                    ["jpg", "jpeg", "png"]
-                ),
-                (new FormField("active"))->length(1, 500),
-            ]);
+            $formResult = $req->validateForm($this->catalogFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -79,18 +68,7 @@ class CatalogController extends z_controller
         }
 
         if ($req->hasFormData()) {
-                    $formResult = $req->validateForm([
-                        (new FormField("brand_id"))->required()->length(1, 255),
-                        (new FormField("name"))->required(),
-                        (new FormField("itemable_type"))->required(),
-                        (new FormField("description"))->required()->length(5, 500),
-                        (new FormField("gender"))->length(1, 100),
-                        (new FormField("titlethumb"))->file(
-                            FILE_SIZE_20MB,
-                            ["jpg", "jpeg", "png"]
-                        ),
-                        (new FormField("active"))->length(1, 500),
-                    ]);
+            $formResult = $req->validateForm($this->catalogFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
@@ -258,5 +236,21 @@ class CatalogController extends z_controller
             "titlethumb" => $titlethumb,
             "navMenu" => "catalog",
         ]);
+    }
+
+    private function catalogFormFields(): array
+    {
+        return [
+            (new FormField("brand_id"))->required()->length(1, 255),
+            (new FormField("name"))->required(),
+            (new FormField("itemable_type"))->required(),
+            (new FormField("description"))->required()->length(5, 500),
+            (new FormField("gender"))->length(1, 100),
+            (new FormField("titlethumb"))->file(
+                FILE_SIZE_20MB,
+                ["jpg", "jpeg", "png"]
+            ),
+            (new FormField("active"))->length(1, 500),
+        ];
     }
 }

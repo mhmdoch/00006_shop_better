@@ -1,40 +1,17 @@
 <?php
 
+use \App\Helper\OrderState;
+
 class CartController extends z_controller
 {
     public function action_index(Request $req, Response $res)
     {
         $cartItems = $req->getModel("Cart")->getItems();
 
-        $grossPot = [];
-        $totalSum = 0;
+        $priceTaxes = OrderState::orderPriceTaxes($cartItems);
+        $taxPot = $priceTaxes['taxPot'];
+        $totalSum = $priceTaxes['totalSum'];
 
-        foreach ($cartItems as $cartItem) {
-            $taxrate = $cartItem["taxrate"];
-            $grossPrice = $cartItem["price"];
-            $quantity = $cartItem["quantity"];
-
-            $cartItemFullPrice = bcmul($grossPrice, $quantity, 2);
-            $totalSum = bcadd($totalSum, $cartItemFullPrice, 2);
-
-
-            if (!isset($grossPot[$taxrate])) {
-                $grossPot[$taxrate] = '0.00';
-            }
-
-            $grossPot[$taxrate] = bcadd($grossPot[$taxrate], $cartItemFullPrice, 2);
-        }
-
-        $taxPot = [];
-        foreach ($grossPot as $taxrate => $grossAmount) {
-            $netAmount = bcdiv($grossAmount, bcadd('1', $taxrate, 2), 2);
-            $taxAmount = bcsub($grossAmount, $netAmount, 2);
-            $taxPot[$taxrate] = [
-                'gross' => $grossAmount,
-                'net' => $netAmount,
-                'tax' => $taxAmount,
-                'taxrate' => $taxrate,
-                ];}
 
         if ($req->isAction("delete-cartItem")) {
             //$req->checkPermission("brand.delete");
