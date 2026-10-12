@@ -1,7 +1,45 @@
 @extends($layout)
 
 @section("content")
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="bg-box rounded p-4">
+                <h1 class="h3 mb-0">Bestellung <?= e($opt["order"]["order_number"]) ?></h1>
+            </div>
 
-guest
+            <x-orderitemlist :orderedItems="$opt['orderItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']"/>
+        </main>
 
+        <aside class="col-lg-4">
+            <div class="bg-box rounded p-4">
+                <h5>Übersicht</h5>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span>Kunde</span>
+                    <span><?= e($opt["order"]["email"] ?? "Gast") ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Status</span>
+                    <span data-test="order-status"><?= e($opt["order"]["status"]) ?></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Bestellt am</span>
+                    <span><?= e(date("d.m.Y H:i", strtotime($opt["order"]["created"]))) ?></span>
+                </div>
+                <hr>
+            </div>
+
+            <div class="bg-box rounded p-4 mt-4" data-test="order-address">
+                <h5>Lieferadresse</h5>
+                <hr>
+                <div><?= e($opt["order"]["recipient"]) ?></div>
+                <div><?= e($opt["order"]["address_line_1"]) ?></div>
+                <?php if (!empty($opt["order"]["address_line_2"])): ?>
+                    <div><?= e($opt["order"]["address_line_2"]) ?></div>
+                <?php endif; ?>
+                <div><?= e($opt["order"]["postal_code"]) ?> <?= e($opt["order"]["city"]) ?></div>
+                <div><?= e($opt["order"]["country"]) ?></div>
+            </div>
+        </aside>
+    </div>
 @endsection

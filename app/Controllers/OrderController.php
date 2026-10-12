@@ -128,8 +128,26 @@ class OrderController extends z_controller
             return $res->reroute(["error", "404"]);
         }
 
+
+        $orderItems = $req->getModel("Order")->getItemsByOrderId($order["id"]);
+
+        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $taxPot = $priceTaxes['taxPot'];
+        $totalSum = $priceTaxes['totalSum'];
+
+        $total = 0;
+        foreach ($orderItems as $orderItem) {
+            $total += $orderItem["price"] * $orderItem["quantity"];
+        }
+
+
         return $res->render("order/guest", [
             "order" => $order,
+            "orderItems" => $orderItems,
+            "total" => $total,
+            "taxPot" => $taxPot,
+            "totalSum" => $totalSum,
+            "navMenu" => "order",
         ]);
     }
 

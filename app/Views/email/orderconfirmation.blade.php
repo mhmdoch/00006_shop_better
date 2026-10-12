@@ -46,7 +46,10 @@
     />
     <br>
     <p>Vielen Dank!</p>
+
     <p>Wir melden uns, sobald es weiter geht.</p>
+
+    <p>Den Status deiner Bestellung kannst du jederzeit über <a href="<?= rtrim($opt['application_root'], '/') ?>/order/guest/<?= $order['token'] ?>">diesen</a> Link verfolgen.</p>
 
 
 
