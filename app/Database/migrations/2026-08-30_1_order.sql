@@ -2,6 +2,7 @@ CREATE TABLE `order` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `cart_id` INT NOT NULL,
   `order_number` VARCHAR(50) NOT NULL UNIQUE,
+  `email` VARCHAR(255) NOT NULL,
   `recipient` VARCHAR(255) NOT NULL,
   `address_line_1` VARCHAR(255) NOT NULL,
   `address_line_2` VARCHAR(255) DEFAULT NULL,

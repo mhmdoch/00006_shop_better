@@ -24,7 +24,17 @@
             var order_create_form = Z.Forms.create({
                 dom: "create_order"
             });
-
+            order_create_form.createField({
+                name: "email",
+                type: "email",
+                text: "E-Mail",
+                required: true,
+                <?php if ($opt["user"]->isLoggedIn) { ?>
+                    value: <?= json_encode(user()->fields["email"]); ?>,
+                <?php } else { ?>
+                    value: "",
+                <?php } ?>
+            });
             order_create_form.createField({
                 name: "recipient",
                 type: "text",

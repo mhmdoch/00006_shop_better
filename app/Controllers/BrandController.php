@@ -220,7 +220,7 @@ class BrandController extends z_controller
 
     private function handleDeleteBrand(Request $req, Response $res) {
         if ($req->isAction("delete-brand")) {
-            $req->checkPermission("brand.manage");
+            $req->checkPermission
             $brandId = $req->getPost("brandId");
             $req->getModel("Brand")->deleteBrand($brandId);
             return $res->success();

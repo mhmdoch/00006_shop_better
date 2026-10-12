@@ -23,6 +23,7 @@ class OrderController extends z_controller
 
             $addressForm = $req->validateForm([
                 (new FormField("recipient"))->required()->length(2, 255),
+                (new FormField("email"))->required()->length(2, 255),               
                 (new FormField("address_line_1"))->required()->length(2, 255),
                 (new FormField("address_line_2"))->length(0, 255),
                 (new FormField("postal_code"))->required()->length(2, 20),

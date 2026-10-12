@@ -10,7 +10,7 @@ INSERT INTO `z_role_permission` (`role`, `name`) VALUES
 
 -- Support
 (2, 'brand.manage'),
-(2, 'catalog.manage');
+(2, 'catalog.manage'),
 
 -- Customer
 

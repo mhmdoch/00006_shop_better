@@ -77,21 +77,17 @@ class OrderModel extends z_model
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
 
         $sql = "INSERT INTO `order` (
-                    `cart_id`,
-                    `order_number`,
-                    `recipient`,
-                    `address_line_1`,
-                    `address_line_2`,
-                    `postal_code`,
-                    `city`,
-                    `country`,
-                    `status`
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+            `cart_id`, `order_number`, `email`, `recipient`,
+            `address_line_1`, `address_line_2`,
+            `postal_code`, `city`, `country`, `status`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+
         $orderId = $this->exec(
             $sql,
-            "isssssss",
+            "issssssss",
             $cartId,
             $orderNumber,
+            $addressForm->getValue("email"),
             $addressForm->getValue("recipient"),
             $addressForm->getValue("address_line_1"),
             $addressForm->getValue("address_line_2"),
@@ -129,12 +125,10 @@ class OrderModel extends z_model
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
-                    `z_user`.`email`,
                     SUM(`cart_item`.`quantity`) AS `quantity`,
                     SUM(`item`.`price` * `cart_item`.`quantity`) AS `total`
                 FROM `order`
                 JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
-                LEFT JOIN `z_user` ON `z_user`.`id` = `cart`.`user_id`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
                 JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
                 GROUP BY `order`.`id`
@@ -148,12 +142,10 @@ class OrderModel extends z_model
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
-                    `z_user`.`email`,
                     SUM(`cart_item`.`quantity`) AS `quantity`,
                     SUM(`item`.`price` * `cart_item`.`quantity`) AS `total`
                 FROM `order`
                 JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
-                LEFT JOIN `z_user` ON `z_user`.`id` = `cart`.`user_id`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
                 JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
                 WHERE `cart`.`user_id` = ?
@@ -168,10 +160,9 @@ class OrderModel extends z_model
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
-                    `z_user`.`email`
+                    `cart`.`anon_id`
                 FROM `order`
                 JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
-                LEFT JOIN `z_user` ON `z_user`.`id` = `cart`.`user_id`
                 WHERE `order`.`id` = ?
                 LIMIT 1";
 
