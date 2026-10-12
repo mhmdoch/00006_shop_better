@@ -35,7 +35,13 @@ class OrderController extends z_controller
                 return $res->formErrors($addressForm->errors);
             }
 
-            $orderId = $req->getModel("Order")->createOrder($cart["id"], $addressForm);
+            $token = bin2hex(random_bytes(32));
+
+            $orderId = $req->getModel("Order")->createOrder(
+                $cart["id"],
+                $addressForm,
+                $token
+            );
 
             $order = $req->getModel("Order")->getOrderById($orderId);
             $items = $req->getModel("Cart")->getItemsByCartId($cart["id"]);
@@ -105,6 +111,25 @@ class OrderController extends z_controller
             "title" => "Meine Bestellungen",
             "showCustomer" => false,
             "navMenu" => "order",
+        ]);
+    }
+
+    public function action_guest(Request $req, Response $res) 
+    {
+        $token = $req->getParameters(0, 1);
+
+        if (!$token) {
+            return $res->reroute(["error", "404"]);
+        }
+
+        $order = $req->getModel("Order")->getOrderByToken($token);
+
+        if ($order === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
+        return $res->render("order/guest", [
+            "order" => $order,
         ]);
     }
 

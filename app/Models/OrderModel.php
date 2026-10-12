@@ -2,7 +2,7 @@
 
 class OrderModel extends z_model
 {
-    public function createOrder($cartId, $addressForm): int
+    public function createOrder($cartId, $addressForm, string $token): int
     {
         // Get the current stock
         // shoes 4, apples, 10
@@ -79,12 +79,12 @@ class OrderModel extends z_model
         $sql = "INSERT INTO `order` (
             `cart_id`, `order_number`, `email`, `recipient`,
             `address_line_1`, `address_line_2`,
-            `postal_code`, `city`, `country`, `status`
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+            `postal_code`, `city`, `country`, `token`, `status`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
 
         $orderId = $this->exec(
             $sql,
-            "issssssss",
+            "isssssssss",
             $cartId,
             $orderNumber,
             $addressForm->getValue("email"),
@@ -94,6 +94,7 @@ class OrderModel extends z_model
             $addressForm->getValue("postal_code"),
             $addressForm->getValue("city"),
             $addressForm->getValue("country"),
+            $token,
         )->getInsertId();
 
         return $orderId;
@@ -210,5 +211,15 @@ class OrderModel extends z_model
             AND `order`.`id` IS NULL";
 
     $this->exec($sql, "i", $itemId);
+    }
+
+    public function getOrderByToken(string $token): ?array
+    {
+    $sql = "SELECT `order`.*
+            FROM `order`
+            WHERE `token` = ?
+            LIMIT 1";
+
+    return $this->exec($sql, "s", $token)->resultToLine();
     }
 }

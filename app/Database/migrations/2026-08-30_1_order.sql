@@ -9,6 +9,7 @@ CREATE TABLE `order` (
   `postal_code` VARCHAR(20) NOT NULL,
   `city` VARCHAR(100) NOT NULL,
   `country` VARCHAR(100) NOT NULL,
+  `token` VARCHAR(100),
   `status` ENUM('pending', 'confirmed', 'paid', 'shipped', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
