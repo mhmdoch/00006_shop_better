@@ -20,7 +20,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Status</span>
-                    <span><?= e($opt["order"]["status"]) ?></span>
+                    <span data-test="order-status"><?= e($opt["order"]["status"]) ?></span>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Bestellt am</span>
@@ -43,7 +43,6 @@
                     <hr>
                     <?php if (!in_array($opt["order"]["status"], ["completed", "cancelled"])) { ?>
                         <div id="order_status_form" data-test="order_status_form"></div>
-                    <?php } ?>
 
                     <script>
                         $(document).ready(function() {
@@ -63,16 +62,19 @@
                                 required: true
                             });
 
+                            $("#order_status_form option").attr("data-test", "order-status-option");
+
                             order_status_form.buttonSubmit.innerHTML = "Status speichern";
                             order_status_form.saveHook = () => {
                                 window.location.reload();
                             };
                         });
                     </script>
+                    <?php } ?>
                 <?php endif; ?>
             </div>
 
-            <div class="bg-box rounded p-4 mt-4">
+            <div class="bg-box rounded p-4 mt-4" data-test="order-address">
                 <h5>Lieferadresse</h5>
                 <hr>
                 <div><?= e($opt["order"]["recipient"]) ?></div>

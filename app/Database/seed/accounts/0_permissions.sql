@@ -7,20 +7,13 @@ INSERT INTO `z_role` (`id`, `name`) VALUES
 INSERT INTO `z_role_permission` (`role`, `name`) VALUES
 -- Admin
 (1, '*.*'),
-(1, 'brand.create'),
-(1, 'brand.edit'),
 
 -- Support
-(2, 'support'),
-(2, 'dashboard'),
-(2, 'order.create'),
-(2, 'order.own'),
+(2, 'brand.manage'),
+(2, 'catalog.manage');
 
 -- Customer
-(3, 'customer'),
-(3, 'dashboard'),
-(3, 'order.create'),
-(3, 'order.own'),
+
 
 -- Customer: Only after setup
 (4, 'customer.isSetup');

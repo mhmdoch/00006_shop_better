@@ -69,6 +69,4 @@ describe('Brand-Index', () => {
             cy.query('brand').contains(brands.find.lego);
         });
     });
-
-
 });

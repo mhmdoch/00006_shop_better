@@ -6,7 +6,6 @@ class OrderController extends z_controller
 {
     public function action_create(Request $req, Response $res)
     {
-        $req->checkPermission("order.create");
 
         $cart = $req->getModel("Cart")->assertCartExists();
         $cartItems = $req->getModel("Cart")->getItems();
@@ -78,7 +77,7 @@ class OrderController extends z_controller
 
     public function action_index(Request $req, Response $res)
     {
-        $req->checkPermission("order.index");
+        $req->checkPermission("order.manage");
 
         $orders = $req->getModel("Order")->getOrders();
 
@@ -92,9 +91,12 @@ class OrderController extends z_controller
 
     public function action_own(Request $req, Response $res)
     {
-        $req->checkPermission("order.own");
-
         $user = $req->getRequestingUser();
+
+        if (!$user->isLoggedIn) {
+            return $res->reroute(["login", "index"]);
+        }
+
         $orders = $req->getModel("Order")->getOrdersByUserId($user->userId);
 
         return $res->render("order/index", [
@@ -115,11 +117,18 @@ class OrderController extends z_controller
             return $res->reroute(["error", "404"]);
         }
 
+        $user = $req->getRequestingUser();
+        $isOwner = ($user->isLoggedIn) && ($user->userId == $order["user_id"]);
+
+        if (!$isOwner) {
+            $req->checkPermission("order.manage");
+        }
+
         $stateMachine = new \App\Helper\OrderState();
         $statuses = $stateMachine->orderStateNext($order["status"]);
 
         if ($req->hasFormData()) {
-            $req->checkPermission("order.index");
+            $req->checkPermission("order.manage");
 
             $statusForm = $req->validateForm([
                 (new FormField("status"))
@@ -163,13 +172,6 @@ class OrderController extends z_controller
         }
 
 
-        $user = $req->getRequestingUser();
-        $isOwner = $user->isLoggedIn && $user->userId == $order["user_id"];
-
-        if (!$isOwner) {
-            $req->checkPermission("order.index");
-        }
-
         $orderItems = $req->getModel("Order")->getItemsByOrderId($orderId);
 
         $priceTaxes = OrderState::orderPriceTaxes($orderItems);
@@ -184,7 +186,7 @@ class OrderController extends z_controller
             $total += $orderItem["price"] * $orderItem["quantity"];
         }
 
-        if ($order["user_id"] === $user->userId) {
+        if ($isOwner) {
             App\Helper\Breadcrumbs::append("Meine Bestellungen", "/order/own/");
         }
 
@@ -194,7 +196,7 @@ class OrderController extends z_controller
             "order" => $order,
             "orderItems" => $orderItems,
             "total" => $total,
-            "canEditStatus" => $req->checkPermission("order.index", true),
+            "canEditStatus" => $req->checkPermission("order.manage", true),
             "statuses" => json_encode($statuses),
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,

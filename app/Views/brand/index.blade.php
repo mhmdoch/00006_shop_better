@@ -14,10 +14,10 @@
                 <a href="<?php echo $opt["root"]; ?>brand/show/<?= e($brand["id"]) ?>" data-test="brand">
                     <?= e($brand["name"]) ?>
                 </a>
-                <?php if ($opt["user"]->checkPermission("brand.edit")): ?>
+                <?php if ($opt["user"]->checkPermission("brand.manage")): ?>
                     <a href="<?php echo $opt["root"]; ?>brand/edit/<?= e($brand["id"]) ?>" class="bi bi-wrench" data-id="<?= e($brand["id"]) ?>" title="editieren"></a>
                 <?php endif; ?>
-                <?php if ($opt["user"]->checkPermission("brand.delete")): ?>
+                <?php if ($opt["user"]->checkPermission("brand.manage")): ?>
                     <?php if ($brand["active"]) { ?>
                         <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
                     <?php } else { ?>
@@ -31,7 +31,7 @@
     </main>
 
     <aside class="col-lg-4">
-        <?php if ($opt["user"]->checkPermission("brand.create")): ?>
+        <?php if ($opt["user"]->checkPermission("brand.manage")): ?>
             <div class="bg-box rounded p-4 mb-4">
                 <h5>Verwaltung</h5>
                 <hr>

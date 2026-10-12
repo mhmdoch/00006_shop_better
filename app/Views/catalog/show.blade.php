@@ -9,7 +9,7 @@
         <div class="bg-box rounded p-4">
             <h3>
                 <?= e($opt["catalog"]["brand_name"]) ?> <?= e($opt["catalog"]["name"]) ?>
-                <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
+                <?php if ($opt["user"]->checkPermission("catalog.manage")): ?>
                     <a href="<?php echo $opt["root"]; ?>catalog/edit/<?= e($opt["catalog"]["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a> <a href="#" class="delete-brand bi bi-trash3" data-id="" title="löschen"></a>
                 <?php endif; ?>
             </h3>
@@ -27,7 +27,7 @@
             <x-itemShoeSelector :opt="$opt" />
         <?php endif; ?>
 
-        <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.delete")): ?>
+        <?php if ($opt["user"]->checkPermission("catalog.manage")): ?>
         <div class="bg-box rounded p-4 mt-4">
             <h4>Varianten:</h4>
 
@@ -63,7 +63,7 @@
     <aside class="col-lg-4">
         <div class="bg-box rounded p-4">
             <h5>Übersicht</h5>
-            <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
+            <?php if ($opt["user"]->checkPermission("catalog.manage")): ?>
                 <div class="d-flex justify-content-between">
                     <span>Status</span>
                     <span><?= (e($opt["catalog"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
@@ -75,7 +75,7 @@
                 <span><?= count($opt["items"]) ?></span>
             </div>
 
-            <?php if ($opt["user"]->checkPermission("catalog.edit") || $opt["user"]->checkPermission("catalog.create")): ?>
+            <?php if ($opt["user"]->checkPermission("catalog.manage")): ?>
                 <div class="d-flex justify-content-between mt-2">
                     <span> <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
                             <a href="<?php echo $opt["root"]; ?>item/itemShoeCreate/<?= e($opt["catalog"]["id"]) ?>">Variante hinzufügen</a>

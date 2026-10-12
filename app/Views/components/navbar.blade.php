@@ -18,14 +18,14 @@
                         <a class="nav-link <?= ($opt["navMenu"] ?? "") == "brand" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>brand/">Marken</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "cart" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>cart">Warenkorb</a>
+                        <a class="nav-link <?= ($opt["navMenu"] ?? "") == "cart" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>cart" data-test="nav-cart">Warenkorb</a>
                     </li>
-                    <?php if ($opt["user"]->checkPermission("order.own")): ?>
+                    <?php if ($opt["user"]->isLoggedIn): ?>
                         <li class="nav-item">
-                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "order" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>order/own">Meine Bestellungen</a>
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "order" ? "active" : "" ?>" href="<?php echo $opt["root"]; ?>order/own" data-test="nav-own-order">Meine Bestellungen</a>
                         </li>
                     <?php endif; ?>
-                    <?php if ($opt["user"]->checkPermission("order.index")): ?>
+                    <?php if ($opt["user"]->checkPermission("order.manage")): ?>
                         <li class="nav-item">
                             <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order" data-test="nav-all-order">Alle Bestellungen</a>
                         </li>
@@ -35,7 +35,7 @@
             <div>
                 <?php if ($opt["user"]->isLoggedIn) : ?>
                     <span class="text-right">
-                        <div class="login-links">
+                        <div class="login-links" data-test="nav-user">
 
                             <?= e($opt["user"]->fields["email"]) ?>
                             -

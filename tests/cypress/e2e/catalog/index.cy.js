@@ -53,9 +53,7 @@ describe('Catalog-Index', () => {
                 cy.query('usernameNav').type(logins.admin.name);
                 cy.query('passwordNav').type(logins.admin.password);
                 cy.query('btn-loginNav').click();
-
-                    cy.loginAs('admin');
-
+                cy.loginAs('admin');
             });
         });
     });

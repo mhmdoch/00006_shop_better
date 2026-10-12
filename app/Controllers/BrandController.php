@@ -43,7 +43,7 @@ class BrandController extends z_controller
 
     public function action_inactive(Request $req, Response $res)
     {
-        $req->checkPermission("brand.create");
+        $req->checkPermission("brand.manage");
 
         $brands = $req->getModel("Brand")->getBrandsPlusInactive();
 
@@ -152,7 +152,7 @@ class BrandController extends z_controller
 
     public function action_create(Request $req, Response $res)
     {
-        $req->checkPermission("brand.create");
+        $req->checkPermission("brand.manage");
 
         if ($req->hasFormData()) {
             $formResult = $req->validateForm($this->brandFormFields());
@@ -184,7 +184,7 @@ class BrandController extends z_controller
 
     public function action_edit(Request $req, Response $res)
     {
-        $req->checkPermission("brand.edit");
+        $req->checkPermission("brand.manage");
 
         $brandId = $req->getParameters(0, 1);
         $brand = $req->getModel("Brand")->getBrandById($brandId);
@@ -220,7 +220,7 @@ class BrandController extends z_controller
 
     private function handleDeleteBrand(Request $req, Response $res) {
         if ($req->isAction("delete-brand")) {
-            $req->checkPermission("brand.delete");
+            $req->checkPermission("brand.manage");
             $brandId = $req->getPost("brandId");
             $req->getModel("Brand")->deleteBrand($brandId);
             return $res->success();

@@ -9,7 +9,7 @@ class CatalogController extends z_controller
 {
     public function action_create(Request $req, Response $res)
     {
-        $req->checkPermission("catalog.create");
+        $req->checkPermission("catalog.manage");
 
         if ($req->hasFormData()) {
             $formResult = $req->validateForm($this->catalogFormFields());
@@ -58,7 +58,7 @@ class CatalogController extends z_controller
 
     public function action_edit(Request $req, Response $res)
     {
-        $req->checkPermission("catalog.edit");
+        $req->checkPermission("catalog.manage");
 
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);

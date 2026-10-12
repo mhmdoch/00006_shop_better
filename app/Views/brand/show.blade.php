@@ -40,7 +40,7 @@
             <div class="bg-box rounded p-4 mb-4">
                 <h5>Übersicht</h5>
                 <hr>
-                <?php if ($opt["user"]->checkPermission("brand.edit") || $opt["user"]->checkPermission("brand.create")): ?>
+                <?php if ($opt["user"]->checkPermission("brand.manage")): ?>
                     <div class="d-flex justify-content-between">
                         <span>Status</span>
                         <span><?= (e($opt["brand"]["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?></span>
@@ -65,7 +65,7 @@
                     </span>
                 </div>
             </div>
-            <?php if ($opt["user"]->checkPermission("delete.edit")): ?>
+            <?php if ($opt["user"]->checkPermission("brand.manage")): ?>
                 <div class="bg-box rounded p-4">
                     <h5>Verlauf</h5>
                     <hr>

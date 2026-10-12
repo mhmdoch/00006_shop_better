@@ -5,7 +5,7 @@ class ItemController extends z_controller
 
     public function action_itemshoecreate(Request $req, Response $res)
     {
-        $req->checkPermission("item.create");
+        $req->checkPermission("catalog.manage");
 
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
@@ -31,7 +31,7 @@ class ItemController extends z_controller
 
     public function action_itemShoeEdit(Request $req, Response $res)
     {
-        $req->checkPermission("item.edit");
+        $req->checkPermission("catalog.manage");
 
         $itemId = $req->getParameters(0, 1);
         $item = $req->getModel("Item")->getItemShoeById($itemId);
@@ -113,7 +113,7 @@ class ItemController extends z_controller
 
     public function action_itemlegocreate(Request $req, Response $res)
     {
-        $req->checkPermission("item.create");
+        $req->checkPermission("catalog.manage");
 
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
