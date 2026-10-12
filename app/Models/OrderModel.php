@@ -4,8 +4,6 @@ class OrderModel extends z_model
 {
     public function createOrder($cartId, $addressForm, string $token): int
     {
-        // Get the current stock
-        // shoes 4, apples, 10
 
         $cartItemList = [];
 
@@ -29,9 +27,6 @@ class OrderModel extends z_model
             ];
         }
 
-        // Reduce stock with one update query and a where
-        // shoes = shoes - 3 WHERE shoes = 4
-        // apples = apples - 5 WHERE apples = 10
 
         foreach ($cartItemList as $itemId => $cartItem) {
             $sql = "UPDATE `item`
@@ -40,13 +35,6 @@ class OrderModel extends z_model
 
             $this->exec($sql, "iii", $cartItem["quantity"], $itemId, $cartItem["quantity"]);
         }
-
-        // Check if actually all stocks were reduced
-        // select shoes, apples
-        // shoes = 1, apples = 5
-        // if not, throw exception
-
-        // Do a normal order flow with simple code and foreach, no transaction
 
         $orderItemList = [];
 
@@ -59,7 +47,6 @@ class OrderModel extends z_model
 
         $orderItems = $this->exec($sql, "i", $cartId)->resultToArray();
 
-        // getting a new list of the items with changed stock
 
         foreach ($orderItems as $orderItem) {
             $orderItemList[$orderItem["item_id"]] = [
