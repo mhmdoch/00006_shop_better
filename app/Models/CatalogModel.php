@@ -3,8 +3,7 @@
 class CatalogModel extends z_model
 {
 
-    public function getCatalogs(): array
-    {
+    public function getCatalogs(): array {
         $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
@@ -14,17 +13,27 @@ class CatalogModel extends z_model
         return $this->exec($sql)->resultToArray();
     }
 
-    public function getCatalogById($catalogId): ?array
-    {
-        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name` 
-                FROM `catalog` 
-                JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id` 
+    public function getCatalogsForSlide(): array {
+        $sql = "SELECT catalog.*, brand.name AS brand_name
+                FROM `catalog`
+                JOIN `brand` ON catalog.brand_id = brand.id
+                LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
+                LEFT JOIN `item` AS i ON i.`catalog_id` = catalog.id AND i.`active` = 1
+                WHERE catalog.active = 1
+                GROUP BY catalog.id
+                LIMIT 10";
+        return $this->exec($sql)->resultToArray();
+    }
+
+    public function getCatalogById($catalogId): ?array {
+        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name`
+                FROM `catalog`
+                JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id`
                 WHERE `catalog`.`id` = ?";
         return $this->exec($sql, "i", $catalogId)->resultToLine();
     }
 
-    public function getCatalogPictureByCatalogId($catalogId): ?array
-    {
+    public function getCatalogPictureByCatalogId($catalogId): ?array {
         $sql = "SELECT `catalog`.titlethumb AS thumbid, z_file.reference AS reference, z_file.extension AS extension
                 FROM `catalog`
                 JOIN `z_file` ON `catalog`.titlethumb = `z_file`.`id`
@@ -32,44 +41,41 @@ class CatalogModel extends z_model
         return $this->exec($sql, "i", $catalogId)->resultToLine();
     }
 
-    public function getCatalogsByFilters($type, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset): array
-    {
+    public function getCatalogsByFilters($type, $brandId, $name, $orderBy, $sortDir, $pageLimit, $pageOffset): array {
         $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price, zf. reference AS thumb_reference, zf.extension AS thumb_extension    
-                            FROM `catalog` 
-                            JOIN `brand` ON catalog.brand_id = brand.id 
+                            FROM `catalog`
+                            JOIN `brand` ON catalog.brand_id = brand.id
                             LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
                             LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
-                            WHERE catalog.active = 1 
-                                    AND (? = 'all' OR catalog.itemable_type = ?) 
-                                    AND (? = 0 OR catalog.brand_id = ?) 
-                                    AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%')) 
-                                    GROUP BY catalog.id 
+                            WHERE catalog.active = 1
+                                    AND (? = 'all' OR catalog.itemable_type = ?)
+                                    AND (? = 0 OR catalog.brand_id = ?)
+                                    AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%'))
+                                    GROUP BY catalog.id
                                     ORDER BY {$sortDir} {$orderBy}
                                     LIMIT ? OFFSET ?";
         return $this->exec($sql, "ssiissii", $type, $type, $brandId, $brandId, $name, $name, $pageLimit, $pageOffset)->resultToArray();
     }
 
-    public function getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset): array
-    {
+    public function getCatalogsForBrandShow($brandId, $name, $price, $orderBy, $sortDir, $pageLimit, $pageOffset): array {
         $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price, MAX(i.`price`) AS highest_price,
                             zf.reference AS thumb_reference, zf.extension AS thumb_extension
-                            FROM `catalog` 
-                            JOIN `brand` ON catalog.brand_id = brand.id 
+                            FROM `catalog`
+                            JOIN `brand` ON catalog.brand_id = brand.id
                             LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
                             LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
                             WHERE catalog.active = 1
                                     AND catalog.brand_id = ?
-                                    AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%')) 
-                                    GROUP BY catalog.id 
+                                    AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%'))
+                                    GROUP BY catalog.id
                                     HAVING MIN(i.`price`) <= ?
                                     ORDER BY {$sortDir} {$orderBy}
                                     LIMIT ? OFFSET ?";
         return $this->exec($sql, "issdii", $brandId, $name, $name, $price, $pageLimit, $pageOffset)->resultToArray();
     }
 
-    public function getCatalogsForBrandShowNoFilter($brandId, $name, $price): array
-    {
-        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price, MAX(i.`price`) AS highest_price 
+    public function getCatalogsForBrandShowNoFilter($brandId, $name, $price): array {
+        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price, MAX(i.`price`) AS highest_price
                             FROM `catalog`
                             JOIN `brand` ON catalog.brand_id = brand.id
                             LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
@@ -81,8 +87,7 @@ class CatalogModel extends z_model
         return $this->exec($sql, "issd", $brandId, $name, $name, $price)->resultToArray();
     }
 
-    public function getCatalogsForBrandShowAmount($brandId, $name, $price): int
-    {
+    public function getCatalogsForBrandShowAmount($brandId, $name, $price): int {
         $sql = "SELECT COUNT(*) AS amount
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
@@ -101,8 +106,7 @@ class CatalogModel extends z_model
         return (int) ($result['amount'] ?? 0);
     }
 
-    public function getCatalogsByFiltersAmount($type, $brandId, $name): int
-    {
+    public function getCatalogsByFiltersAmount($type, $brandId, $name): int {
         $sql = "SELECT COUNT(*) AS amount
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
@@ -116,19 +120,17 @@ class CatalogModel extends z_model
         return (int) ($result['amount'] ?? 0);
     }
 
-    public function getCatalogsByBrand($brandId): array
-    {
-        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price 
+    public function getCatalogsByBrand($brandId): array {
+        $sql = "SELECT catalog.*, brand.name AS brand_name, MIN(i.`price`) AS lowest_price
                         FROM `catalog` JOIN `brand` ON catalog.brand_id = brand.id
                         LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
-                        WHERE `brand_id` = ? 
-                        GROUP BY catalog.id 
+                        WHERE `brand_id` = ?
+                        GROUP BY catalog.id
                         ORDER BY `name`";
         return $this->exec($sql, "i", $brandId)->resultToArray();
     }
 
-    public function updateZFile($id, $fileSize): void
-    {
+    public function updateZFile($id, $fileSize): void {
         $sql = "UPDATE z_file SET type = ?, extension = ?, size = ? WHERE id = ?";
         $this->exec($sql, "ssii", "image/jpeg", "jpg", $fileSize, $id);
     }

@@ -102,7 +102,7 @@ class CatalogController extends z_controller
 
         $sortKey = $req->getParameters(3, 1);
         $sortDir =  Pagination::paginationSortKey($sortKey);
-    
+
         $orderBy = $req->getParameters(4, 1);
         $orderBy = Pagination::paginationOrderBy($orderBy);
 
@@ -112,8 +112,8 @@ class CatalogController extends z_controller
 
         $pageNumber = $req->getParameters(6, 1);
         $catalogsAmount = $req->getModel("Catalog")->getCatalogsByFiltersAmount(
-                                                                            $catalogsType, 
-                                                                            $brandId, 
+                                                                            $catalogsType,
+                                                                            $brandId,
                                                                             $name
                                                                             );
         $pagination['pageLast'] = max(1, (int) ceil($catalogsAmount / $pageLimit));
@@ -178,13 +178,47 @@ class CatalogController extends z_controller
             return $res->reroute(["error", "404"]);
         }
 
+        if ($req->isAction("delete-catalogRating")) {
+            $req->checkPermission("catalog.manage");
+            $ratingId = $req->getPost("ratingId");
+            $req->getModel("CatalogRating")->deleteCatalogRating($ratingId);
+            return $res->success();
+        }
+
+        $ownRating = null;
+
+        if (user()->isLoggedIn) {
+            $ownRating = $req->getModel("CatalogRating")->getRatingByUser($catalogId, user()->userId);
+        }
+
+        if ($req->hasFormData()) {
+            if ($ownRating !== null) {
+                return $res->error();
+            }
+
+            $formResult = $req->validateForm($this->catalogRatingFormFields());
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            $res->insertDatabase("catalog_rating", $formResult, [
+                "catalog_id" => $catalog["id"],
+                "user_id" => user()->userId,
+                "active" => 1,
+            ]);
+
+            return $res->success();
+        }
+
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
 
         $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
-   
 
-  
+        $rating = $req->getModel("CatalogRating")->getRatingsByCatalogId($catalogId);
+        $ratingSum = $req->getModel("CatalogRating")->getRatingSummary($catalogId);
+
         $sizes = [];
         $colors = [];
         $currentSize = "all";
@@ -234,8 +268,19 @@ class CatalogController extends z_controller
             "currentColor" => $currentColor,
             "selectedItem" => $selectedItem,
             "titlethumb" => $titlethumb,
+            "ratings" => $rating,
+            "ratingSum" => $ratingSum,
+            "ownRating" => $ownRating,
             "navMenu" => "catalog",
         ]);
+    }
+
+    private function catalogRatingFormFields(): array
+    {
+        return [
+            (new FormField("stars"))->required()->integer()->range(1, 5),
+            (new FormField("review_text"))->required()->length(1, 2000),
+        ];
     }
 
     private function catalogFormFields(): array

@@ -8,4 +8,11 @@ class AppHelper
     {
         return number_format($priceInCents / 100, 2, ',', '.') . ' €';
     }
+
+    public static function imagePath($catalog): string
+    {
+        if (!empty($catalog["thumb_reference"]))
+
+        return number_format($priceInCents / 100, 2, ',', '.') . ' €';
+    }
 }

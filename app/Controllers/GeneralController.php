@@ -5,7 +5,11 @@ class GeneralController extends z_controller
 
     public function action_index(Request $req, Response $res)
     {
-        return $res->render("general/index");
+        $catalogs = $req->getModel("Catalog")->getCatalogsForSlide();
+
+        return $res->render("general/index",[
+            "catalogs" => $catalogs,
+        ]);
     }
 
 

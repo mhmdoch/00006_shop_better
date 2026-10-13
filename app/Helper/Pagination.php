@@ -4,26 +4,21 @@ namespace App\Helper;
 
 class Pagination
 {
-
-
-    public static function paginationCatalogType($catalogsType)
-    {
+    public static function paginationCatalogType($catalogsType) {
         if (!in_array($catalogsType, ["lego", "shoe"], true)) {
             $catalogsType = "all";
         }
         return $catalogsType;
     }
 
-    public static function paginationOrderBy($orderBy)
-    {
+    public static function paginationOrderBy($orderBy) {
         if (!in_array($orderBy, ["ASC", "DESC"], true)) {
             $orderBy = "ASC";
         }
         return $orderBy;
     }
 
-    public static function paginationSortKey($sortKey)
-    {
+    public static function paginationSortKey($sortKey) {
         if (!in_array($sortKey, ["type", "brand", "name", "price"], true)) {
             $sortKey = "all";
         }
@@ -38,8 +33,7 @@ class Pagination
         return $sortDir;
     }
 
-    public static function paginationLimit($pageLimit)
-    {
+    public static function paginationLimit($pageLimit) {
         if (!filter_var($pageLimit, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 45]])) {
             $pageLimit = 15;
         }

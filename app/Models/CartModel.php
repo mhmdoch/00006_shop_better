@@ -2,8 +2,7 @@
 
 class CartModel extends z_model
 {
-    public function assertCartExists(): array
-    {
+    public function assertCartExists(): array {
         $anonId = request()->getCookie("shoppingCardId") ?: null;
         $userId = user()?->userId ?? null;
 
@@ -76,9 +75,10 @@ class CartModel extends z_model
         return $this->exec($sql, "s", $anonId)->resultToLine();
     }
 
-    public function addItem($cartId, $itemId): void
-    {
-        $sql = "SELECT `quantity` FROM `cart_item` WHERE `cart_id` = ? AND `item_id` = ?";
+    public function addItem($cartId, $itemId): void {
+        $sql = "SELECT `quantity`
+                FROM `cart_item`
+                WHERE `cart_id` = ? AND `item_id` = ?";
         $alreadyExisting = $this->exec($sql, "ii", $cartId, $itemId)->resultToLine();
 
         if ($alreadyExisting === null) {
@@ -90,7 +90,7 @@ class CartModel extends z_model
         } else {
             $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `cart_id` = ? AND `item_id` = ?";
             $this->exec($sql, "ii", $cartId, $itemId);
-        }        
+        }
     }
 
     public function getAmountItemsByCartId(int $cartId): ?int {
@@ -100,8 +100,7 @@ class CartModel extends z_model
         return $this->exec($sql, "i", $cartId)->resultToLine()["amount"] ?? null;
     }
 
-    public function getItems(): array
-    {
+    public function getItems(): array {
         $cart = $this->assertCartExists();
 
         $sql = "SELECT
@@ -129,31 +128,29 @@ class CartModel extends z_model
         return $this->exec($sql, "i", $cart["id"])->resultToArray();
     }
 
-    public function deleteCartItemById(int $cartItemId): void
-    {
+    public function deleteCartItemById(int $cartItemId): void {
         $sql = "DELETE FROM `cart_item` WHERE `id` = ?";
         $this->exec($sql, "i", $cartItemId);
     }
 
-    public function raiseCartItemById(int $cartItemId): void
-    {
-        $currentItem = $this->exec("SELECT `cart_item`.`quantity`, `item`.`stock` FROM `cart_item` JOIN `item` ON `item`.`id` = `cart_item`.`item_id` WHERE `cart_item`.`id` = ?", "i", $cartItemId)->resultToLine();
-
-        // currentItem["quantity"] auslesen
-        // gucken, ob  das item menge + 1 vorhanden ist, sonst return
+    public function raiseCartItemById(int $cartItemId): void {
+        $currentItem = $this->exec("SELECT `cart_item`.`quantity`, `item`.`stock`
+                                    FROM `cart_item`
+                                    JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                                    WHERE `cart_item`.`id` = ?", "i", $cartItemId
+                                    )->resultToLine();
 
         if ($currentItem && ($currentItem["quantity"] + 1) > $currentItem["stock"]) {
-            // Handle the case where the quantity cannot be increased
             return;
         }
 
         $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `id` = ?";
         $this->exec($sql, "i", $cartItemId);
     }
-    public function reduceCartItemById(int $cartItemId): void
-    {
+
+    public function reduceCartItemById(int $cartItemId): void {
         $currentItem = $this->exec("SELECT `quantity` FROM `cart_item` WHERE `id` = ?", "i", $cartItemId)->resultToLine();
-        if ($currentItem && $currentItem["quantity"] <= 1) 
+        if ($currentItem && $currentItem["quantity"] <= 1)
             {
                 $this->deleteCartItemById($cartItemId);
             } else {
@@ -167,8 +164,7 @@ class CartModel extends z_model
         return $this->exec($sql, "i", $cartItemId)->resultToLine()["quantity"] ?? null;
     }
 
-    public function getItemsByCartId(int $cartId): array
-    {
+    public function getItemsByCartId(int $cartId): array {
         $sql = "SELECT
                     `cart_item`.`id` AS `cart_item_id`,
                     `cart_item`.`quantity`,

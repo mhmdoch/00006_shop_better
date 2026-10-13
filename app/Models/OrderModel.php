@@ -2,15 +2,14 @@
 
 class OrderModel extends z_model
 {
-    public function createOrder($cartId, $addressForm, string $token): int
-    {
+    public function createOrder($cartId, $addressForm, string $token): int {
 
         $cartItemList = [];
 
-        $sql = "SELECT `ci`.`item_id` AS `item_id`, 
-                       `ci`.`quantity` AS `quantity`, 
+        $sql = "SELECT `ci`.`item_id` AS `item_id`,
+                       `ci`.`quantity` AS `quantity`,
                        `i`.`stock` AS `stock`
-                FROM `cart_item` AS `ci` 
+                FROM `cart_item` AS `ci`
                 JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
                 WHERE `ci`.`cart_id` = ?";
 
@@ -38,11 +37,12 @@ class OrderModel extends z_model
 
         $orderItemList = [];
 
-        $sql = "SELECT `ci`.`item_id` AS `item_id`, 
-                       `ci`.`quantity` AS `quantity`, 
+        $sql = "SELECT ci.`item_id` AS `item_id`,
+                       `ci`.`quantity` AS `quantity`,
                        `i`.`stock` AS `stock`
-                FROM `cart_item` AS `ci` 
-                JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
+                FROM `cart_item` AS `ci`
+                JOIN `item`AS i
+                ON `i`.`id` = `ci`.`item_id`
                 WHERE `ci`.`cart_id` = ?";
 
         $orderItems = $this->exec($sql, "i", $cartId)->resultToArray();
@@ -89,11 +89,11 @@ class OrderModel extends z_model
     }
 
 
-    public function restockOrder($orderId): void
-    {
+    public function restockOrder($orderId): void {
         $sql = "SELECT `cart_item`.`item_id`, `cart_item`.`quantity`
                 FROM `order`
-                JOIN `cart_item` ON `cart_item`.`cart_id` = `order`.`cart_id`
+                JOIN `cart_item`
+                ON `cart_item`.`cart_id` = `order`.`cart_id`
                 WHERE `order`.`id` = ?";
 
         $cartItems = $this->exec($sql, "i", $orderId)->resultToArray();
@@ -108,25 +108,26 @@ class OrderModel extends z_model
     }
 
 
-    public function getOrders(): array
-    {
+    public function getOrders(): array {
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
                     SUM(`cart_item`.`quantity`) AS `quantity`,
                     SUM(`item`.`price` * `cart_item`.`quantity`) AS `total`
                 FROM `order`
-                JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
-                JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
-                JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                JOIN `cart`
+                ON `cart`.`id` = `order`.`cart_id`
+                JOIN `cart_item`
+                ON `cart_item`.`cart_id` = `cart`.`id`
+                JOIN `item`
+                ON `item`.`id` = `cart_item`.`item_id`
                 GROUP BY `order`.`id`
                 ORDER BY `order`.`created` DESC";
 
         return $this->exec($sql)->resultToArray();
     }
 
-    public function getOrdersByUserId($userId): array
-    {
+    public function getOrdersByUserId($userId): array {
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
@@ -143,8 +144,7 @@ class OrderModel extends z_model
         return $this->exec($sql, "i", $userId)->resultToArray();
     }
 
-    public function getOrderById($orderId): ?array
-    {
+    public function getOrderById($orderId): ?array {
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
@@ -157,8 +157,7 @@ class OrderModel extends z_model
         return $this->exec($sql, "i", $orderId)->resultToLine();
     }
 
-    public function getItemsByOrderId($orderId): array
-    {
+    public function getItemsByOrderId($orderId): array {
         $sql = "SELECT
                     `cart_item`.`quantity`,
                     `item`.`id` AS `item_id`,
@@ -181,8 +180,7 @@ class OrderModel extends z_model
         return $this->exec($sql, "i", $orderId)->resultToArray();
     }
 
-    public function updateStatus(int $orderId, string $status): void
-    {
+    public function updateStatus(int $orderId, string $status): void {
         $sql = "UPDATE `order`
                 SET `status` = ?
                 WHERE `id` = ?";
@@ -190,23 +188,20 @@ class OrderModel extends z_model
         $this->exec($sql, "si", $status, $orderId);
     }
 
-    public function deleteLostCartItems(int $itemId): void
-    {
-    $sql = "DELETE FROM `cart_item`
-            LEFT JOIN `order` ON `order`.`cart_id` = `cart_item`.`cart_id`
-            WHERE `cart_item`.`item_id` = ?
-            AND `order`.`id` IS NULL";
+    public function deleteLostCartItems(int $itemId): void {
+        $sql = "DELETE FROM `cart_item`
+                LEFT JOIN `order` ON `order`.`cart_id` = `cart_item`.`cart_id`
+                WHERE `cart_item`.`item_id` = ?
+                AND `order`.`id` IS NULL";
 
-    $this->exec($sql, "i", $itemId);
+        $this->exec($sql, "i", $itemId);
     }
 
-    public function getOrderByToken(string $token): ?array
-    {
-    $sql = "SELECT `order`.*
-            FROM `order`
-            WHERE `token` = ?
-            LIMIT 1";
-
-    return $this->exec($sql, "s", $token)->resultToLine();
+    public function getOrderByToken(string $token): ?array {
+        $sql = "SELECT *
+                FROM `order`
+                WHERE `token` = ?
+                LIMIT 1";
+        return $this->exec($sql, "s", $token)->resultToLine();
     }
 }

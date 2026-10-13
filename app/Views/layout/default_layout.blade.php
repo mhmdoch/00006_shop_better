@@ -6,7 +6,9 @@
     @yield("head")
     <link href="<?php $opt["generateResourceLink"]("assets/bootstrap-icons/bootstrap-icons.min.css"); ?>" rel="stylesheet">
     <link href="<?php $opt["generateResourceLink"]("assets/css/app.css"); ?>" rel="stylesheet">
-
+    <link rel="stylesheet" href="<?php $opt["generateResourceLink"]("assets/css/owl.carousel.min.css"); ?>">
+    <link rel="stylesheet" href="<?php $opt["generateResourceLink"]("assets/css/owl.theme.default.css"); ?>">
+    <script src="<?php $opt["generateResourceLink"]("assets/js/owl.carousel.min.js"); ?>"></script>
 </head>
 
 <body id="top" data-test="dashboard-top">

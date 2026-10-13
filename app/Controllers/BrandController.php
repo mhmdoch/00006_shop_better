@@ -123,7 +123,7 @@ class BrandController extends z_controller
 
         $pagination['pageNeighboorsRight'] = $pagesAvailableRight;
 
-        if($pagesAvailableRight >= $settings['pageNeighboorsAmount']) {
+        if($pagesAvailableRight >= $settings['pageNeighboorsAmount']) { 
             $pagination['pageNeighboorsRight'] = $settings['pageNeighboorsAmount'];
         }
 
