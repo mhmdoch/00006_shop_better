@@ -32,7 +32,7 @@ class CatalogRatingModel extends z_model
         $averageStars = $result["average_stars"] ?? null;
 
         return [
-            "average_stars" => $averageStars === null ? null : (float) $averageStars,
+            "average_stars" => $averageStars === null ? null : (string) $averageStars,
             "rating_count" => (int) ($result["rating_count"] ?? 0),
         ];
     }

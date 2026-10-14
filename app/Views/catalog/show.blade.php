@@ -45,15 +45,15 @@
             <?php if ($opt["ratingSum"]["rating_count"] > 0): ?>
                 <?php
                     $averageStars = $opt["ratingSum"]["average_stars"];
-                    $roundedStars = round($averageStars * 2) / 2;
+                    $roundedStars = bcdiv(bcadd(bcmul($averageStars, '2', 1), '0.5', 0), '2', 1);
                 ?>
                 <div class="d-flex align-items-center flex-wrap mb-3" data-test="catalog_rating_sum">
                     <span class="text-warning mr-2">
                         <?php for ($star = 1; $star <= 5; $star++): ?>
-                            <i class="bi <?= $star <= $roundedStars ? 'bi-star-fill' : ($star - 0.5 <= $roundedStars ? 'bi-star-half' : 'bi-star') ?>"></i>
+                            <i class="bi <?= bccomp($star, $roundedStars, 1) <= 0 ? 'bi-star-fill' : (bccomp(bcsub($star, '0.5', 1), $roundedStars, 1) <= 0 ? 'bi-star-half' : 'bi-star') ?>"></i>
                         <?php endfor; ?>
                     </span>
-                    <strong class="mr-2"><?= e(number_format($averageStars, 1, ",", ".")) ?> / 5</strong>
+                    <strong class="mr-2"><?= e(str_replace('.', ',', bcadd($averageStars, '0.05', 1))) ?> / 5</strong>
                     <span class="text-muted">
                         aus <?= e($opt["ratingSum"]["rating_count"]) ?> <?= $opt["ratingSum"]["rating_count"] === 1 ? 'Bewertung' : 'Bewertungen' ?>
                     </span>
@@ -105,7 +105,6 @@
                             text: "Sterne",
                             required: true,
                             value: "",
-                            attributes: { 'data-test': 'rating_stars' },
                             food: [
                                 { value: "", text: "Sterne wählen" },
                                 { value: 1, text: "1 Stern" },
@@ -119,8 +118,7 @@
                             name: "review_text",
                             type: "textarea",
                             text: "Bewertungstext",
-                            required: true,
-                            attributes: { 'data-test': 'rating_review_text', maxlength: 2000 }
+                            required: true
                         });
                         catalog_rating_create_form.buttonSubmit.innerHTML = "Bewertung abgeben";
                         catalog_rating_create_form.saveHook = (res) => {
