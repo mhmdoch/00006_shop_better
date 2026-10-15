@@ -3,7 +3,7 @@
         @foreach (App\Helper\Breadcrumbs::items() as $name => $url)
         @if ($loop->last)
         <li class="breadcrumb-item active" aria-current="page">
-            {{ $name }}
+            {{ $name === "Home" ? "Unsere Champions" : $name }}
         </li>
         @else
         <li class="breadcrumb-item">

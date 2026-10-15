@@ -14,13 +14,32 @@ class CatalogModel extends z_model
     }
 
     public function getCatalogsForSlide(): array {
-        $sql = "SELECT catalog.*, brand.name AS brand_name
+        $sql = "SELECT catalog.*, brand.name AS brand_name,
+                       zf.reference AS thumb_reference, zf.extension AS thumb_extension
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
                 LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
-                LEFT JOIN `item` AS i ON i.`catalog_id` = catalog.id AND i.`active` = 1
                 WHERE catalog.active = 1
-                GROUP BY catalog.id
+                ORDER BY catalog.id DESC
+                LIMIT 10";
+        return $this->exec($sql)->resultToArray();
+    }
+
+    public function getBestRatedCatalogsForSlide(): array {
+        $sql = "SELECT catalog.*, brand.name AS brand_name,
+                       zf.reference AS thumb_reference, zf.extension AS thumb_extension,
+                       ratings.average_stars, ratings.rating_count
+                FROM `catalog`
+                JOIN `brand` ON catalog.brand_id = brand.id
+                JOIN (
+                    SELECT catalog_id, AVG(stars) AS average_stars, COUNT(*) AS rating_count
+                    FROM `catalog_rating`
+                    WHERE active = 1
+                    GROUP BY catalog_id
+                ) AS ratings ON ratings.catalog_id = catalog.id
+                LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
+                WHERE catalog.active = 1
+                ORDER BY ratings.average_stars DESC, ratings.rating_count DESC, catalog.id DESC
                 LIMIT 10";
         return $this->exec($sql)->resultToArray();
     }

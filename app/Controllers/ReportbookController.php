@@ -6,6 +6,11 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ReportbookController extends z_controller
 {
+    public function action_index(Request $req, Response $res)
+    {
+        return $res->render("reportbook/index");
+    }
+
     
     public function action_create(Request $req, Response $res)
     {

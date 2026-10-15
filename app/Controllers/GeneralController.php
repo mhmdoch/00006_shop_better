@@ -6,9 +6,11 @@ class GeneralController extends z_controller
     public function action_index(Request $req, Response $res)
     {
         $catalogs = $req->getModel("Catalog")->getCatalogsForSlide();
+        $championCatalogs = $req->getModel("Catalog")->getBestRatedCatalogsForSlide();
 
         return $res->render("general/index",[
             "catalogs" => $catalogs,
+            "championCatalogs" => $championCatalogs,
         ]);
     }
 
