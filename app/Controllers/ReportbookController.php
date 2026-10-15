@@ -51,6 +51,8 @@ class ReportbookController extends z_controller
             $costReport,
         );
 
+
+
         // TODO: make this always include all days
         $costReportByDate = [];
         foreach($costReport as $entry) {
