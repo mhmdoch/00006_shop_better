@@ -9,64 +9,34 @@ class ReportbookController extends z_controller
     
     public function action_create(Request $req, Response $res)
     {
-
         $spreadsheet = IOFactory::load('webroot/assets/cost-report.xls');
         $sheet = $spreadsheet->getActiveSheet();
         $costReport = $sheet->toArray();
-        $datax = $costReport;
 
-        // Remove header (style only) and sum row
+        array_shift($costReport);
         array_shift($costReport);
         array_pop($costReport);
 
-        // Get key names
-            // Datum der Buchung
-            // Benutzer
-            // Geloggt für
-            // Aktivität
-            // Kommentar
-            // Projekt
-            // Stücke
-            // Kostentyp
-            // Kosten
-        $columnNames = $costReport[0];
-        array_shift($costReport);
+        $costReportByDay = [];
 
-        // TODO: Remove and switch to index, instead od ["Kommentar"] use 4
-        // map rows to their key names
-        $costReport = array_map(
-            // Foreach row
-            function ($entry) use ($columnNames) {
-                $mappedEntry = [];
-
-                // map each value in each entry by it's key
-                foreach($entry as $key => $value) {
-                    $newKeyName = $columnNames[$key];
-                    if(empty($newKeyName)) continue;
-                    $mappedEntry[$newKeyName] = $value;
-                }
-
-                return $mappedEntry;
-            },
-            $costReport,
-        );
-
-
-
-        // TODO: make this always include all days
-        $costReportByDate = [];
-        foreach($costReport as $entry) {
-            $dayIndex = date('w', strtotime($entry["Datum der Buchung"]));
-            $dateEntry = &$costReportByDate[$dayIndex];
-            if(!isset($dateEntry)) {
-                $dateEntry = [
-                    "comments" => "",
-                    "hours" => 0,
-                ];
-            }
-            $dateEntry["comments"] .= $entry["Kommentar"] . " ";
-            $dateEntry["hours"] += (float) $entry["Stücke"];
+        for ($i = 1; $i <= 5; $i++) {
+            $costReportByDay[$i] = [
+                "comment" => "",
+                "hours" => 0,
+            ];
         }
+
+        foreach ($costReport as $costReportItem) {
+            $day = date('w', strtotime($costReportItem[0]));
+            $comment = $costReportItem[4];
+            $hours = (float) $costReportItem[6];
+
+            $costReportByDay[$day]["comment"] .= $comment . " ";
+            $costReportByDay[$day]["hours"] += $hours;
+        }
+
+
+
 
         if ($req->hasFormData()) {
                     $formResult = $req->validateForm([
@@ -168,7 +138,7 @@ class ReportbookController extends z_controller
             $pdf->Write(4, $formResult->getValue("day5hours"));
 
             $pdf->SetXY(177,191.8);
-            $pdf->Write(4, ((int) $formResult->getValue("day1hours") + (int) $formResult->getValue("day2hours") + (int) $formResult->getValue("day3hours") + (int) $formResult->getValue("day4hours") + (int) $formResult->getValue("day5hours")));
+            $pdf->Write(4, ((float) $formResult->getValue("day1hours") + (float) $formResult->getValue("day2hours") + (float) $formResult->getValue("day3hours") + (float) $formResult->getValue("day4hours") + (float) $formResult->getValue("day5hours")));
 
             $pdf->Output('F', 'webroot/assets/berichtsheft_fertig.pdf');
 
@@ -176,7 +146,7 @@ class ReportbookController extends z_controller
             return $res->success();
         }
 
-        return $res->render("reportbook/create", ["datax" => $datax, "costReport" => $costReportByDate]);
+        return $res->render("reportbook/create", ["costReportByDay" => $costReportByDay]);
     }
 
 }

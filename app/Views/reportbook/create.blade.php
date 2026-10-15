@@ -62,21 +62,20 @@
                 required: true
             });
 
-            <?php foreach(["Montag", "Di", "Mi", "Do", "Fr"] as $i => $day) { ?>
-                catalog_create_form.createField({
-                    name: "day{{ $i + 1 }}",
+            <?php foreach ($costReportByDay as $day => $costReportFin) { ?>                catalog_create_form.createField({
+                    name: "day{{ $day }}",
                     type: "textarea",
                     text: "{{ $day }}",
                     width: 11,
                     attributes: { rows: 4 },
-                    value: {!! json_encode($costReport[$i + 1]["comments"] ?? "") !!}
+                    value: {!! json_encode($costReportFin["comment"] ?? "") !!}
                 });
                 catalog_create_form.createField({
-                    name: "day{{ $i + 1 }}hours",
+                    name: "day{{ $day }}hours",
                     type: "text",
                     text: "Stunden",
                     width: 1,
-                    value: "{{ $costReport[$i + 1]["hours"] ?? 0 }}"
+                    value: "{{ round($costReportFin["hours"] ?? 0, 1) }}"
                 });
             <?php } ?>
 
