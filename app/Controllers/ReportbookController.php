@@ -105,15 +105,15 @@ class ReportbookController extends z_controller
             $provider = mb_convert_encoding($formResult->getValue("provider"), 'Windows-1252', 'UTF-8');
 
             $day1 = mb_convert_encoding($formResult->getValue("day1"), 'Windows-1252', 'UTF-8');
-            $day1 = mb_strimwidth($day1, 0, 492, '...', 'Windows-1252');
+            $day1 = mb_strimwidth($day1, 0, 480, '...', 'Windows-1252');
             $day2 = mb_convert_encoding($formResult->getValue("day2"), 'Windows-1252', 'UTF-8');
-            $day2 = mb_strimwidth($day2, 0, 492, '...', 'Windows-1252');
+            $day2 = mb_strimwidth($day2, 0, 480, '...', 'Windows-1252');
             $day3 = mb_convert_encoding($formResult->getValue("day3"), 'Windows-1252', 'UTF-8');
-            $day3 = mb_strimwidth($day3, 0, 492, '...', 'Windows-1252');
+            $day3 = mb_strimwidth($day3, 0, 480, '...', 'Windows-1252');
             $day4 = mb_convert_encoding($formResult->getValue("day4"), 'Windows-1252', 'UTF-8');
-            $day4 = mb_strimwidth($day4, 0, 492, '...', 'Windows-1252');
+            $day4 = mb_strimwidth($day4, 0, 480, '...', 'Windows-1252');
             $day5 = mb_convert_encoding($formResult->getValue("day5"), 'Windows-1252', 'UTF-8');
-            $day5 = mb_strimwidth($day5, 0, 492, '...', 'Windows-1252');
+            $day5 = mb_strimwidth($day5, 0, 480, '...', 'Windows-1252');
 
             // Name
             $pdf->SetXY(121, 21);
