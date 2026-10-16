@@ -7,7 +7,7 @@
 
     <div class="row">
         <main class="col-lg-8">
-            <x-orderitemlist :orderedItems="$opt['orderItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" />
+            <x-orderitemlist :orderedItems="$opt['orderItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :subtotal="$opt['subtotal']" :discountAmount="$opt['discountAmount']" :discountCode="$opt['discountCode']" />
         </main>
 
         <aside class="col-lg-4">
@@ -75,7 +75,11 @@
 
             order_create_form.buttonSubmit.innerHTML = "Bestellung abschließen";
             order_create_form.saveHook = (res) => {
-                window.location.href = "<?= $opt["root"] ?>order/show/" + res.orderId;
+                if (res.cartChanged) {
+                    window.location.href = <?= json_encode($opt["root"] . "cart", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+                    return;
+                }
+                window.location.href = <?= json_encode($opt["root"] . "order/show/", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + res.orderId;
             };
         });
     </script>

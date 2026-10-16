@@ -1,4 +1,4 @@
-  @props(["orderedItems", "totalSum", "taxPot", "root", "cartIndex"])
+  @props(["orderedItems", "totalSum", "taxPot", "root", "cartIndex" => false, "subtotal" => null, "discountAmount" => "0.00", "discountCode" => null])
   
   <div class="bg-box rounded p-4 mt-4">
                 <div class="table-responsive">
@@ -18,7 +18,7 @@
                             <?php foreach ($orderedItems as $orderItem): ?>
                                 <tr data-test="order-element">
                                     <td>
-                                        <a href="<?= $root ?>catalog/show/<?= e($orderItem["catalog_id"]) ?>" data-test="order-element-link">
+                                        <a href="<?= e($root) ?>catalog/show/<?= e($orderItem["catalog_id"]) ?>" data-test="order-element-link">
                                             <?= e($orderItem["brand_name"]) ?> <?= e($orderItem["catalog_name"]) ?>
                                         </a>
                                     </td>
@@ -48,7 +48,19 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="6" class="text-right">Zwischensumme</th><th  class="text-right"><?= e($totalSum) ?> €</th></tr>
+                                <th colspan="6" class="text-right">Zwischensumme</th>
+                                <th class="text-right"><?= e($subtotal ?? $totalSum) ?> €</th>
+                            </tr>
+                            <?php if ($discountCode !== null): ?>
+                                <tr>
+                                    <td colspan="6" class="text-right">Rabattcode <?= e($discountCode) ?></td>
+                                    <td class="text-right" data-test="order-discount">-<?= e($discountAmount) ?> €</td>
+                                </tr>
+                            <?php endif; ?>
+                            <tr>
+                                <th colspan="6" class="text-right">Gesamtsumme</th>
+                                <th class="text-right" data-test="order-total"><?= e($totalSum) ?> €</th>
+                            </tr>
                             <tr>
                                 <th colspan="7" class="text-right"></th>
                             </tr>
@@ -60,10 +72,10 @@
                             </tr>     
                             <?php foreach ($taxPot as $cartItem): ?>
                                 <tr>
-                                    <td colspan="4" class="text-right small"><?= $cartItem["taxrate"] * 100 ?> %</td>
-                                    <td class="text-right small" data-test="order_gross"><?= $cartItem["gross"] ?> €</td>
-                                    <td class="text-right small" data-test="order_net"><?= $cartItem["net"] ?> €</td>
-                                    <td class="text-right small" data-test="order_tax"><?= $cartItem["tax"] ?> €</td>
+                                    <td colspan="4" class="text-right small"><?= e(bcmul($cartItem["taxrate"], '100', 0)) ?> %</td>
+                                    <td class="text-right small" data-test="order_gross"><?= e($cartItem["gross"]) ?> €</td>
+                                    <td class="text-right small" data-test="order_net"><?= e($cartItem["net"]) ?> €</td>
+                                    <td class="text-right small" data-test="order_tax"><?= e($cartItem["tax"]) ?> €</td>
                                 </tr>
                         <?php endforeach; ?>
                     </tfoot>
@@ -71,6 +83,20 @@
                 </div>
 
                 @if($cartIndex)
+                    <div class="mt-4">
+                        <?php if ($discountCode !== null): ?>
+                            <span>Rabattcode <?= e($discountCode) ?> ist angewendet.</span>
+                            <button type="button" id="removeDiscount" class="btn btn-outline-secondary ml-2" data-test="remove-discount">Entfernen</button>
+                        <?php else: ?>
+                            <label for="discountCode">Rabattcode</label>
+                            <div class="input-group">
+                                <input type="text" id="discountCode" class="form-control" maxlength="100" data-test="discount-code">
+                                <div class="input-group-append">
+                                    <button type="button" id="applyDiscount" class="btn btn-primary" data-test="apply-discount">Einlösen</button>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <div class="text-right mt-4">
                         <a href="{{ $root }}order/create" class="btn btn-primary" data-test="order-checkout">
                             Zur Kasse

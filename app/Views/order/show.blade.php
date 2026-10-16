@@ -7,7 +7,7 @@
                 <h1 class="h3 mb-0">Bestellung <?= e($opt["order"]["order_number"]) ?></h1>
             </div>
 
-            <x-orderitemlist :orderedItems="$opt['orderItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']"/>
+            <x-orderitemlist :orderedItems="$opt['orderItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :subtotal="$opt['subtotal']" :discountAmount="$opt['discountAmount']" :discountCode="$opt['discountCode']"/>
         </main>
 
         <aside class="col-lg-4">

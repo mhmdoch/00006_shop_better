@@ -12,7 +12,11 @@ class OrderController extends z_controller
 
         $orderItems = $cartItems;
 
-        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $priceTaxes = $req->getModel("Cart")->getPriceTaxes($cart["id"], $orderItems);
+        if ($priceTaxes["discountMessage"] !== null) {
+            if ($req->hasFormData()) return $res->success(["cartChanged" => true]);
+            return $res->rerouteUrl("cart");
+        }
         $taxPot = $priceTaxes['taxPot'];
         $totalSum = $priceTaxes['totalSum'];
 
@@ -44,7 +48,11 @@ class OrderController extends z_controller
             );
 
             $order = $req->getModel("Order")->getOrderById($orderId);
-            $items = $req->getModel("Cart")->getItemsByCartId($cart["id"]);
+            $items = $req->getModel("Order")->getItemsByOrderId($orderId);
+            $priceTaxes = OrderState::orderPriceTaxes(
+                $items,
+                $req->getModel("Cart")->getDiscountByCartId($order["cart_id"])
+            );
 
             $res->sendEmail(
                 $order["email"],                    // Recipient
@@ -54,8 +62,11 @@ class OrderController extends z_controller
                 [
                     "order" => $order,
                     "items" => $items,
-                    "totalSum" => $totalSum,
-                    "taxPot" => $taxPot,
+                    "totalSum" => $priceTaxes["totalSum"],
+                    "taxPot" => $priceTaxes["taxPot"],
+                    "subtotal" => $priceTaxes["subtotal"],
+                    "discountAmount" => $priceTaxes["discountAmount"],
+                    "discountCode" => $priceTaxes["discountCode"],
                 ],
                 "mail_layout",                      // Layout file
             );
@@ -78,6 +89,9 @@ class OrderController extends z_controller
             "total" => $total,
             "totalSum" => $totalSum,
             "taxPot" => $taxPot,
+            "subtotal" => $priceTaxes["subtotal"],
+            "discountAmount" => $priceTaxes["discountAmount"],
+            "discountCode" => $priceTaxes["discountCode"],
             "navMenu" => "order",
         ]);
     }
@@ -131,7 +145,10 @@ class OrderController extends z_controller
 
         $orderItems = $req->getModel("Order")->getItemsByOrderId($order["id"]);
 
-        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $priceTaxes = OrderState::orderPriceTaxes(
+            $orderItems,
+            $req->getModel("Cart")->getDiscountByCartId($order["cart_id"])
+        );
         $taxPot = $priceTaxes['taxPot'];
         $totalSum = $priceTaxes['totalSum'];
 
@@ -147,6 +164,9 @@ class OrderController extends z_controller
             "total" => $total,
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,
+            "subtotal" => $priceTaxes["subtotal"],
+            "discountAmount" => $priceTaxes["discountAmount"],
+            "discountCode" => $priceTaxes["discountCode"],
             "navMenu" => "order",
         ]);
     }
@@ -218,7 +238,10 @@ class OrderController extends z_controller
 
         $orderItems = $req->getModel("Order")->getItemsByOrderId($orderId);
 
-        $priceTaxes = OrderState::orderPriceTaxes($orderItems);
+        $priceTaxes = OrderState::orderPriceTaxes(
+            $orderItems,
+            $req->getModel("Cart")->getDiscountByCartId($order["cart_id"])
+        );
         $taxPot = $priceTaxes['taxPot'];
         $totalSum = $priceTaxes['totalSum'];
 
@@ -244,6 +267,9 @@ class OrderController extends z_controller
             "statuses" => json_encode($statuses),
             "taxPot" => $taxPot,
             "totalSum" => $totalSum,
+            "subtotal" => $priceTaxes["subtotal"],
+            "discountAmount" => $priceTaxes["discountAmount"],
+            "discountCode" => $priceTaxes["discountCode"],
             'logs' => $logs,
             "navMenu" => "order",
         ]);

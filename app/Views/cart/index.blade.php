@@ -5,7 +5,7 @@
         <h1 class="h3 mb-0">Warenkorb</h1>
     </div>
 
-    <div id="cartNotification" class="alert alert-danger d-none mt-4" role="alert"></div>
+    <div id="cartNotification" class="alert alert-danger <?= empty($opt["discountMessage"]) ? "d-none" : "" ?> mt-4" role="alert"><?= e($opt["discountMessage"] ?? "") ?></div>
 
     <?php if (empty($opt["cartItems"])): ?>
         <div class="bg-box rounded p-4 mt-4">
@@ -14,12 +14,39 @@
     <?php else: ?>
         
 
-    <x-orderitemlist :orderedItems="$opt['cartItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :cartIndex="true"/>
+    <x-orderitemlist :orderedItems="$opt['cartItems']" :totalSum="$opt['totalSum']" :taxPot="$opt['taxPot']" :root="$opt['root']" :cartIndex="true" :subtotal="$opt['subtotal']" :discountAmount="$opt['discountAmount']" :discountCode="$opt['discountCode']"/>
 
 
 
 <script>
     $(document).ready(function() {
+        function applyDiscount() {
+            Z.Request.action('apply-discount', {
+                code: document.getElementById("discountCode").value
+            }, (res) => {
+                if (res.result == 'success') {
+                    location.reload();
+                    return;
+                }
+                $("#cartNotification").text(res.message || "Rabattcode konnte nicht eingelöst werden.").removeClass("d-none");
+            });
+        }
+
+        $("#applyDiscount").click(applyDiscount);
+        $("#discountCode").keyup(function(event) {
+            if (event.keyCode == 13) applyDiscount();
+        });
+
+        $("#removeDiscount").click(function() {
+            Z.Request.action('remove-discount', {}, (res) => {
+                if (res.result == 'success') {
+                    location.reload();
+                    return;
+                }
+                $("#cartNotification").text("Rabattcode konnte nicht entfernt werden.").removeClass("d-none");
+            });
+        });
+
         $(".cartItemList").on("click", ".delete-cartItem", function(event) {
             event.preventDefault();
 

@@ -40,6 +40,7 @@ class Breadcrumbs
         $translations = [
             "brand" => "Marken",
             "cart" => "Warenkorb",
+            "discount" => "Rabattcodes",
             "order" => "Bestellungen",
             "own" => "Meine Bestellungen",
             //"show" => "Details",

@@ -81,6 +81,12 @@ INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`, `created`, `updated`)
 INSERT INTO `order` (`cart_id`, `order_number`, `email`, `recipient`, `address_line_1`, `address_line_2`, `postal_code`, `city`, `country`, `status`, `created`, `updated`) VALUES
 (@customer_cart_2_id, 'ORD-2026-0007', 'customer@zubzet.com', 'Carla Customer', 'Seestraße 41', 'bei Familie Beispiel', '04109', 'Leipzig', 'Deutschland', 'completed', '2026-08-08 19:27:00', '2026-08-13 13:45:00');
 
+-- Preise der Beispielbestellungen festhalten
+UPDATE `cart_item`
+JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+JOIN `order` ON `order`.`cart_id` = `cart_item`.`cart_id`
+SET `cart_item`.`price` = `item`.`price`, `cart_item`.`taxrate` = `item`.`taxrate`;
+
 -- Current empty carts
 INSERT INTO `cart` (`user_id`) VALUES
 (1),

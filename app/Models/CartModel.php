@@ -53,6 +53,40 @@ class CartModel extends z_model
         return $this->exec($sql, "i", $cartId)->resultToLine();
     }
 
+    public function setDiscountByCartId(int $cartId, ?int $discountId): void {
+        $sql = "UPDATE `cart`
+                LEFT JOIN `order` ON `order`.`cart_id` = `cart`.`id`
+                SET `cart`.`discount_id` = ?
+                WHERE `cart`.`id` = ? AND `order`.`id` IS NULL";
+        $this->exec($sql, "ii", $discountId, $cartId);
+    }
+
+    public function getDiscountByCartId(int $cartId): ?array {
+        $sql = "SELECT `discount`.*
+                FROM `cart`
+                JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
+                WHERE `cart`.`id` = ?";
+        return $this->exec($sql, "i", $cartId)->resultToLine();
+    }
+
+    public function getPriceTaxes(int $cartId, array $cartItems): array {
+        $priceTaxes = App\Helper\OrderState::orderPriceTaxes($cartItems);
+        $priceTaxes["discountMessage"] = null;
+        $discount = $this->getDiscountByCartId($cartId);
+
+        if ($discount === null) return $priceTaxes;
+
+        $error = model("Discount")->getDiscountError($discount, $priceTaxes["subtotal"]);
+        if ($error !== null || empty($cartItems)) {
+            $priceTaxes["discountMessage"] = $error ?? "Der Rabattcode wurde aus dem leeren Warenkorb entfernt.";
+            return $priceTaxes;
+        }
+
+        $priceTaxes = App\Helper\OrderState::orderPriceTaxes($cartItems, $discount);
+        $priceTaxes["discountMessage"] = null;
+        return $priceTaxes;
+    }
+
     public function getCartByUserId(int $userId): ?array {
         $sql = "SELECT `cart`.*
                 FROM `cart`
@@ -129,39 +163,43 @@ class CartModel extends z_model
     }
 
     public function deleteCartItemById(int $cartItemId): void {
-        $sql = "DELETE FROM `cart_item` WHERE `id` = ?";
-        $this->exec($sql, "i", $cartItemId);
+        $cart = $this->assertCartExists();
+        $sql = "DELETE FROM `cart_item` WHERE `id` = ? AND `cart_id` = ?";
+        $this->exec($sql, "ii", $cartItemId, $cart["id"]);
     }
 
     public function raiseCartItemById(int $cartItemId): void {
+        $cart = $this->assertCartExists();
         $currentItem = $this->exec("SELECT `cart_item`.`quantity`, `item`.`stock`
                                     FROM `cart_item`
                                     JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
-                                    WHERE `cart_item`.`id` = ?", "i", $cartItemId
+                                    WHERE `cart_item`.`id` = ? AND `cart_item`.`cart_id` = ?", "ii", $cartItemId, $cart["id"]
                                     )->resultToLine();
 
         if ($currentItem && ($currentItem["quantity"] + 1) > $currentItem["stock"]) {
             return;
         }
 
-        $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `id` = ?";
-        $this->exec($sql, "i", $cartItemId);
+        $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `id` = ? AND `cart_id` = ?";
+        $this->exec($sql, "ii", $cartItemId, $cart["id"]);
     }
 
     public function reduceCartItemById(int $cartItemId): void {
-        $currentItem = $this->exec("SELECT `quantity` FROM `cart_item` WHERE `id` = ?", "i", $cartItemId)->resultToLine();
+        $cart = $this->assertCartExists();
+        $currentItem = $this->exec("SELECT `quantity` FROM `cart_item` WHERE `id` = ? AND `cart_id` = ?", "ii", $cartItemId, $cart["id"])->resultToLine();
         if ($currentItem && $currentItem["quantity"] <= 1)
             {
                 $this->deleteCartItemById($cartItemId);
             } else {
-                $sql = "UPDATE `cart_item` SET `quantity` = `quantity` - 1 WHERE `id` = ?";
-                $this->exec($sql, "i", $cartItemId);
+                $sql = "UPDATE `cart_item` SET `quantity` = `quantity` - 1 WHERE `id` = ? AND `cart_id` = ?";
+                $this->exec($sql, "ii", $cartItemId, $cart["id"]);
             }
     }
 
     public function getCartItemQuantityById(int $cartItemId): ?int {
-        $sql = "SELECT `quantity` FROM `cart_item` WHERE `id` = ?";
-        return $this->exec($sql, "i", $cartItemId)->resultToLine()["quantity"] ?? null;
+        $cart = $this->assertCartExists();
+        $sql = "SELECT `quantity` FROM `cart_item` WHERE `id` = ? AND `cart_id` = ?";
+        return $this->exec($sql, "ii", $cartItemId, $cart["id"])->resultToLine()["quantity"] ?? null;
     }
 
     public function getItemsByCartId(int $cartId): array {

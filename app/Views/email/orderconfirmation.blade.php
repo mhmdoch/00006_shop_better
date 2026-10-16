@@ -41,6 +41,9 @@
         :orderedItems="$items"
         :totalSum="$totalSum"
         :taxPot="$taxPot"
+        :subtotal="$subtotal"
+        :discountAmount="$discountAmount"
+        :discountCode="$discountCode"
         :root="rtrim($opt['application_root'], '/') . '/'"
         :cartIndex="false"
     />

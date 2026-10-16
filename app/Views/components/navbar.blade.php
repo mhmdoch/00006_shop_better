@@ -30,6 +30,11 @@
                             <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order" data-test="nav-all-order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>
+                    <?php if ($opt["user"]->checkPermission("discount.manage")): ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "discount" ? "active" : "" ?>" href="<?= e($opt["root"]) ?>discount" data-test="nav-discount">Rabattcodes</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
             <div>

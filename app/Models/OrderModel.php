@@ -8,12 +8,21 @@ class OrderModel extends z_model
 
         $sql = "SELECT `ci`.`item_id` AS `item_id`,
                        `ci`.`quantity` AS `quantity`,
-                       `i`.`stock` AS `stock`
+                       `i`.`stock` AS `stock`,
+                       `i`.`price`,
+                       `i`.`taxrate`
                 FROM `cart_item` AS `ci`
                 JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
-                WHERE `ci`.`cart_id` = ?";
+                WHERE `ci`.`cart_id` = ? AND `i`.`active` = 1";
 
         $cartItems = $this->exec($sql, "i", $cartId)->resultToArray();
+
+        if (empty($cartItems)) throw new Exception("Dein Warenkorb ist leer.");
+
+        $priceTaxes = model("Cart")->getPriceTaxes($cartId, $cartItems);
+        if ($priceTaxes["discountMessage"] !== null) {
+            throw new Exception($priceTaxes["discountMessage"]);
+        }
 
         foreach ($cartItems as $cartItem) {
             if ($cartItem["stock"] < $cartItem["quantity"]) {
@@ -22,7 +31,9 @@ class OrderModel extends z_model
 
             $cartItemList[$cartItem["item_id"]] = [
                 "quantity" => $cartItem["quantity"],
-                "stock"    => $cartItem["stock"]
+                "stock"    => $cartItem["stock"],
+                "price"    => $cartItem["price"],
+                "taxrate"  => $cartItem["taxrate"],
             ];
         }
 
@@ -43,7 +54,7 @@ class OrderModel extends z_model
                 FROM `cart_item` AS `ci`
                 JOIN `item`AS i
                 ON `i`.`id` = `ci`.`item_id`
-                WHERE `ci`.`cart_id` = ?";
+                WHERE `ci`.`cart_id` = ? AND `i`.`active` = 1";
 
         $orderItems = $this->exec($sql, "i", $cartId)->resultToArray();
 
@@ -59,6 +70,12 @@ class OrderModel extends z_model
                 if ($orderItem['stock'] != $cartItemList[$itemId]['stock'] - $orderItem['quantity']) {
                     throw new Exception("Lagerbestand reicht nicht aus.");
                 }
+        }
+
+        foreach ($cartItemList as $itemId => $cartItem) {
+            $sql = "UPDATE `cart_item` SET `price` = ?, `taxrate` = ?
+                    WHERE `cart_id` = ? AND `item_id` = ?";
+            $this->exec($sql, "ssii", $cartItem["price"], $cartItem["taxrate"], $cartId, $itemId);
         }
 
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
@@ -94,7 +111,7 @@ class OrderModel extends z_model
                 FROM `order`
                 JOIN `cart_item`
                 ON `cart_item`.`cart_id` = `order`.`cart_id`
-                WHERE `order`.`id` = ?";
+                WHERE `order`.`id` = ? AND `cart_item`.`price` IS NOT NULL";
 
         $cartItems = $this->exec($sql, "i", $orderId)->resultToArray();
 
@@ -113,7 +130,13 @@ class OrderModel extends z_model
                     `order`.*,
                     `cart`.`user_id`,
                     SUM(`cart_item`.`quantity`) AS `quantity`,
-                    SUM(`item`.`price` * `cart_item`.`quantity`) AS `total`
+                    SUM(`cart_item`.`price` * `cart_item`.`quantity`) - LEAST(
+                        SUM(`cart_item`.`price` * `cart_item`.`quantity`),
+                        CASE WHEN `discount`.`type` = 'percent'
+                            THEN ROUND(SUM(`cart_item`.`price` * `cart_item`.`quantity`) * `discount`.`value` / 100, 2)
+                            ELSE COALESCE(`discount`.`value`, 0)
+                        END
+                    ) AS `total`
                 FROM `order`
                 JOIN `cart`
                 ON `cart`.`id` = `order`.`cart_id`
@@ -121,6 +144,8 @@ class OrderModel extends z_model
                 ON `cart_item`.`cart_id` = `cart`.`id`
                 JOIN `item`
                 ON `item`.`id` = `cart_item`.`item_id`
+                LEFT JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
+                WHERE `cart_item`.`price` IS NOT NULL
                 GROUP BY `order`.`id`
                 ORDER BY `order`.`created` DESC";
 
@@ -132,12 +157,20 @@ class OrderModel extends z_model
                     `order`.*,
                     `cart`.`user_id`,
                     SUM(`cart_item`.`quantity`) AS `quantity`,
-                    SUM(`item`.`price` * `cart_item`.`quantity`) AS `total`
+                    SUM(`cart_item`.`price` * `cart_item`.`quantity`) - LEAST(
+                        SUM(`cart_item`.`price` * `cart_item`.`quantity`),
+                        CASE WHEN `discount`.`type` = 'percent'
+                            THEN ROUND(SUM(`cart_item`.`price` * `cart_item`.`quantity`) * `discount`.`value` / 100, 2)
+                            ELSE COALESCE(`discount`.`value`, 0)
+                        END
+                    ) AS `total`
                 FROM `order`
                 JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
                 JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                LEFT JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
                 WHERE `cart`.`user_id` = ?
+                AND `cart_item`.`price` IS NOT NULL
                 GROUP BY `order`.`id`
                 ORDER BY `order`.`created` DESC";
 
@@ -163,8 +196,8 @@ class OrderModel extends z_model
                     `item`.`id` AS `item_id`,
                     `item`.`size`,
                     `item`.`color`,
-                    `item`.`price`,
-                    `item`.`taxrate` AS `taxrate`,
+                    `cart_item`.`price`,
+                    `cart_item`.`taxrate`,
                     `catalog`.`id` AS `catalog_id`,
                     `catalog`.`name` AS `catalog_name`,
                     `catalog`.`itemable_type`,
@@ -175,6 +208,7 @@ class OrderModel extends z_model
                 JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
                 JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
                 WHERE `order`.`id` = ?
+                AND `cart_item`.`price` IS NOT NULL
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $orderId)->resultToArray();
