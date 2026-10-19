@@ -29,7 +29,7 @@
 
 <x-cataloglistitem :catalogs="$opt['catalogs']" :brands="$opt['brands']" :settings="$opt['settings']" :pagination="$opt['pagination']" :opt="$opt"/>
 
-<x-paginationLinks :location="$opt['root'] . 'catalog/index/'" :path="$opt['settings']['type'] . '/' . $opt['settings']['brandId'] . '/' . $opt['settings']['name'] . '/' . $opt['settings']['sortKey'] . '/' . $opt['settings']['orderBy'] . '/' . $opt['settings']['limit']" :opt="$opt"/>
+<x-paginationLinks :location="$opt['root'] . 'catalog/index/'" :path="$opt['settings']['type'] . '/' . $opt['settings']['brandId'] . '/' . rawurlencode($opt['settings']['name']) . '/' . $opt['settings']['sortKey'] . '/' . $opt['settings']['orderBy'] . '/' . $opt['settings']['limit']" :opt="$opt"/>
 
 
 </div>
@@ -64,7 +64,7 @@
         attributes: { 'data-test': 'filter_by_name' },
         text: "Name",
         width: 3,
-        value: "<?= ($opt['settings']['name'] === 'all' ? '' : $opt['settings']['name']) ?>",
+        value: <?= json_encode($opt['settings']['name'] === 'all' ? '' : $opt['settings']['name'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
     });
     var sortBy = filterForm.createField({
         name: "sortBy",

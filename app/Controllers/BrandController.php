@@ -72,7 +72,7 @@ class BrandController extends z_controller
 
         $catalogs = $req->getModel("Catalog")->getCatalogsByBrand($brandId);
 
-        $name = $req->getParameters(1, 1) ?: "all";
+        $name = rawurldecode($req->getParameters(1, 1) ?: "all");
         $price = $req->getParameters(2, 1) ?: 999999999;
 
         $sortKey = (string) $req->getParameters(3, 1) ?: "name";

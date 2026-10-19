@@ -108,7 +108,7 @@ class CatalogController extends z_controller
         $catalogsType =  Pagination::paginationCatalogType($catalogsType);
 
         $brandId = $req->getParameters(1, 1) ?: 0;
-        $name = $req->getParameters(2, 1) ?: "all";
+        $name = rawurldecode($req->getParameters(2, 1) ?: "all");
 
         $sortKey = $req->getParameters(3, 1);
         $sortDir =  Pagination::paginationSortKey($sortKey);

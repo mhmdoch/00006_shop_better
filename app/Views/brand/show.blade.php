@@ -29,7 +29,7 @@
 <div id="catalogsContainer">
     <x-cataloglistitem :catalogs="$opt['catalogs']" :brand="$opt['brand']" :settings="$opt['settings']" :opt="$opt"/>
 
-    <x-paginationLinks :location="$opt['root'] . 'brand/show/'" :path="$opt['settings']['brandId'] . '/' . $opt['settings']['name'] . '/' . $opt['settings']['price'] . '/' . $opt['settings']['sortKey'] . '/' . $opt['settings']['orderBy'] . '/' . $opt['settings']['limit']" :opt="$opt"/>
+    <x-paginationLinks :location="$opt['root'] . 'brand/show/'" :path="$opt['settings']['brandId'] . '/' . rawurlencode($opt['settings']['name']) . '/' . $opt['settings']['price'] . '/' . $opt['settings']['sortKey'] . '/' . $opt['settings']['orderBy'] . '/' . $opt['settings']['limit']" :opt="$opt"/>
     
 </div>
 
