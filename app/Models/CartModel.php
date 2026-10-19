@@ -114,16 +114,22 @@ class CartModel extends z_model
 
         if ($alreadyExisting === null) {
             $sql = "INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`)
-                        SELECT ?, `id`, 1
+                        SELECT ?, `item`.`id`, 1
                         FROM `item`
-                        WHERE `id` = ? AND `active` = 1 AND `stock` >= 1";
+                        JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                        JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+                        WHERE `item`.`id` = ? AND `item`.`active` = 1 AND `item`.`stock` >= 1
+                        AND `catalog`.`active` = 1 AND `brand`.`active` = 1";
             $this->exec($sql, "ii", $cartId, $itemId);
         } else {
             $sql = "UPDATE `cart_item`
                     JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                    JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                    JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
                     SET `cart_item`.`quantity` = `cart_item`.`quantity` + 1
                     WHERE `cart_item`.`cart_id` = ? AND `cart_item`.`item_id` = ?
-                    AND `cart_item`.`quantity` + 1 <= `item`.`stock`";
+                    AND `cart_item`.`quantity` + 1 <= `item`.`stock`
+                    AND `catalog`.`active` = 1 AND `brand`.`active` = 1";
             $this->exec($sql, "ii", $cartId, $itemId);
         }
     }
@@ -158,6 +164,7 @@ class CartModel extends z_model
                 JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
                 WHERE `cart`.`id` = ?
                 AND `item`.`active` = 1
+                AND `catalog`.`active` = 1 AND `brand`.`active` = 1
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $cart["id"])->resultToArray();
@@ -220,6 +227,7 @@ class CartModel extends z_model
                 LEFT JOIN `z_user` ON `z_user`.`id` = `cart`.`user_id`
                 WHERE `cart`.`id` = ?
                 AND `item`.`active` = 1
+                AND `catalog`.`active` = 1 AND `brand`.`active` = 1
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $cartId)->resultToArray();

@@ -42,6 +42,14 @@ class BrandModel extends z_model
         return $this->exec($sql, "i", $brandId)->resultToLine();
     }
 
+    public function restoreBrand($brandId) {
+        $sql = "UPDATE `brand` SET `active` = 1 WHERE `id` = ?";
+        $this->exec($sql, "i", $brandId);
+
+        $log = "INSERT INTO `log_active` (`active_type`, `active_id`, `action`, userId) VALUES ('brand', ?, 'aktiviert', ?)";
+        $this->exec($log, "ii", $brandId, user()->userId);
+    }
+
     public function deleteBrand($brandId) {
         $sql = "UPDATE `brand` SET `active` = 0 WHERE `id` = ?";
         $this->exec($sql, "i", $brandId);

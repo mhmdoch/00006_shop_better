@@ -8,7 +8,7 @@ class CatalogModel extends z_model
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
                 LEFT JOIN `item` AS i ON i.`catalog_id` = catalog.id AND i.`active` = 1
-                WHERE catalog.active = 1
+                WHERE catalog.active = 1 AND brand.active = 1
                 GROUP BY catalog.id";
         return $this->exec($sql)->resultToArray();
     }
@@ -19,7 +19,7 @@ class CatalogModel extends z_model
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
                 LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
-                WHERE catalog.active = 1
+                WHERE catalog.active = 1 AND brand.active = 1
                 ORDER BY catalog.id DESC
                 LIMIT 10";
         return $this->exec($sql)->resultToArray();
@@ -38,14 +38,14 @@ class CatalogModel extends z_model
                     GROUP BY catalog_id
                 ) AS ratings ON ratings.catalog_id = catalog.id
                 LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
-                WHERE catalog.active = 1
+                WHERE catalog.active = 1 AND brand.active = 1
                 ORDER BY ratings.average_stars DESC, ratings.rating_count DESC, catalog.id DESC
                 LIMIT 10";
         return $this->exec($sql)->resultToArray();
     }
 
     public function getCatalogById($catalogId): ?array {
-        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name`
+        $sql = "SELECT `catalog`.*, `brand`.`name` AS `brand_name`, `brand`.`active` AS `brand_active`
                 FROM `catalog`
                 JOIN `brand` ON `catalog`.`brand_id` = `brand`.`id`
                 WHERE `catalog`.`id` = ?";
@@ -66,7 +66,7 @@ class CatalogModel extends z_model
                             JOIN `brand` ON catalog.brand_id = brand.id
                             LEFT JOIN `z_file` AS zf ON catalog.titlethumb = zf.id
                             LEFT JOIN `item` AS i ON i.`catalog_id` = `catalog`.id AND i.`active` = 1
-                            WHERE catalog.active = 1
+                            WHERE catalog.active = 1 AND brand.active = 1
                                     AND (? = 'all' OR catalog.itemable_type = ?)
                                     AND (? = 0 OR catalog.brand_id = ?)
                                     AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%'))
@@ -129,7 +129,7 @@ class CatalogModel extends z_model
         $sql = "SELECT COUNT(*) AS amount
                 FROM `catalog`
                 JOIN `brand` ON catalog.brand_id = brand.id
-                WHERE catalog.active = 1
+                WHERE catalog.active = 1 AND brand.active = 1
                     AND (? = 'all' OR catalog.itemable_type = ?)
                     AND (? = 0 OR catalog.brand_id = ?)
                     AND (? = 'all' OR CONCAT(brand.name, ' ', catalog.name) LIKE CONCAT('%', ?, '%'))";

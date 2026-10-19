@@ -41,10 +41,12 @@ describe('Inactive catalogs and brands', () => {
 
     describe('brand', () => {
         beforeEach(() => {
-            // Den Link der Markenseite merken, bevor die Marke gelöscht wird
+            // Die Links der Markenseite und der Katalogseite merken, solange beide noch erreichbar sind
             cy.visit("/brand");
             cy.query('brand').contains(brandName).click();
             cy.location('pathname').as('brandPath');
+            cy.openCatalog(name);
+            cy.location('pathname').as('catalogPath');
 
             // Der Admin löscht die Marke in der Markenübersicht (die Sicherheitsfrage bestätigt Cypress automatisch)
             cy.loginAs('admin');
@@ -66,6 +68,56 @@ describe('Inactive catalogs and brands', () => {
             cy.get('@brandPath').then((path) => cy.visit(path));
             cy.contains(brandName);
             cy.contains('ERROR 404').should('not.exist');
+        });
+
+        it('hides the catalogs of the brand from the catalog list', () => {
+            cy.visit("/catalog");
+            cy.query('filter_by_name').type('Classic');
+            cy.query('catalog_list_card').should('not.contain', name);
+        });
+
+        it('shows a 404 page to a guest for a catalog of the brand', () => {
+            cy.visit("/login/logout");
+            cy.get('@catalogPath').then((path) => cy.visit(path, { failOnStatusCode: false }));
+            cy.contains('ERROR 404');
+        });
+
+        it('brings everything back when the brand is restored', () => {
+            cy.visit("/brand/inactive");
+            cy.query('brand').contains(brandName).parent().find('[data-test=restore-brand]').click();
+
+            // Die Marke steht wieder in der Übersicht
+            cy.visit("/brand");
+            cy.query('brand').contains(brandName);
+
+            // Der Katalog ist für Gäste wieder erreichbar, ohne dass er einzeln aktiviert werden musste
+            cy.visit("/login/logout");
+            cy.get('@catalogPath').then((path) => cy.visit(path));
+            cy.contains(name);
+        });
+    });
+
+    describe('cart', () => {
+        it('no longer shows a product in the cart when its brand is deleted', () => {
+            // Als Gast ein Produkt in den Warenkorb legen
+            cy.openCatalog(name);
+            cy.query('variant_size').contains('40').click();
+            cy.query('variant_color').contains('blau').click();
+            cy.query('variant_add_to_cart').click();
+            cy.contains(name);
+
+            // Als Admin weiter, den Gast-Warenkorb behält die Anmeldung (kein cy.loginAs, das würde das Cookie löschen)
+            cy.fixture('logins.json').then((logins) => {
+                cy.setCookie('z_login_token', logins.admin.token);
+            });
+            cy.visit("/cart");
+            cy.contains(name);
+
+            cy.visit("/brand");
+            cy.query('brand').contains(brandName).parent().find('.delete-brand').click();
+
+            cy.visit("/cart");
+            cy.contains(name).should('not.exist');
         });
     });
 });

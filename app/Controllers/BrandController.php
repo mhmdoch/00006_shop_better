@@ -213,7 +213,7 @@ class BrandController extends z_controller
     private function brandFormFields(): array
     {
         return [
-            (new FormField("name"))->required()->length(3, 255),
+            (new FormField("name"))->required()->length(3, 100),
             (new FormField("website"))->length(5, 500),
         ];
     }
@@ -223,6 +223,13 @@ class BrandController extends z_controller
             $req->checkPermission("brand.manage");
             $brandId = $req->getPost("brandId");
             $req->getModel("Brand")->deleteBrand($brandId);
+            return $res->success();
+        }
+
+        if ($req->isAction("restore-brand")) {
+            $req->checkPermission("brand.manage");
+            $brandId = $req->getPost("brandId");
+            $req->getModel("Brand")->restoreBrand($brandId);
             return $res->success();
         }
     }

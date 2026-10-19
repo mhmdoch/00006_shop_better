@@ -183,7 +183,14 @@ class CatalogController extends z_controller
 
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
-        if ($catalog === null || (!$catalog["active"] && !$req->checkPermission("catalog.manage", true))) {
+        if ($catalog === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
+        // A catalog is online only if the catalog and its brand are active
+        $catalogOnline = (bool) $catalog["active"] && (bool) $catalog["brand_active"];
+
+        if (!$catalogOnline && !$req->checkPermission("catalog.manage", true)) {
             return $res->reroute(["error", "404"]);
         }
 
@@ -205,7 +212,7 @@ class CatalogController extends z_controller
                 return $res->error("Bitte melde dich an, um zu bewerten.");
             }
 
-            if ((int) $catalog["active"] !== 1) {
+            if (!$catalogOnline) {
                 return $res->error("Dieses Produkt kann nicht mehr bewertet werden.");
             }
 
@@ -298,6 +305,7 @@ class CatalogController extends z_controller
             "ratings" => $rating,
             "ratingSum" => $ratingSum,
             "ownRating" => $ownRating,
+            "catalogOnline" => $catalogOnline,
             "navMenu" => "catalog",
         ]);
     }

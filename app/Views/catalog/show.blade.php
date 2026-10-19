@@ -91,7 +91,7 @@
             <?php endif; ?>
 
             <hr>
-            <?php if ((int) $opt["catalog"]["active"] !== 1): ?>
+            <?php if (!$opt["catalogOnline"]): ?>
                 <p class="text-muted mb-0">Dieses Produkt kann nicht mehr bewertet werden.</p>
             <?php elseif (!$opt["user"]->isLoggedIn): ?>
                 <p class="mb-0"><a href="<?= e($opt['root']) ?>login">Melde dich an</a>, um eine Bewertung abzugeben.</p>

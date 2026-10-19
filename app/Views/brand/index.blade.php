@@ -21,8 +21,8 @@
                     <?php if ($brand["active"]) { ?>
                         <a href="#" class="delete-brand bi bi-trash3" data-id="<?= e($brand["id"]) ?>" title="löschen"></a>
                     <?php } else { ?>
-                        <!--{{ $brand["active"] }}-->
-                        <?= (($brand["active"]) == true) ? "<span style='color:green;font-weight:bold;'>aktiv</span>" : "<span style='color:darkred'>gelöscht</span>" ?>
+                        <span style='color:darkred'>gelöscht</span>
+                        <a href="#" class="restore-brand bi bi-arrow-counterclockwise" data-id="<?= e($brand["id"]) ?>" data-test="restore-brand" title="wiederherstellen"></a>
 
                     <?php } ?>
                 <?php endif; ?>
@@ -61,7 +61,7 @@
         $("#brandIndexContainer").on("click", ".delete-brand", function(event) {
             event.preventDefault();
 
-            if (!confirm("ACHTUNG: Marke wirklich löschen? Dies hat Auswirkungen auf zugehörige Produkte und deren Varianten.")) {
+            if (!confirm("ACHTUNG: Marke wirklich löschen? Die Produkte der Marke sind danach nicht mehr sichtbar und nicht mehr bestellbar. Die Marke lässt sich unter „Inaktive“ wiederherstellen.")) {
                 return;
             }
 
@@ -69,6 +69,20 @@
 
             Z.Request.action('delete-brand', {
                 brandId: id
+            }, (res) => {
+                if (res.result == 'success') {
+                    location.reload();
+                    return;
+                }
+                alert("An error occurred");
+            });
+        });
+
+        $("#brandIndexContainer").on("click", ".restore-brand", function(event) {
+            event.preventDefault();
+
+            Z.Request.action('restore-brand', {
+                brandId: $(this).data("id")
             }, (res) => {
                 if (res.result == 'success') {
                     location.reload();

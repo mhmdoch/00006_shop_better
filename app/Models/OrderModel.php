@@ -15,7 +15,10 @@ class OrderModel extends z_model
                        `i`.`taxrate`
                 FROM `cart_item` AS `ci`
                 JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
-                WHERE `ci`.`cart_id` = ? AND `i`.`active` = 1";
+                JOIN `catalog` ON `catalog`.`id` = `i`.`catalog_id`
+                JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+                WHERE `ci`.`cart_id` = ? AND `i`.`active` = 1
+                AND `catalog`.`active` = 1 AND `brand`.`active` = 1";
 
         $cartItems = $this->exec($sql, "i", $cartId)->resultToArray();
 
