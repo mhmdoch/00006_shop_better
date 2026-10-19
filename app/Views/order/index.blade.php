@@ -45,8 +45,8 @@
                                     <?php endif; ?>
                                     <br><?= e($order["postal_code"]) ?> <?= e($order["city"]) ?>
                                 </td>
-                                <td class="text-right"><?= e($order["quantity"]) ?></td>
-                                <td class="text-right">
+                                <td class="text-right" data-test="order-quantity"><?= e($order["quantity"]) ?></td>
+                                <td class="text-right" data-test="order-total">
                                     <?= e(\App\Helper\AppHelper::price($order["total"])) ?>
                                 </td>
                                 <td>
