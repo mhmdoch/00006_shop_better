@@ -34,6 +34,7 @@ class GeneralController extends z_controller
                 $shoppingCartIdentifier,
                 time() + TIMESPAN_DAY_7, "/",
             );
+            $req->input->COOKIE["shoppingCardId"] = $shoppingCartIdentifier;
         }
 
         return true;

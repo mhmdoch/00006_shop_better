@@ -17,7 +17,7 @@
                 </div>
                 <div class="d-flex justify-content-between mt-2">
                     <span>Mindestbestellwert</span>
-                    <span><?= e(number_format((float) $opt["discount"]["min_total"], 2, ",", ".")) ?> €</span>
+                    <span><?= e(\App\Helper\AppHelper::price($opt["discount"]["min_total"])) ?></span>
                 </div>
                 <div class="d-flex justify-content-between mt-2">
                     <span>Status</span>

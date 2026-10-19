@@ -38,7 +38,7 @@
                                         <?= $discount["type"] === "percent" ? "%" : "€" ?>
                                     </td>
                                     <td class="text-right text-nowrap">
-                                        <?= e(number_format((float) $discount["min_total"], 2, ",", ".")) ?> €
+                                        <?= e(\App\Helper\AppHelper::price($discount["min_total"])) ?>
                                     </td>
                                     <td><?= $discount["active"] ? "Ja" : "Nein" ?></td>
                                     <td class="text-right text-nowrap">

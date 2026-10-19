@@ -223,7 +223,7 @@ class OrderModel extends z_model
     }
 
     public function deleteLostCartItems(int $itemId): void {
-        $sql = "DELETE FROM `cart_item`
+        $sql = "DELETE `cart_item` FROM `cart_item`
                 LEFT JOIN `order` ON `order`.`cart_id` = `cart_item`.`cart_id`
                 WHERE `cart_item`.`item_id` = ?
                 AND `order`.`id` IS NULL";

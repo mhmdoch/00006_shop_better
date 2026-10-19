@@ -66,7 +66,12 @@ class ItemController extends z_controller
             $newStock = $formResult->getValue("stock");
             $oldStock = $item["stock"];
 
-            if (empty($itemChanges) && $newStock != $oldStock) {
+            // Nothing changed, keep the current variant
+            if (empty($itemChanges) && $newStock == $oldStock) {
+                return $res->success();
+            }
+
+            if (empty($itemChanges)) {
                 $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
     
                 if ($newStock > $oldStock) {

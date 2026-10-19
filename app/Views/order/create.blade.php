@@ -79,6 +79,10 @@
                     window.location.href = <?= json_encode($opt["root"] . "cart", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                     return;
                 }
+                if (res.guestToken) {
+                    window.location.href = <?= json_encode($opt["root"] . "order/guest/", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + res.guestToken;
+                    return;
+                }
                 window.location.href = <?= json_encode($opt["root"] . "order/show/", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?> + res.orderId;
             };
         });

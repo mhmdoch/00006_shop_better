@@ -40,7 +40,7 @@
         <hr>
         <div class="d-flex justify-content-between">
             <span>Preis</span>
-            <strong data-test="variant_price"><?= e(number_format((float) $opt["selectedItem"]["price"], 2, ",", ".")) ?> €</strong>
+            <strong data-test="variant_price"><?= e(\App\Helper\AppHelper::price($opt["selectedItem"]["price"])) ?></strong>
         </div>
         <div class="d-flex justify-content-between">
             <span>Bestand</span>

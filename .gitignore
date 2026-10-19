@@ -5,3 +5,7 @@ z_config/z_automated_setting.ini
 **/cypress/screenshots
 logs/
 .coverage
+
+# Berichtsheft: generated/uploaded personal files
+webroot/assets/berichtsheft_fertig.pdf
+webroot/assets/cost-report.xls

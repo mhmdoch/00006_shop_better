@@ -150,7 +150,7 @@
                                     <tr>
                                         <td><?= e($item["color"]) ?></td>
                                         <td class="text-right"><?= e($item["size"]) ?></td>
-                                        <td class="text-right"><?= e($item["price"]) ?> €</td>
+                                        <td class="text-right"><?= e(\App\Helper\AppHelper::price($item["price"])) ?></td>
                                         <td class="text-right"><?= e($item["stock"]) ?></td>
                                         <td class="text-right"><a href="<?php echo $opt["root"]; ?>item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a></td>
                                     </tr>

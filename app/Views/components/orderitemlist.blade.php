@@ -30,7 +30,7 @@
                                         <td>-</td>
                                     <?php endif; ?>
                                     <td class="text-right">
-                                        <?= e(number_format((float) $orderItem["price"], 2, ",", ".")) ?> €
+                                        <?= e(\App\Helper\AppHelper::price($orderItem["price"])) ?>
                                     </td>
                                     <td class="text-right">
                                         <?= e($orderItem["quantity"]) ?>
@@ -41,7 +41,7 @@
                                     <td class="text-right"><?= bcmul($orderItem["taxrate"], 100, 0) ?> %</td>
 
                                     <td class="text-right">
-                                        <?= e(number_format((float) $orderItem["price"] * (int) $orderItem["quantity"], 2, ",", ".")) ?> €
+                                        <?= e(\App\Helper\AppHelper::price((float) $orderItem["price"] * (int) $orderItem["quantity"])) ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -49,17 +49,17 @@
                         <tfoot>
                             <tr>
                                 <th colspan="6" class="text-right">Zwischensumme</th>
-                                <th class="text-right"><?= e($subtotal ?? $totalSum) ?> €</th>
+                                <th class="text-right"><?= e(\App\Helper\AppHelper::price($subtotal ?? $totalSum)) ?></th>
                             </tr>
                             <?php if ($discountCode !== null): ?>
                                 <tr>
                                     <td colspan="6" class="text-right">Rabattcode <?= e($discountCode) ?></td>
-                                    <td class="text-right" data-test="order-discount">-<?= e($discountAmount) ?> €</td>
+                                    <td class="text-right" data-test="order-discount">-<?= e(\App\Helper\AppHelper::price($discountAmount)) ?></td>
                                 </tr>
                             <?php endif; ?>
                             <tr>
                                 <th colspan="6" class="text-right">Gesamtsumme</th>
-                                <th class="text-right" data-test="order-total"><?= e($totalSum) ?> €</th>
+                                <th class="text-right" data-test="order-total"><?= e(\App\Helper\AppHelper::price($totalSum)) ?></th>
                             </tr>
                             <tr>
                                 <th colspan="7" class="text-right"></th>
@@ -73,9 +73,9 @@
                             <?php foreach ($taxPot as $cartItem): ?>
                                 <tr>
                                     <td colspan="4" class="text-right small"><?= e(bcmul($cartItem["taxrate"], '100', 0)) ?> %</td>
-                                    <td class="text-right small" data-test="order_gross"><?= e($cartItem["gross"]) ?> €</td>
-                                    <td class="text-right small" data-test="order_net"><?= e($cartItem["net"]) ?> €</td>
-                                    <td class="text-right small" data-test="order_tax"><?= e($cartItem["tax"]) ?> €</td>
+                                    <td class="text-right small" data-test="order_gross"><?= e(\App\Helper\AppHelper::price($cartItem["gross"])) ?></td>
+                                    <td class="text-right small" data-test="order_net"><?= e(\App\Helper\AppHelper::price($cartItem["net"])) ?></td>
+                                    <td class="text-right small" data-test="order_tax"><?= e(\App\Helper\AppHelper::price($cartItem["tax"])) ?></td>
                                 </tr>
                         <?php endforeach; ?>
                     </tfoot>

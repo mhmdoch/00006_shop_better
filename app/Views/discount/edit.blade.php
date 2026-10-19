@@ -7,7 +7,7 @@
         <p>
             Rabatt: <?= e(number_format((float) $opt["discount"]["value"], 2, ",", ".")) ?>
             <?= $opt["discount"]["type"] === "percent" ? "%" : "€" ?><br>
-            Mindestbestellwert: <?= e(number_format((float) $opt["discount"]["min_total"], 2, ",", ".")) ?> €
+            Mindestbestellwert: <?= e(\App\Helper\AppHelper::price($opt["discount"]["min_total"])) ?>
         </p>
         <div id="edit_discount"></div>
     </div>

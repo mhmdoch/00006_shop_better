@@ -74,7 +74,8 @@ class OrderController extends z_controller
 
             return $res->success([
                 "orderId" => $orderId,
-
+                // Guests can only view their order via the token
+                "guestToken" => $req->getRequestingUser()->isLoggedIn ? null : $token,
             ]);
         }
 

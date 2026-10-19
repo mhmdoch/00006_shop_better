@@ -47,7 +47,7 @@
                                 </td>
                                 <td class="text-right"><?= e($order["quantity"]) ?></td>
                                 <td class="text-right">
-                                    <?= e(number_format((float) $order["total"], 2, ",", ".")) ?> €
+                                    <?= e(\App\Helper\AppHelper::price($order["total"])) ?>
                                 </td>
                                 <td>
                                     <?= e($order["status"]) ?>

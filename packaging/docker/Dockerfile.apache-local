@@ -5,7 +5,7 @@ ARG USER_UID=1000
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 USER root
-RUN install-php-extensions imagick
+RUN install-php-extensions imagick bcmath
 
 RUN usermod -u "${USER_UID}" www-data \
  && groupmod -g "${USER_UID}" www-data \

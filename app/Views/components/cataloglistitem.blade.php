@@ -28,7 +28,7 @@ $catalogCount = count($catalogs);
                     <h5 class="card-title"><?= e($catalog["name"]) ?></h5>
                     <p class="card-text">
                         <?php if ($catalog["lowest_price"] !== null) { ?>
-                            ab <?= e(number_format($catalog["lowest_price"], 2, ",", ".")) ?> €
+                            ab <?= e(\App\Helper\AppHelper::price($catalog["lowest_price"])) ?>
                         <?php } else { ?>
                             noch kein Preis
                         <?php } ?>
