@@ -41,6 +41,8 @@
                     window.history.pushState({}, "", url);
                 });
             </script>
+        <?php elseif ($opt["catalog"]["itemable_type"] === "lego"): ?>
+            <x-itemLegoSelector :opt="$opt" />
         <?php endif; ?>
 
         <div id="catalogRatingsContainer" class="bg-box rounded p-4 mt-4" data-test="catalog_ratings">
@@ -157,6 +159,29 @@
                                         <td class="text-right"><?= e(\App\Helper\AppHelper::price($item["price"])) ?></td>
                                         <td class="text-right"><?= e($item["stock"]) ?></td>
                                         <td class="text-right"><a href="<?php echo $opt["root"]; ?>item/itemShoeEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                    </table>
+                <?php } elseif ($opt["catalog"]["itemable_type"] === "lego") { ?>
+                    <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th style="width:10%">Setnummer</th>
+                                    <th style="width:15%">Preis</th>
+                                    <th style="width:5%">Anzahl</th>
+                                    <th style="width:5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="cartItemList">
+                                <?php foreach ($opt["items"] as $item) { ?>
+                                    <tr>
+                                        <td><?= e($item["name"]) ?></td>
+                                        <td class="text-right"><?= e($item["set_number"]) ?></td>
+                                        <td class="text-right"><?= e(\App\Helper\AppHelper::price($item["price"])) ?></td>
+                                        <td class="text-right"><?= e($item["stock"]) ?></td>
+                                        <td class="text-right"><a href="<?php echo $opt["root"]; ?>item/itemLegoEdit/<?= e($item["id"]) ?>" class="bi bi-wrench" data-id="" title="editieren"></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

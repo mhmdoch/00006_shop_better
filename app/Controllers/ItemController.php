@@ -49,60 +49,7 @@ class ItemController extends z_controller
                 return $res->formErrors($formResult->errors);
             }
 
-            $itemChanges = [];
-
-            foreach (["sku", "size", "color", "taxrate", "price"] as $field) {
-                $newValue = $formResult->getValue($field);
-                $oldValue = $item[$field];
-
-                if ($newValue != $oldValue) {
-                    $itemChanges[$field] = [
-                        "old" => $oldValue,
-                        "new" => $newValue
-                    ];
-                }
-            }
-
-            $newStock = $formResult->getValue("stock");
-            $oldStock = $item["stock"];
-
-            // Nothing changed, keep the current variant
-            if (empty($itemChanges) && $newStock == $oldStock) {
-                return $res->success();
-            }
-
-            if (empty($itemChanges)) {
-                $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
-    
-                if ($newStock > $oldStock) {
-                    $res->insertDatabase("log_active",
-                                            new FormResult(),
-                                            ["active_type" => "item", "active_id" => $itemId, "action" => "stock erhöht", "userId" => user()->userId]);
-                } else {
-                    $res->insertDatabase("log_active",
-                                            new FormResult(),
-                                            ["active_type" => "item", "active_id" => $itemId, "action" => "stock reduziert", "userId" => user()->userId]);
-                }
-
-                return $res->success();
-            }
-
-            $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]]);
-            $res->updateDatabase(
-                            "item", "id", 
-                            "i", 
-                            $itemId, new FormResult(), ["active" => 0]);
-
-            $res->getModel("Order")->deleteLostCartItems($itemId);
-            
-            $res->insertDatabase("log_active",
-                                    new FormResult(),
-                                    ["active_type" => "item", "active_id" => $newItemId, "action" => "aktiviert", "userId" => user()->userId]);
-            $res->insertDatabase("log_active",
-                                    new FormResult(),
-                                    ["active_type" => "item", "active_id" => $itemId, "action" => "deaktiviert", "userId" => user()->userId]);
-
-            return $res->success();
+            return $this->saveItemVersion($res, $item, $formResult, ["sku", "size", "color", "taxrate", "price"]);
         }
 
         App\Helper\Breadcrumbs::append("{$item['brand_name']} {$item['catalog_name']}", "/catalog/show/" . $item['catalog_id']);
@@ -114,6 +61,101 @@ class ItemController extends z_controller
             "catalog" => $catalog,
             "navMenu" => "item",
         ]);
+    }
+
+    public function action_itemLegoEdit(Request $req, Response $res)
+    {
+        $req->checkPermission("catalog.manage");
+
+        $itemId = $req->getParameters(0, 1);
+        $item = $req->getModel("Item")->getItemShoeById($itemId);
+
+        if ($item === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
+        $catalog = $req->getModel("Catalog")->getCatalogById($item["catalog_id"]);
+
+        if ($req->hasFormData()) {
+            $formResult = $req->validateForm($this->legoFormFields());
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            return $this->saveItemVersion(
+                $res, $item, $formResult,
+                ["sku", "name", "description", "set_number", "theme", "piece_count", "release_date", "price"],
+                ["taxrate" => $item["taxrate"]]
+            );
+        }
+
+        App\Helper\Breadcrumbs::append("{$item['brand_name']} {$item['catalog_name']}", "/catalog/show/" . $item['catalog_id']);
+        App\Helper\Breadcrumbs::append("Edit", "/catalog/show/" . $itemId);
+
+        return $res->render("item/itemLegoEdit", [
+            "item" => $item,
+            "catalog" => $catalog,
+            "navMenu" => "item",
+        ]);
+    }
+
+    /**
+     * Only a stock change updates the item in place. Any other change creates
+     * a new version of the item and deactivates the old one.
+     */
+    private function saveItemVersion(Response $res, array $item, FormResult $formResult, array $fields, array $extra = [])
+    {
+        $itemId = $item["id"];
+        $itemChanges = [];
+
+        foreach ($fields as $field) {
+            $newValue = $formResult->getValue($field);
+            $oldValue = $item[$field];
+
+            if ($newValue != $oldValue) {
+                $itemChanges[$field] = [
+                    "old" => $oldValue,
+                    "new" => $newValue
+                ];
+            }
+        }
+
+        $newStock = $formResult->getValue("stock");
+        $oldStock = $item["stock"];
+
+        // Nothing changed, keep the current variant
+        if (empty($itemChanges) && $newStock == $oldStock) {
+            return $res->success();
+        }
+
+        if (empty($itemChanges)) {
+            $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
+
+            $action = $newStock > $oldStock ? "stock erhöht" : "stock reduziert";
+            $res->insertDatabase("log_active",
+                                    new FormResult(),
+                                    ["active_type" => "item", "active_id" => $itemId, "action" => $action, "userId" => user()->userId]);
+
+            return $res->success();
+        }
+
+        $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]] + $extra);
+        $res->updateDatabase(
+                        "item", "id",
+                        "i",
+                        $itemId, new FormResult(), ["active" => 0]);
+
+        $res->getModel("Order")->deleteLostCartItems($itemId);
+
+        $res->insertDatabase("log_active",
+                                new FormResult(),
+                                ["active_type" => "item", "active_id" => $newItemId, "action" => "aktiviert", "userId" => user()->userId]);
+        $res->insertDatabase("log_active",
+                                new FormResult(),
+                                ["active_type" => "item", "active_id" => $itemId, "action" => "deaktiviert", "userId" => user()->userId]);
+
+        return $res->success();
     }
 
     public function action_itemlegocreate(Request $req, Response $res)

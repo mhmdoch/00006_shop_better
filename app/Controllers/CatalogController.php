@@ -256,6 +256,16 @@ class CatalogController extends z_controller
             }
         }
 
+        if ($catalog["itemable_type"] === "lego" && !empty($items)) {
+            // Preselect the first variant unless another one was picked
+            $selectedItem = $items[0];
+            foreach ($items as $item) {
+                if ((string) $item["id"] === (string) $req->getGet("item", "")) {
+                    $selectedItem = $item;
+                }
+            }
+        }
+
         App\Helper\Breadcrumbs::append("{$catalog['brand_name']} {$catalog['name']}", "/catalog/show/" . $catalogId);
 
         return $res->render("catalog/show", [
