@@ -21,6 +21,10 @@
             <?php } else { ?>
                 <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
             <?php } ?>
+
+            <?php if (!empty(trim($opt["catalog"]["description"] ?? ""))): ?>
+                <p class="mt-4 mb-0" data-test="catalog_description"><?= nl2br(e($opt["catalog"]["description"])) ?></p>
+            <?php endif; ?>
         </div>
 
         <?php if ($opt["catalog"]["itemable_type"] === "shoe"): ?>
