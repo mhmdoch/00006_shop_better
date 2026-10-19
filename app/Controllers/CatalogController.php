@@ -26,9 +26,11 @@ class CatalogController extends z_controller
                 // $imageAsJPG = new Thumbnail();
                 // $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
 
-            // picture processing with Imagick
+            // picture processing with Imagick, the picture is optional
+            if ($titlethumb !== null) {
                 $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
                 $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
+            }
 
 
             $res->insertDatabase(
@@ -75,6 +77,14 @@ class CatalogController extends z_controller
             }
 
             $res->updateDatabase("catalog", "id", "i", $catalogId, $formResult);
+
+            // A new picture was uploaded, so it still needs its thumbnail
+            $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
+            if ($titlethumb !== null && (string) $titlethumb["thumbid"] !== (string) $catalog["titlethumb"]) {
+                $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
+                $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
+            }
+
             return $res->success();
         }
 

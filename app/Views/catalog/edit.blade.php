@@ -100,8 +100,7 @@
                 name: "titlethumb",
                 type: "file",
                 text: "Bild",
-                value: <?= json_encode($catalog["titlethumb"]) ?>,
-                required: true
+                value: <?= json_encode($catalog["titlethumb"]) ?>
             });
         });
     </script>

@@ -70,8 +70,7 @@
             catalog_create_form.createField({
                 name: "titlethumb",
                 type: "file",
-                text: "Bild",
-                required: true
+                text: "Bild"
             });
             catalog_create_form.buttonSubmit.innerHTML = "Speichern";
             catalog_create_form.saveHook = (res) => {

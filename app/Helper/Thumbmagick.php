@@ -35,10 +35,15 @@ class Thumbmagick extends \Imagick
         $newThumbBG->setImageFormat('jpg');
 
         $imageToDelete = $this->getImageFilename();
-        unlink($imageToDelete);
+        $imagePath = "webroot/uploads/{$name}.jpg";
 
-        $newImg->writeImage("webroot/uploads/{$name}.jpg");
+        $newImg->writeImage($imagePath);
         $newThumbBG->writeImage("webroot/uploads/thumb_{$name}.jpg");
+
+        // Only drop the original after the new files exist, and not if it was overwritten
+        if ($imageToDelete !== $imagePath && file_exists($imageToDelete)) {
+            unlink($imageToDelete);
+        }
 
         $newImg->clear();
         $newImg->destroy();
@@ -49,7 +54,7 @@ class Thumbmagick extends \Imagick
         $newThumbBG->clear();
         $newThumbBG->destroy();
 
-        $fileSize = filesize($newImg);
+        $fileSize = filesize($imagePath);
         $req->getModel("Catalog")->updateZFile($id, $fileSize);
     }
 }
