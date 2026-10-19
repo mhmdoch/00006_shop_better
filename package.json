@@ -13,6 +13,7 @@
         "seed": "docker exec application php index.php db:seed",
         "cypress": "cypress open --project tests",
         "tests": "cypress run --project tests",
+        "tests:php": "docker exec application php tests/php/OrderStateTest.php",
         "info": "docker exec application php index.php info:startup --pwd \"$(pwd)\"",
         "startup": "npm run start && npm run docker-compose -- up"
     },
