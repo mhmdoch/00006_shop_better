@@ -10,12 +10,18 @@ class ItemController extends z_controller
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
+        if ($catalog === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         if ($req->hasFormData()) {
             $formResult = $req->validateForm($this->shoeFormFields());
 
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
             }
+
+            $this->taxrateToFraction($formResult);
 
              $itemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $catalogId]);
             $res->insertDatabase("log_active", new FormResult(), ["active_type" => "item", "active_id" => $itemId, "action" => "aktiviert", "userId" => user()->userId]);
@@ -48,6 +54,8 @@ class ItemController extends z_controller
             if ($formResult->hasErrors) {
                 return $res->formErrors($formResult->errors);
             }
+
+            $this->taxrateToFraction($formResult);
 
             return $this->saveItemVersion($res, $item, $formResult, ["sku", "size", "color", "taxrate", "price"]);
         }
@@ -165,6 +173,10 @@ class ItemController extends z_controller
         $catalogId = $req->getParameters(0, 1);
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
+        if ($catalog === null) {
+            return $res->reroute(["error", "404"]);
+        }
+
         if ($req->hasFormData()) {
             $formResult = $req->validateForm($this->legoFormFields());
 
@@ -186,30 +198,54 @@ class ItemController extends z_controller
         ]);
     }
 
+    /**
+     * The form takes the tax rate in percent (19), the database stores it as a fraction (0.19).
+     */
+    private function taxrateToFraction(FormResult $formResult): void
+    {
+        foreach ($formResult->fields as $field) {
+            if ($field->name === "taxrate") {
+                $field->value = bcdiv($field->value, "100", 2);
+            }
+        }
+    }
+
     private function shoeFormFields(): array
     {
         return [
-            (new FormField("sku"))->required(),
-            (new FormField("size"))->required(),
-            (new FormField("color"))->required(),
-            (new FormField("taxrate"))->required(),
-            (new FormField("price"))->required(),
-            (new FormField("stock"))->required(),
+            (new FormField("sku"))->required()->length(1, 100),
+            (new FormField("size"))->required()->length(1, 100),
+            (new FormField("color"))->required()->length(1, 255),
+            (new FormField("taxrate"))->required()->regex('/^\d{1,3}$/')->range(0, 100),
+            $this->priceField(),
+            $this->stockField(),
         ];
     }
 
     private function legoFormFields(): array
     {
         return [
-            (new FormField("sku"))->required(),
-            (new FormField("name"))->required(),
+            (new FormField("sku"))->required()->length(1, 100),
+            (new FormField("name"))->required()->length(1, 255),
             (new FormField("description"))->required(),
-            (new FormField("set_number"))->required(),
-            (new FormField("theme"))->required(),
-            (new FormField("piece_count"))->required(),
-            (new FormField("release_date"))->required(),
-            (new FormField("price"))->required(),
-            (new FormField("stock"))->required(),
+            (new FormField("set_number"))->required()->length(1, 30),
+            (new FormField("theme"))->required()->length(1, 100),
+            (new FormField("piece_count"))->required()->integer()->range(1, 100000),
+            (new FormField("release_date"))->required()->date(),
+            $this->priceField(),
+            $this->stockField(),
         ];
+    }
+
+    private function priceField(): FormField
+    {
+        return (new FormField("price"))->required()
+            ->regex('/^\d{1,10}(\.\d{1,2})?$/')
+            ->range(0.01, 9999999999.99);
+    }
+
+    private function stockField(): FormField
+    {
+        return (new FormField("stock"))->required()->integer()->range(0, 1000000);
     }
 }

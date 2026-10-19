@@ -33,7 +33,7 @@
             item_shoe_create_form.createField({
                 name: "taxrate",
                 type: "number",
-                text: "Steuersatz",
+                text: "Steuersatz (%)",
                 required: true
             });
             item_shoe_create_form.createField({

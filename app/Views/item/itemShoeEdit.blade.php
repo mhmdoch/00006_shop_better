@@ -71,7 +71,7 @@
                 name: "taxrate",
                 type: "number",
                 text: "Steuersatz (%)",
-                value: <?= json_encode($opt["item"]["taxrate"] ?? "") ?>,
+                value: <?= json_encode((string) round(($opt["item"]["taxrate"] ?? 0) * 100)) ?>,
                 required: true
             });
             item_shoe_edit_form.createField({
