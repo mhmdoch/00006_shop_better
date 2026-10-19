@@ -119,10 +119,14 @@ class CartModel extends z_model
             $sql = "INSERT INTO `cart_item` (`cart_id`, `item_id`, `quantity`)
                         SELECT ?, `id`, 1
                         FROM `item`
-                        WHERE `id` = ? AND `active` = 1";
+                        WHERE `id` = ? AND `active` = 1 AND `stock` >= 1";
             $this->exec($sql, "ii", $cartId, $itemId);
         } else {
-            $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `cart_id` = ? AND `item_id` = ?";
+            $sql = "UPDATE `cart_item`
+                    JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                    SET `cart_item`.`quantity` = `cart_item`.`quantity` + 1
+                    WHERE `cart_item`.`cart_id` = ? AND `cart_item`.`item_id` = ?
+                    AND `cart_item`.`quantity` + 1 <= `item`.`stock`";
             $this->exec($sql, "ii", $cartId, $itemId);
         }
     }

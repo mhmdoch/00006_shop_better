@@ -38,40 +38,51 @@ class OrderModel extends z_model
         }
 
 
+        $this->reserveStock($cartItemList);
+
+        try {
+            $orderId = $this->insertOrder($cartId, $cartItemList, $addressForm, $token);
+        } catch (Throwable $e) {
+            $this->releaseStock($cartItemList);
+            throw $e;
+        }
+
+        return $orderId;
+
+    }
+
+
+    /**
+     * Takes the stock for all items or none. A concurrent order may have
+     * taken it since the check in createOrder, so every item is checked again.
+     */
+    private function reserveStock(array $cartItemList): void {
+        $reserved = [];
+
         foreach ($cartItemList as $itemId => $cartItem) {
             $sql = "UPDATE `item`
                     SET `stock` = `stock` - ?
                     WHERE `id` = ? AND `stock` >= ?";
-
             $this->exec($sql, "iii", $cartItem["quantity"], $itemId, $cartItem["quantity"]);
+
+            $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
+            if ($changed !== 1) {
+                $this->releaseStock($reserved);
+                throw new Exception("Lagerbestand reicht nicht aus.");
+            }
+
+            $reserved[$itemId] = $cartItem;
         }
+    }
 
-        $orderItemList = [];
-
-        $sql = "SELECT ci.`item_id` AS `item_id`,
-                       `ci`.`quantity` AS `quantity`,
-                       `i`.`stock` AS `stock`
-                FROM `cart_item` AS `ci`
-                JOIN `item`AS i
-                ON `i`.`id` = `ci`.`item_id`
-                WHERE `ci`.`cart_id` = ? AND `i`.`active` = 1";
-
-        $orderItems = $this->exec($sql, "i", $cartId)->resultToArray();
-
-
-        foreach ($orderItems as $orderItem) {
-            $orderItemList[$orderItem["item_id"]] = [
-                "quantity" => $orderItem["quantity"],
-                "stock"    => $orderItem["stock"]
-            ];
+    private function releaseStock(array $cartItemList): void {
+        foreach ($cartItemList as $itemId => $cartItem) {
+            $sql = "UPDATE `item` SET `stock` = `stock` + ? WHERE `id` = ?";
+            $this->exec($sql, "ii", $cartItem["quantity"], $itemId);
         }
+    }
 
-        foreach ($orderItemList as $itemId => $orderItem) {
-                if ($orderItem['stock'] != $cartItemList[$itemId]['stock'] - $orderItem['quantity']) {
-                    throw new Exception("Lagerbestand reicht nicht aus.");
-                }
-        }
-
+    private function insertOrder($cartId, array $cartItemList, $addressForm, string $token): int {
         foreach ($cartItemList as $itemId => $cartItem) {
             $sql = "UPDATE `cart_item` SET `price` = ?, `taxrate` = ?
                     WHERE `cart_id` = ? AND `item_id` = ?";
@@ -86,7 +97,7 @@ class OrderModel extends z_model
             `postal_code`, `city`, `country`, `token`, `status`
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
 
-        $orderId = $this->exec(
+        return $this->exec(
             $sql,
             "isssssssss",
             $cartId,
@@ -100,41 +111,26 @@ class OrderModel extends z_model
             $addressForm->getValue("country"),
             $token,
         )->getInsertId();
-
-        return $orderId;
-
     }
 
 
     /**
      * Changes the status only if the order is still in the expected one.
-     * A cancellation gives the stock back in the same transaction, so it
-     * is booked exactly once even if it is triggered twice at the same time.
+     * Only one of several concurrent calls wins, so a cancellation gives
+     * the stock back exactly once.
      * @return bool False if the order was changed in the meantime
      */
     public function changeStatus(int $orderId, string $fromStatus, string $toStatus): bool {
-        db()->executeMultiQuery("START TRANSACTION");
+        $sql = "UPDATE `order`
+                SET `status` = ?
+                WHERE `id` = ? AND `status` = ?";
+        $this->exec($sql, "sis", $toStatus, $orderId, $fromStatus);
 
-        try {
-            $sql = "UPDATE `order`
-                    SET `status` = ?
-                    WHERE `id` = ? AND `status` = ?";
-            $this->exec($sql, "sis", $toStatus, $orderId, $fromStatus);
+        $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
+        if ($changed !== 1) return false;
 
-            $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
-            if ($changed !== 1) {
-                db()->executeMultiQuery("ROLLBACK");
-                return false;
-            }
-
-            if ($toStatus === "cancelled") {
-                $this->restockOrder($orderId);
-            }
-
-            db()->executeMultiQuery("COMMIT");
-        } catch (Throwable $e) {
-            db()->executeMultiQuery("ROLLBACK");
-            throw $e;
+        if ($toStatus === "cancelled") {
+            $this->restockOrder($orderId);
         }
 
         return true;
