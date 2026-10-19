@@ -191,6 +191,14 @@ class CatalogController extends z_controller
         }
 
         if ($req->hasFormData()) {
+            if (!user()->isLoggedIn) {
+                return $res->error("Bitte melde dich an, um zu bewerten.");
+            }
+
+            if ((int) $catalog["active"] !== 1) {
+                return $res->error("Dieses Produkt kann nicht mehr bewertet werden.");
+            }
+
             if ($ownRating !== null) {
                 return $res->error();
             }
