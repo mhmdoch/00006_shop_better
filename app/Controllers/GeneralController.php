@@ -28,7 +28,7 @@ class GeneralController extends z_controller
 
         // Make sure a cookie is set
         if(empty($shoppingCartIdentifier)) {
-            $shoppingCartIdentifier = uniqid(true);
+            $shoppingCartIdentifier = bin2hex(random_bytes(32));
             $res->setCookie(
                 "shoppingCardId",
                 $shoppingCartIdentifier,

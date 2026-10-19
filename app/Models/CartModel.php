@@ -13,20 +13,16 @@ class CartModel extends z_model
                 // Cart found, user not logged in
                 if(is_null($userId)) return $cart;
 
-                // Cart found, user logged in, already moved to user
-                if(!is_null($cart["user_id"])) return $cart;
+                // Cart found, user logged in, nothing to move: use the user's own cart
+                if($this->getAmountItemsByCartId($cart["id"]) >= 1) {
+                    // Cart found, user logged in, not yet moved to user
+                    $sql = "UPDATE `cart` SET `user_id` = ? WHERE `id` = ?";
+                    $this->exec($sql, "ii", $userId, $cart["id"]);
 
-                // Get item count
-                $itemCount = $this->getAmountItemsByCartId($cart["id"]);
-                if($itemCount < 1) return $cart;
+                    response()->unsetCookie("shoppingCardId");
 
-                // Cart found, user logged in, not yet moved to user
-                $sql = "UPDATE `cart` SET `user_id` = ? WHERE `id` = ?";
-                $this->exec($sql, "ii", $userId, $cart["id"]);
-
-                response()->unsetCookie("shoppingCardId");
-
-                return $cart;
+                    return $cart;
+                }
             }
         }
 
@@ -103,6 +99,7 @@ class CartModel extends z_model
                 FROM `cart`
                 LEFT JOIN `order` ON `order`.`cart_id` = `cart`.`id`
                 WHERE `cart`.`anon_id` = ?
+                AND `cart`.`user_id` IS NULL
                 AND `order`.`id` IS NULL
                 ORDER BY `cart`.`id` DESC
                 LIMIT 1";
