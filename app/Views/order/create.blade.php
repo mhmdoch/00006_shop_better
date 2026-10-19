@@ -14,6 +14,7 @@
             <div class="bg-box rounded p-4 mt-4">
                 <h5>Lieferadresse</h5>
                 <hr>
+                <div id="orderNotification" class="alert alert-danger d-none" role="alert" data-test="order-notification"></div>
                 <div id="create_order" data-test="order-address-form"></div>
             </div>
         </aside>
@@ -75,6 +76,10 @@
 
             order_create_form.buttonSubmit.innerHTML = "Bestellung abschließen";
             order_create_form.saveHook = (res) => {
+                if (res.orderError) {
+                    $("#orderNotification").text(res.orderError).removeClass("d-none");
+                    return;
+                }
                 if (res.cartChanged) {
                     window.location.href = <?= json_encode($opt["root"] . "cart", JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
                     return;

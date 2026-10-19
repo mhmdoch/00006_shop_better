@@ -41,11 +41,15 @@ class OrderController extends z_controller
 
             $token = bin2hex(random_bytes(32));
 
-            $orderId = $req->getModel("Order")->createOrder(
-                $cart["id"],
-                $addressForm,
-                $token
-            );
+            try {
+                $orderId = $req->getModel("Order")->createOrder(
+                    $cart["id"],
+                    $addressForm,
+                    $token
+                );
+            } catch (DomainException $e) {
+                return $res->success(["orderError" => $e->getMessage()]);
+            }
 
             $order = $req->getModel("Order")->getOrderById($orderId);
             $items = $req->getModel("Order")->getItemsByOrderId($orderId);

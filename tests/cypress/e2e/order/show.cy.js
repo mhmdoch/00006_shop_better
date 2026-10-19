@@ -249,4 +249,41 @@ describe('Order-Show', () => {
         cy.query('nav-cart').click();
         cy.get('body').contains('Dein Warenkorb ist leer.');
     });
+
+    it('shows an error at checkout when somebody else bought the last item', () => {
+        const addLastItem = () => {
+            cy.visit("/");
+            cy.query('nav-catalog').click();
+            cy.query('catalog_list_card').contains('Air Force 1 \'07').click();
+            cy.query('variant_size').contains('51.5').click();
+            cy.query('variant_color').contains('Schwarz').click();
+            cy.query('variant_add_to_cart').click();
+            cy.query('order_gross').contains('124,99 €');
+        };
+        const fillAddress = () => {
+            cy.form('recipient').type('Udo Latteck');
+            cy.form('address_line_1').type('Udo Latteck Strasse 1');
+            cy.form('postal_code').type('23456');
+            cy.form('city').type('Downtown');
+        };
+
+        cy.loginAs('customer');
+        addLastItem();
+
+        cy.loginAs('admin');
+        addLastItem();
+        cy.query('order-checkout').click();
+        fillAddress();
+        cy.query('order-address-form').contains('Bestellung').click();
+        cy.query('order-status').contains('pending');
+
+        cy.loginAs('customer');
+        cy.visit("/");
+        cy.query('nav-cart').click();
+        cy.query('order-checkout').click();
+        fillAddress();
+        cy.query('order-address-form').contains('Bestellung').click();
+        cy.query('order-notification').contains('Lagerbestand reicht nicht aus.');
+        cy.url().should('include', '/order/create');
+    });
 });

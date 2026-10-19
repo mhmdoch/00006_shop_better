@@ -19,16 +19,16 @@ class OrderModel extends z_model
 
         $cartItems = $this->exec($sql, "i", $cartId)->resultToArray();
 
-        if (empty($cartItems)) throw new Exception("Dein Warenkorb ist leer.");
+        if (empty($cartItems)) throw new DomainException("Dein Warenkorb ist leer.");
 
         $priceTaxes = model("Cart")->getPriceTaxes($cartId, $cartItems);
         if ($priceTaxes["discountMessage"] !== null) {
-            throw new Exception($priceTaxes["discountMessage"]);
+            throw new DomainException($priceTaxes["discountMessage"]);
         }
 
         foreach ($cartItems as $cartItem) {
             if ($cartItem["stock"] < $cartItem["quantity"]) {
-                throw new Exception("Lagerbestand reicht nicht aus.");
+                throw new DomainException("Lagerbestand reicht nicht aus.");
             }
 
             $cartItemList[$cartItem["item_id"]] = [
@@ -70,7 +70,7 @@ class OrderModel extends z_model
             $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
             if ($changed !== 1) {
                 $this->releaseStock($reserved);
-                throw new Exception("Lagerbestand reicht nicht aus.");
+                throw new DomainException("Lagerbestand reicht nicht aus.");
             }
 
             $reserved[$itemId] = $cartItem;

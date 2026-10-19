@@ -174,17 +174,11 @@ class CartModel extends z_model
 
     public function raiseCartItemById(int $cartItemId): void {
         $cart = $this->assertCartExists();
-        $currentItem = $this->exec("SELECT `cart_item`.`quantity`, `item`.`stock`
-                                    FROM `cart_item`
-                                    JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
-                                    WHERE `cart_item`.`id` = ? AND `cart_item`.`cart_id` = ?", "ii", $cartItemId, $cart["id"]
-                                    )->resultToLine();
-
-        if ($currentItem && ($currentItem["quantity"] + 1) > $currentItem["stock"]) {
-            return;
-        }
-
-        $sql = "UPDATE `cart_item` SET `quantity` = `quantity` + 1 WHERE `id` = ? AND `cart_id` = ?";
+        $sql = "UPDATE `cart_item`
+                JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                SET `cart_item`.`quantity` = `cart_item`.`quantity` + 1
+                WHERE `cart_item`.`id` = ? AND `cart_item`.`cart_id` = ?
+                AND `cart_item`.`quantity` + 1 <= `item`.`stock`";
         $this->exec($sql, "ii", $cartItemId, $cart["id"]);
     }
 
