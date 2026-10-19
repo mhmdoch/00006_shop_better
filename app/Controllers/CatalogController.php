@@ -173,7 +173,7 @@ class CatalogController extends z_controller
 
         $catalog = $req->getModel("Catalog")->getCatalogById($catalogId);
 
-        if ($catalog === null) {
+        if ($catalog === null || (!$catalog["active"] && !$req->checkPermission("catalog.manage", true))) {
             return $res->reroute(["error", "404"]);
         }
 

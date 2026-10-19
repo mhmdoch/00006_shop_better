@@ -66,7 +66,7 @@ class BrandController extends z_controller
         $brandId = $req->getParameters(0, 1);
         $brand = $req->getModel("Brand")->getBrandById($brandId);
 
-        if ($brand === null) {
+        if ($brand === null || (!$brand["active"] && !$req->checkPermission("brand.manage", true))) {
             return $res->reroute(["error", "404"]);
         }
 
