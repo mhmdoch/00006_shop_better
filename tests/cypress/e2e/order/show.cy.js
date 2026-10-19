@@ -163,7 +163,10 @@ describe('Order-Show', () => {
         cy.form('postal_code').type('23456');
         cy.form('city').type('Downtown');
         cy.query('order-address-form').contains('Bestellung').click();
-        cy.query('btn-login');
+        cy.url().should('include', '/order/guest/');
+        cy.query('order-status').contains('pending');
+        cy.get('body').contains('gast@example.com');
+        cy.query('order_gross').contains('310,00 €');
         cy.query('nav-cart').click();
         cy.get('body').contains('Dein Warenkorb ist leer.');
         cy.loginAs('admin');

@@ -1,5 +1,7 @@
 <?php
 
+use App\Helper\OrderState;
+
 class OrderModel extends z_model
 {
     public function createOrder($cartId, $addressForm, string $token): int {
@@ -156,55 +158,67 @@ class OrderModel extends z_model
 
 
     public function getOrders(): array {
-        $sql = "SELECT
-                    `order`.*,
-                    `cart`.`user_id`,
-                    SUM(`cart_item`.`quantity`) AS `quantity`,
-                    SUM(`cart_item`.`price` * `cart_item`.`quantity`) - LEAST(
-                        SUM(`cart_item`.`price` * `cart_item`.`quantity`),
-                        CASE WHEN `discount`.`type` = 'percent'
-                            THEN ROUND(SUM(`cart_item`.`price` * `cart_item`.`quantity`) * `discount`.`value` / 100, 2)
-                            ELSE COALESCE(`discount`.`value`, 0)
-                        END
-                    ) AS `total`
-                FROM `order`
-                JOIN `cart`
-                ON `cart`.`id` = `order`.`cart_id`
-                JOIN `cart_item`
-                ON `cart_item`.`cart_id` = `cart`.`id`
-                JOIN `item`
-                ON `item`.`id` = `cart_item`.`item_id`
-                LEFT JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
-                WHERE `cart_item`.`price` IS NOT NULL
-                GROUP BY `order`.`id`
-                ORDER BY `order`.`created` DESC";
-
-        return $this->exec($sql)->resultToArray();
+        return $this->getOrderList();
     }
 
     public function getOrdersByUserId($userId): array {
+        return $this->getOrderList($userId);
+    }
+
+    /**
+     * Orders with their quantity and total. The total is calculated by
+     * OrderState, the same way as on the order and in the mail.
+     */
+    private function getOrderList(?int $userId = null): array {
+        $userFilter = $userId === null ? "" : "AND `cart`.`user_id` = ?";
+        $bindings = $userId === null ? [] : ["i", $userId];
+
         $sql = "SELECT
                     `order`.*,
                     `cart`.`user_id`,
-                    SUM(`cart_item`.`quantity`) AS `quantity`,
-                    SUM(`cart_item`.`price` * `cart_item`.`quantity`) - LEAST(
-                        SUM(`cart_item`.`price` * `cart_item`.`quantity`),
-                        CASE WHEN `discount`.`type` = 'percent'
-                            THEN ROUND(SUM(`cart_item`.`price` * `cart_item`.`quantity`) * `discount`.`value` / 100, 2)
-                            ELSE COALESCE(`discount`.`value`, 0)
-                        END
-                    ) AS `total`
+                    `discount`.`code` AS `discount_code`,
+                    `discount`.`type` AS `discount_type`,
+                    `discount`.`value` AS `discount_value`
+                FROM `order`
+                JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
+                LEFT JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
+                WHERE 1 = 1 $userFilter
+                ORDER BY `order`.`created` DESC";
+        $orders = $this->exec($sql, ...$bindings)->resultToArray();
+
+        $sql = "SELECT
+                    `order`.`id` AS `order_id`,
+                    `cart_item`.`quantity`,
+                    `cart_item`.`price`,
+                    `cart_item`.`taxrate`
                 FROM `order`
                 JOIN `cart` ON `cart`.`id` = `order`.`cart_id`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `cart`.`id`
-                JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
-                LEFT JOIN `discount` ON `discount`.`id` = `cart`.`discount_id`
-                WHERE `cart`.`user_id` = ?
-                AND `cart_item`.`price` IS NOT NULL
-                GROUP BY `order`.`id`
-                ORDER BY `order`.`created` DESC";
+                WHERE `cart_item`.`price` IS NOT NULL $userFilter";
+        $rows = $this->exec($sql, ...$bindings)->resultToArray();
 
-        return $this->exec($sql, "i", $userId)->resultToArray();
+        $itemsByOrder = [];
+        foreach ($rows as $row) {
+            $itemsByOrder[$row["order_id"]][] = $row;
+        }
+
+        $result = [];
+        foreach ($orders as $order) {
+            $items = $itemsByOrder[$order["id"]] ?? [];
+            if (empty($items)) continue;
+
+            $discount = $order["discount_code"] === null ? null : [
+                "code" => $order["discount_code"],
+                "type" => $order["discount_type"],
+                "value" => $order["discount_value"],
+            ];
+
+            $order["quantity"] = array_sum(array_column($items, "quantity"));
+            $order["total"] = OrderState::orderPriceTaxes($items, $discount)["totalSum"];
+            $result[] = $order;
+        }
+
+        return $result;
     }
 
     public function getOrderById($orderId): ?array {
