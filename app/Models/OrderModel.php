@@ -12,7 +12,10 @@ class OrderModel extends z_model
                        `ci`.`quantity` AS `quantity`,
                        `i`.`stock` AS `stock`,
                        `i`.`price`,
-                       `i`.`taxrate`
+                       `i`.`taxrate`,
+                       `i`.`sku`,
+                       `catalog`.`name` AS `catalog_name`,
+                       `brand`.`name` AS `brand_name`
                 FROM `cart_item` AS `ci`
                 JOIN `item`AS i ON `i`.`id` = `ci`.`item_id`
                 JOIN `catalog` ON `catalog`.`id` = `i`.`catalog_id`
@@ -39,6 +42,9 @@ class OrderModel extends z_model
                 "stock"    => $cartItem["stock"],
                 "price"    => $cartItem["price"],
                 "taxrate"  => $cartItem["taxrate"],
+                "sku"      => $cartItem["sku"],
+                "catalog_name" => $cartItem["catalog_name"],
+                "brand_name"   => $cartItem["brand_name"],
             ];
         }
 
@@ -89,9 +95,21 @@ class OrderModel extends z_model
 
     private function insertOrder($cartId, array $cartItemList, $addressForm, string $token): int {
         foreach ($cartItemList as $itemId => $cartItem) {
-            $sql = "UPDATE `cart_item` SET `price` = ?, `taxrate` = ?
+            // Price, tax rate and names are frozen with the order
+            $sql = "UPDATE `cart_item`
+                    SET `price` = ?, `taxrate` = ?, `sku` = ?, `catalog_name` = ?, `brand_name` = ?
                     WHERE `cart_id` = ? AND `item_id` = ?";
-            $this->exec($sql, "ssii", $cartItem["price"], $cartItem["taxrate"], $cartId, $itemId);
+            $this->exec(
+                $sql,
+                "sssssii",
+                $cartItem["price"],
+                $cartItem["taxrate"],
+                $cartItem["sku"],
+                $cartItem["catalog_name"],
+                $cartItem["brand_name"],
+                $cartId,
+                $itemId,
+            );
         }
 
         $orderNumber = "ORD-" . date("Ymd") . "-" . str_pad($cartId, 6, "0", STR_PAD_LEFT);
@@ -246,9 +264,10 @@ class OrderModel extends z_model
                     `cart_item`.`price`,
                     `cart_item`.`taxrate`,
                     `catalog`.`id` AS `catalog_id`,
-                    `catalog`.`name` AS `catalog_name`,
+                    COALESCE(`cart_item`.`catalog_name`, `catalog`.`name`) AS `catalog_name`,
+                    COALESCE(`cart_item`.`sku`, `item`.`sku`) AS `sku`,
                     `catalog`.`itemable_type`,
-                    `brand`.`name` AS `brand_name`
+                    COALESCE(`cart_item`.`brand_name`, `brand`.`name`) AS `brand_name`
                 FROM `order`
                 JOIN `cart_item` ON `cart_item`.`cart_id` = `order`.`cart_id`
                 JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
