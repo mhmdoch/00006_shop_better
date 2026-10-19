@@ -49,7 +49,7 @@
         </div>
 
         <a
-            href="<?= (int) $opt["selectedItem"]["stock"] === 0 ? "#" : $opt["root"] . "cart/add/" . rawurlencode($opt["selectedItem"]["id"]) ?>"
+            href="#"
             class="btn cart-button btn-block mt-3 <?= (int) $opt["selectedItem"]["stock"] === 0 ? "disabled" : "" ?>"
             data-test="variant_add_to_cart"
             data-item-id="<?= e($opt["selectedItem"]["id"]) ?>"

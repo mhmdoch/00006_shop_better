@@ -29,6 +29,11 @@ class CartController extends z_controller
             return $res->success();
         }
 
+        if ($req->isAction("add-item")) {
+            $req->getModel("Cart")->addItem($cart["id"], (int) $req->getPost("itemId"));
+            return $res->success();
+        }
+
         if ($req->isAction("remove-discount")) {
             $req->getModel("Cart")->setDiscountByCartId($cart["id"], null);
             return $res->success();
@@ -80,15 +85,5 @@ class CartController extends z_controller
             "discountMessage" => $priceTaxes["discountMessage"],
             "navMenu" => "cart",
         ]);
-    }
-
-    public function action_add(Request $req, Response $res)
-    {
-        $itemId = $req->getParameters(0, 1);
-
-        $cart = $req->getModel("Cart")->assertCartExists();
-
-        $req->getModel("Cart")->addItem($cart["id"], $itemId);
-        return $res->rerouteUrl("cart");
     }
 }

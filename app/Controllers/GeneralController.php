@@ -22,6 +22,25 @@ class GeneralController extends z_controller
         return true;
     }
 
+    // CSRF protection: a POST that comes from another site is rejected.
+    // Browsers always send the Origin header on cross-site POSTs.
+    public function sameOriginOnly(Request $req, Response $res)
+    {
+        $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
+        $origin = $_SERVER["HTTP_ORIGIN"] ?? null;
+
+        if (in_array($method, ["GET", "HEAD", "OPTIONS"], true) || $origin === null) return true;
+
+        $parts = parse_url($origin);
+        $originHost = ($parts["host"] ?? "") . (isset($parts["port"]) ? ":" . $parts["port"] : "");
+
+        if (strcasecmp($originHost, $_SERVER["HTTP_HOST"] ?? "") === 0) return true;
+
+        http_response_code(403);
+        echo "Anfrage von einer fremden Seite abgelehnt.";
+        return false;
+    }
+
     public function shoppingCardCookie(Request $req, Response $res)
     {
         $shoppingCartIdentifier = $req->getCookie("shoppingCardId");

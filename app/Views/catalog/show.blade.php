@@ -223,6 +223,20 @@
 
 <script>
     $(document).ready(function() {
+        // Adding to the cart changes data, so it is sent as POST and not as a link
+        $(document).on('click', '[data-test="variant_add_to_cart"]', function(event) {
+            event.preventDefault();
+            if ($(this).hasClass('disabled')) return;
+
+            Z.Request.root('cart', 'add-item', {
+                itemId: $(this).data('item-id')
+            }, (res) => {
+                if (res.result === 'success') {
+                    location.href = <?= json_encode($opt["root"] . "cart") ?>;
+                }
+            });
+        });
+
         $('#catalogRatingsContainer').on('click', '.delete-catalogRating', function(event) {
             event.preventDefault();
 
