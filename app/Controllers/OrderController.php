@@ -205,8 +205,14 @@ class OrderController extends z_controller
                 return $res->formErrors($statusForm->errors);
             }
 
-            if ($statusForm->getValue("status") == "cancelled") {
-                $res->getModel("Order")->restockOrder($orderId);
+            // Only continue if nobody else changed the order in the meantime
+            $statusChanged = $req->getModel("Order")->changeStatus(
+                (int) $orderId,
+                $order["status"],
+                $statusForm->getValue("status"),
+            );
+            if (!$statusChanged) {
+                return $res->error("Der Status der Bestellung wurde bereits geändert. Bitte die Seite neu laden.");
             }
 
             $res->insertDatabase(
@@ -219,7 +225,6 @@ class OrderController extends z_controller
                     "action" => $statusForm->getValue("status"),
                 ]
             );
-            $req->getModel("Order")->updateStatus((int) $orderId, $statusForm->getValue("status"));
 
             $res->sendEmail(
                 $order["email"],

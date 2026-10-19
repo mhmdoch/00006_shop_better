@@ -106,7 +106,41 @@ class OrderModel extends z_model
     }
 
 
-    public function restockOrder($orderId): void {
+    /**
+     * Changes the status only if the order is still in the expected one.
+     * A cancellation gives the stock back in the same transaction, so it
+     * is booked exactly once even if it is triggered twice at the same time.
+     * @return bool False if the order was changed in the meantime
+     */
+    public function changeStatus(int $orderId, string $fromStatus, string $toStatus): bool {
+        db()->executeMultiQuery("START TRANSACTION");
+
+        try {
+            $sql = "UPDATE `order`
+                    SET `status` = ?
+                    WHERE `id` = ? AND `status` = ?";
+            $this->exec($sql, "sis", $toStatus, $orderId, $fromStatus);
+
+            $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
+            if ($changed !== 1) {
+                db()->executeMultiQuery("ROLLBACK");
+                return false;
+            }
+
+            if ($toStatus === "cancelled") {
+                $this->restockOrder($orderId);
+            }
+
+            db()->executeMultiQuery("COMMIT");
+        } catch (Throwable $e) {
+            db()->executeMultiQuery("ROLLBACK");
+            throw $e;
+        }
+
+        return true;
+    }
+
+    private function restockOrder($orderId): void {
         $sql = "SELECT `cart_item`.`item_id`, `cart_item`.`quantity`
                 FROM `order`
                 JOIN `cart_item`
@@ -212,14 +246,6 @@ class OrderModel extends z_model
                 ORDER BY `cart_item`.`created` ASC";
 
         return $this->exec($sql, "i", $orderId)->resultToArray();
-    }
-
-    public function updateStatus(int $orderId, string $status): void {
-        $sql = "UPDATE `order`
-                SET `status` = ?
-                WHERE `id` = ?";
-
-        $this->exec($sql, "si", $status, $orderId);
     }
 
     public function deleteLostCartItems(int $itemId): void {
