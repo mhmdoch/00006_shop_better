@@ -37,3 +37,32 @@ describe('Cart: requests from other sites', () => {
         cy.contains('Dein Warenkorb ist leer');
     });
 });
+
+describe('Cart: other actions reject requests from other sites', () => {
+    beforeEach(() => {
+        cy.visit("/login/logout");
+        cy.dbSeed();
+    });
+
+    const actions = [
+        ['/cart', { action: 'apply-discount', code: 'WILLKOMMEN' }],
+        ['/cart', { action: 'remove-discount' }],
+        ['/cart', { action: 'delete-cartItem', cartItemId: 1 }],
+        ['/cart', { action: 'raise-cartItem', cartItemId: 1 }],
+        ['/cart', { action: 'reduce-cartItem', cartItemId: 1 }],
+        ['/order/create', { isFormData: 1, recipient: 'Eve', email: 'eve@example.com', address_line_1: 'Weg 1', postal_code: '12345', city: 'Stadt', country: 'DE' }],
+    ];
+
+    actions.forEach(([url, body]) => {
+        it(`rejects ${body.action ?? 'the order'} from another site`, () => {
+            cy.request({
+                method: 'POST',
+                url,
+                form: true,
+                body,
+                headers: { Origin: 'https://boese-seite.example' },
+                failOnStatusCode: false,
+            }).its('status').should('eq', 403);
+        });
+    });
+});

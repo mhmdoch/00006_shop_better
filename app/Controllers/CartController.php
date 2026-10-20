@@ -40,15 +40,13 @@ class CartController extends z_controller
         }
 
         if ($req->isAction("delete-cartItem")) {
-            //$req->checkPermission("brand.delete");
-            $cartItemId = $req->getPost("cartItemId");
+            $cartItemId = (int) $req->getPost("cartItemId");
             $req->getModel("Cart")->deleteCartItemById($cartItemId);
             return $res->success();
         }
 
         if ($req->isAction("raise-cartItem")) {
-            //$req->checkPermission("brand.delete");
-            $cartItemId = $req->getPost("cartItemId");
+            $cartItemId = (int) $req->getPost("cartItemId");
             $cartItemQuantityBefore = $req->getModel("Cart")->getCartItemQuantityById($cartItemId);
             $req->getModel("Cart")->raiseCartItemById($cartItemId);
             $cartItemQuantityAfter = $req->getModel("Cart")->getCartItemQuantityById($cartItemId);
@@ -64,8 +62,7 @@ class CartController extends z_controller
         }
 
         if ($req->isAction("reduce-cartItem")) {
-            //$req->checkPermission("brand.delete");
-            $cartItemId = $req->getPost("cartItemId");
+            $cartItemId = (int) $req->getPost("cartItemId");
             $req->getModel("Cart")->reduceCartItemById($cartItemId);
             return $res->success();
         }
