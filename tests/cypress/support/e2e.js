@@ -1,3 +1,2 @@
 import './commands'
-import './database'
-import './catalog'
+import './commandsOwn'
