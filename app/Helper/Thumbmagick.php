@@ -41,7 +41,7 @@ class Thumbmagick extends \Imagick
         $newThumbBG->writeImage("webroot/uploads/thumb_{$name}.jpg");
 
         // Only drop the original after the new files exist, and not if it was overwritten
-        if ($imageToDelete !== $imagePath && file_exists($imageToDelete)) {
+        if (realpath($imageToDelete) !== realpath($imagePath) && file_exists($imageToDelete)) {
             unlink($imageToDelete);
         }
 
