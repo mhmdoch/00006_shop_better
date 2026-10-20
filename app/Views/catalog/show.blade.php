@@ -208,6 +208,42 @@
                     </table>
                 <?php } ?>
             </div>
+
+            <?php if (!empty($opt["replacedItems"])): ?>
+                <h5 class="mt-4">Frühere Versionen:</h5>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <tbody class="replacedItemList">
+                            <?php foreach ($opt["replacedItems"] as $item) { ?>
+                                <tr>
+                                    <td>
+                                        <?php if ($opt["catalog"]["itemable_type"] === "shoe") { ?>
+                                            <?= e($item["color"]) ?>, Größe <?= e($item["size"]) ?>
+                                        <?php } else { ?>
+                                            <?= e($item["name"]) ?> (<?= e($item["set_number"]) ?>)
+                                        <?php } ?>
+                                    </td>
+                                    <td class="text-right"><?= e(\App\Helper\AppHelper::price($item["price"])) ?></td>
+                                    <td class="text-right">
+                                        <a href="#" class="restore-item bi bi-arrow-counterclockwise" data-id="<?= e($item["id"]) ?>" data-test="restore_item" title="wiederherstellen" aria-label="wiederherstellen"></a>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $(".restore-item").on("click", function (event) {
+                            event.preventDefault();
+                            Z.Request.root("item", "restore-item", {itemId: $(this).data("id")}, (res) => {
+                                if (res.result === "success") location.reload();
+                                else alert(res.message || "Die Version konnte nicht wiederhergestellt werden.");
+                            });
+                        });
+                    });
+                </script>
+            <?php endif; ?>
         <?php endif; ?>
     </main>
 

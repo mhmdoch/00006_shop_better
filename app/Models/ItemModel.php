@@ -67,4 +67,68 @@ class ItemModel extends z_model
 
         return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] === 1;
     }
+
+    /**
+     * Takes an item out of sale only if it is still active and has the expected stock.
+     * @return bool False if the item was changed in the meantime
+     */
+    public function deactivateItem(int $itemId, int $expectedStock): bool {
+        $sql = "UPDATE `item` SET `active` = 0 WHERE `id` = ? AND `active` = 1 AND `stock` = ?";
+        $this->exec($sql, "ii", $itemId, $expectedStock);
+
+        return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] === 1;
+    }
+
+    public function setActive(int $itemId, bool $active): void {
+        $this->exec("UPDATE `item` SET `active` = ? WHERE `id` = ?", "ii", (int) $active, $itemId);
+    }
+
+    public function setStock(int $itemId, int $stock): void {
+        $this->exec("UPDATE `item` SET `stock` = ? WHERE `id` = ?", "ii", $stock, $itemId);
+    }
+
+    public function setReplacedBy(int $itemId, ?int $replacedBy): void {
+        $this->exec("UPDATE `item` SET `replaced_by` = ? WHERE `id` = ?", "ii", $replacedBy, $itemId);
+    }
+
+    /**
+     * Old versions of a variant that a newer one has replaced, newest first.
+     */
+    public function getReplacedItemsByCatalogId(int $catalogId): array {
+        $sql = "SELECT * FROM `item`
+                WHERE `catalog_id` = ? AND `active` = 0 AND `replaced_by` IS NOT NULL
+                ORDER BY `id` DESC";
+        return $this->exec($sql, "i", $catalogId)->resultToArray();
+    }
+
+    /**
+     * Follows the chain of replacements from an old version to the version that is on sale now.
+     * @return int|null Null if there is none, for example for versions from before the chain was recorded
+     */
+    public function getCurrentVersionId(int $itemId): ?int {
+        $currentId = $itemId;
+
+        // The limit only guards against a broken chain that leads in a circle
+        for ($step = 0; $step < 100; $step++) {
+            $row = $this->exec("SELECT `active`, `replaced_by` FROM `item` WHERE `id` = ?", "i", $currentId)->resultToLine();
+            if ($row === null) return null;
+            if ($currentId !== $itemId && (int) $row["active"] === 1) return $currentId;
+            if ($row["replaced_by"] === null) return null;
+            $currentId = (int) $row["replaced_by"];
+        }
+
+        return null;
+    }
+
+    /**
+     * Puts an old version back on sale with the given stock, only if it is still inactive.
+     * @return bool False if the item was changed in the meantime
+     */
+    public function activateReplaced(int $itemId, int $stock): bool {
+        $sql = "UPDATE `item` SET `active` = 1, `replaced_by` = NULL, `stock` = ?
+                WHERE `id` = ? AND `active` = 0";
+        $this->exec($sql, "ii", $stock, $itemId);
+
+        return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] === 1;
+    }
 }

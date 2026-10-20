@@ -286,6 +286,9 @@ class CatalogController extends z_controller
         }
 
         $items = $req->getModel("Item")->getItemsByCatalogId($catalogId);
+        $replacedItems = $req->checkPermission("catalog.manage", true)
+            ? $req->getModel("Item")->getReplacedItemsByCatalogId((int) $catalogId)
+            : [];
 
         $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
 
@@ -346,6 +349,7 @@ class CatalogController extends z_controller
         return $res->render("catalog/show", [
             "catalog" => $catalog,
             "items" => $items,
+            "replacedItems" => $replacedItems,
             "sizes" => $sizes,
             "colors" => $colors,
             "currentSize" => $currentSize,

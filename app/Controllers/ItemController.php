@@ -3,6 +3,66 @@
 class ItemController extends z_controller
 {
 
+    public function action_index(Request $req, Response $res)
+    {
+        if ($req->isAction("restore-item")) {
+            $req->checkPermission("catalog.manage");
+            return $this->restoreVersion($req, $res, (int) $req->getPost("itemId"));
+        }
+
+        return $res->reroute(["error", "404"]);
+    }
+
+    /**
+     * Puts an old version of a variant back on sale. The version that is on sale now goes out of sale
+     * and hands its stock over, so the stock does not jump back to an old value.
+     */
+    private function restoreVersion(Request $req, Response $res, int $itemId)
+    {
+        $items = $req->getModel("Item");
+        $unavailable = "Diese Version kann nicht wiederhergestellt werden.";
+
+        $item = $items->getItemShoeById($itemId);
+        $currentId = $item === null || $item["active"] ? null : $items->getCurrentVersionId($itemId);
+        if ($currentId === null) {
+            return $res->error($unavailable);
+        }
+
+        $current = $items->getItemShoeById($currentId);
+        if (!$items->deactivateItem($currentId, (int) $current["stock"])) {
+            return $res->error("Die Variante wurde zwischenzeitlich geändert. Bitte die Seite neu laden.");
+        }
+
+        $restored = false;
+        try {
+            $restored = $items->activateReplaced($itemId, (int) $current["stock"]);
+            if (!$restored) {
+                $items->setActive($currentId, true);
+                return $res->error($unavailable);
+            }
+
+            $items->setReplacedBy($currentId, $itemId);
+            $res->getModel("Order")->deleteLostCartItems($currentId);
+        } catch (\Throwable $e) {
+            // Back to the version that was on sale
+            if ($restored) {
+                $items->setActive($itemId, false);
+                $items->setReplacedBy($itemId, $item["replaced_by"] === null ? null : (int) $item["replaced_by"]);
+                $items->setStock($itemId, (int) $item["stock"]);
+            }
+            $items->setReplacedBy($currentId, null);
+            $items->setActive($currentId, true);
+            throw $e;
+        }
+
+        $res->insertDatabase("log_active", new FormResult(),
+            ["active_type" => "item", "active_id" => $itemId, "action" => "aktiviert", "userId" => user()->userId]);
+        $res->insertDatabase("log_active", new FormResult(),
+            ["active_type" => "item", "active_id" => $currentId, "action" => "deaktiviert", "userId" => user()->userId]);
+
+        return $res->success();
+    }
+
     public function action_itemshoecreate(Request $req, Response $res)
     {
         $req->checkPermission("catalog.manage");
@@ -158,13 +218,24 @@ class ItemController extends z_controller
             return $res->success();
         }
 
-        $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]] + $extra);
-        $res->updateDatabase(
-                        "item", "id",
-                        "i",
-                        $itemId, new FormResult(), ["active" => 0]);
+        // The old version is taken out of sale first, and only if it is still the one the admin saw.
+        // This also keeps an old, already replaced version from getting a new version of its own.
+        if (!$req->getModel("Item")->deactivateItem((int) $itemId, (int) $oldStock)) {
+            return $res->error("Diese Variante wurde zwischenzeitlich geändert. Bitte die Seite neu laden.");
+        }
 
-        $res->getModel("Order")->deleteLostCartItems($itemId);
+        $newItemId = null;
+        try {
+            $newItemId = $res->insertDatabase("item", $formResult, ["catalog_id" => $item["catalog_id"]] + $extra);
+            $req->getModel("Item")->setReplacedBy((int) $itemId, (int) $newItemId);
+            $res->getModel("Order")->deleteLostCartItems($itemId);
+        } catch (\Throwable $e) {
+            // Back to the old version, so there is never no or a second active version
+            if ($newItemId !== null) $req->getModel("Item")->setActive((int) $newItemId, false);
+            $req->getModel("Item")->setReplacedBy((int) $itemId, null);
+            $req->getModel("Item")->setActive((int) $itemId, true);
+            throw $e;
+        }
 
         $res->insertDatabase("log_active",
                                 new FormResult(),
