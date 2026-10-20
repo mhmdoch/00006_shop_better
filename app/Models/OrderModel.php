@@ -144,37 +144,28 @@ class OrderModel extends z_model
      * @return bool False if the order was changed in the meantime
      */
     public function changeStatus(int $orderId, string $fromStatus, string $toStatus): bool {
+        // A cancellation changes the status and gives the stock back in one
+        // statement, so a failure cannot leave only one of the two done.
+        // The affected rows are not exactly one here (one per restocked item).
+        if ($toStatus === "cancelled") {
+            $sql = "UPDATE `order`
+                    LEFT JOIN `cart_item`
+                        ON `cart_item`.`cart_id` = `order`.`cart_id` AND `cart_item`.`price` IS NOT NULL
+                    LEFT JOIN `item` ON `item`.`id` = `cart_item`.`item_id`
+                    SET `order`.`status` = ?, `item`.`stock` = `item`.`stock` + `cart_item`.`quantity`
+                    WHERE `order`.`id` = ? AND `order`.`status` = ?";
+            $this->exec($sql, "sis", $toStatus, $orderId, $fromStatus);
+
+            return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] > 0;
+        }
+
         $sql = "UPDATE `order`
                 SET `status` = ?
                 WHERE `id` = ? AND `status` = ?";
         $this->exec($sql, "sis", $toStatus, $orderId, $fromStatus);
 
         $changed = (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"];
-        if ($changed !== 1) return false;
-
-        if ($toStatus === "cancelled") {
-            $this->restockOrder($orderId);
-        }
-
-        return true;
-    }
-
-    private function restockOrder($orderId): void {
-        $sql = "SELECT `cart_item`.`item_id`, `cart_item`.`quantity`
-                FROM `order`
-                JOIN `cart_item`
-                ON `cart_item`.`cart_id` = `order`.`cart_id`
-                WHERE `order`.`id` = ? AND `cart_item`.`price` IS NOT NULL";
-
-        $cartItems = $this->exec($sql, "i", $orderId)->resultToArray();
-
-        foreach ($cartItems as $cartItem) {
-            $sql = "UPDATE `item`
-                    SET `stock` = `stock` + ?
-                    WHERE `id` = ?";
-
-            $this->exec($sql, "ii", $cartItem["quantity"], $cartItem["item_id"]);
-        }
+        return $changed === 1;
     }
 
 
