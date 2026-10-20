@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 class CatalogImageModel extends z_model
 {
-    public function getImagesByCatalogId($catalogId): array {
+    public function getImagesByCatalogId(int $catalogId): array {
         $sql = "SELECT `catalog_image`.`id`, `z_file`.`id` AS `fileId`, `z_file`.`reference`, `z_file`.`extension`
                 FROM `catalog_image`
                 JOIN `z_file` ON `z_file`.`id` = `catalog_image`.`image`
@@ -11,7 +13,7 @@ class CatalogImageModel extends z_model
         return $this->exec($sql, "i", $catalogId)->resultToArray();
     }
 
-    public function getImage($imageId, $catalogId): ?array {
+    public function getImage(int $imageId, int $catalogId): ?array {
         $sql = "SELECT `catalog_image`.`id`, `z_file`.`id` AS `fileId`, `z_file`.`reference`, `z_file`.`extension`
                 FROM `catalog_image`
                 JOIN `z_file` ON `z_file`.`id` = `catalog_image`.`image`
@@ -20,7 +22,7 @@ class CatalogImageModel extends z_model
     }
 
     // Removing the file row also removes the catalog_image row (cascade)
-    public function deleteFile($fileId): void {
+    public function deleteFile(int $fileId): void {
         $this->exec("DELETE FROM `z_file` WHERE `id` = ?", "i", $fileId);
     }
 }
