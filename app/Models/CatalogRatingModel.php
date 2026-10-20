@@ -17,11 +17,29 @@ class CatalogRatingModel extends z_model
     }
 
     public function getRatingsByCatalogId($catalogId): array {
-        $sql = "SELECT *
+        $sql = "SELECT `catalog_rating`.*, `z_file`.`reference` AS `photo_reference`
                 FROM `catalog_rating`
-                WHERE `catalog_id` = ? AND `active` = 1
-                ORDER BY `created` DESC, `id` DESC";
+                LEFT JOIN `z_file` ON `z_file`.`id` = `catalog_rating`.`photo`
+                WHERE `catalog_rating`.`catalog_id` = ? AND `catalog_rating`.`active` = 1
+                ORDER BY `catalog_rating`.`created` DESC, `catalog_rating`.`id` DESC";
         return $this->exec($sql, "i", $catalogId)->resultToArray();
+    }
+
+    public function getRatingPhoto($ratingId): ?array {
+        $sql = "SELECT `z_file`.`id` AS `fileId`, `z_file`.`reference`, `z_file`.`extension`
+                FROM `catalog_rating`
+                JOIN `z_file` ON `z_file`.`id` = `catalog_rating`.`photo`
+                WHERE `catalog_rating`.`id` = ?";
+        return $this->exec($sql, "i", $ratingId)->resultToLine();
+    }
+
+    // Used when the uploaded photo turns out not to be a usable image
+    public function removeRatingWithPhoto($ratingId, ?int $fileId): void {
+        $this->exec("DELETE FROM `catalog_rating` WHERE `id` = ?", "i", $ratingId);
+
+        if ($fileId !== null) {
+            $this->exec("DELETE FROM `z_file` WHERE `id` = ?", "i", $fileId);
+        }
     }
 
     public function getRatingSummary($catalogId): array {

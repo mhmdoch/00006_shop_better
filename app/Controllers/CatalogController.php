@@ -226,11 +226,29 @@ class CatalogController extends z_controller
                 return $res->formErrors($formResult->errors);
             }
 
-            $res->insertDatabase("catalog_rating", $formResult, [
+            $ratingId = $res->insertDatabase("catalog_rating", $formResult, [
                 "catalog_id" => $catalog["id"],
                 "user_id" => user()->userId,
                 "active" => 1,
             ]);
+
+            // The framework only checks the file extension. Re-encoding the picture
+            // proves that it is a real image and drops everything else inside the file.
+            $photo = $req->getModel("CatalogRating")->getRatingPhoto($ratingId);
+
+            if ($photo !== null) {
+                $path = "webroot/uploads/" . $photo["reference"] . "." . $photo["extension"];
+
+                try {
+                    $image = new Thumbmagick($path);
+                    $image->thumbalize($photo["reference"], $photo["fileId"], $req);
+                } catch (\ImagickException $e) {
+                    if (file_exists($path)) unlink($path);
+                    $req->getModel("CatalogRating")->removeRatingWithPhoto($ratingId, (int) $photo["fileId"]);
+
+                    return $res->error("Das Foto konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
+                }
+            }
 
             return $res->success();
         }
@@ -315,6 +333,11 @@ class CatalogController extends z_controller
         return [
             (new FormField("stars"))->required()->integer()->range(1, 5),
             (new FormField("review_text"))->required()->length(1, 2000),
+            // The photo is optional. Only images up to 5 MB are accepted.
+            (new FormField("photo"))->file(
+                FILE_SIZE_5MB,
+                ["jpg", "jpeg", "png"]
+            ),
         ];
     }
 

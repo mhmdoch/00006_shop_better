@@ -29,6 +29,44 @@ describe('Catalog-Rating', () => {
         cy.query('create_catalog_rating').should('not.exist');
     });
 
+    it('shows the photo that a customer attached to the rating', () => {
+        cy.dbExec(`DELETE FROM catalog_rating WHERE user_id = (SELECT id FROM z_user WHERE email = 'customer@zubzet.com') AND catalog_id = (SELECT id FROM catalog WHERE name = '${name}')`);
+
+        cy.loginAs('customer');
+        cy.openCatalog(name);
+
+        cy.form('stars').select('4 Sterne');
+        cy.form('review_text').type('Mit Foto vom Schuh.');
+        // Das Foto wird wie von einem Menschen im Dateiauswahl-Feld gewählt
+        cy.form('photo').selectFile('cypress/fixtures/review-photo.png');
+        cy.query('create_catalog_rating').contains('button', 'Bewertung abgeben').click();
+
+        // Nach dem Neuladen steht die Bewertung mit einem Vorschaubild da
+        cy.query('catalog_rating_text').contains('Mit Foto vom Schuh.');
+        cy.query('catalog_rating_photo').find('img')
+            .should('be.visible')
+            .and(($img) => expect($img[0].naturalWidth).to.be.greaterThan(0));
+    });
+
+    it('rejects a file that is not a real image and keeps the rating form', () => {
+        cy.dbExec(`DELETE FROM catalog_rating WHERE user_id = (SELECT id FROM z_user WHERE email = 'customer@zubzet.com') AND catalog_id = (SELECT id FROM catalog WHERE name = '${name}')`);
+
+        cy.loginAs('customer');
+        cy.openCatalog(name);
+
+        cy.form('stars').select('3 Sterne');
+        cy.form('review_text').type('Das Foto ist kaputt.');
+        // Die Datei heißt .jpg, enthält aber nur Text
+        cy.form('photo').selectFile('cypress/fixtures/not-an-image.jpg');
+        cy.query('create_catalog_rating').contains('button', 'Bewertung abgeben').click();
+
+        // Es wurde nichts gespeichert: nach dem Neuladen gibt es weder Bewertung noch Foto, das Formular ist wieder da
+        cy.reload();
+        cy.contains('Das Foto ist kaputt.').should('not.exist');
+        cy.query('catalog_rating_photo').should('not.exist');
+        cy.query('create_catalog_rating').should('be.visible');
+    });
+
     it('does not accept a rating without stars and text', () => {
         cy.dbExec(`DELETE FROM catalog_rating WHERE user_id = (SELECT id FROM z_user WHERE email = 'customer@zubzet.com') AND catalog_id = (SELECT id FROM catalog WHERE name = '${name}')`);
 

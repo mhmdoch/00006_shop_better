@@ -84,6 +84,11 @@
                             </time>
                         </div>
                         <p class="mb-0 mt-2" data-test="catalog_rating_text"><?= e($rating["review_text"]) ?></p>
+                        <?php if (!empty($rating["photo_reference"])): ?>
+                            <a href="<?php $opt["generateResourceLink"]("uploads/{$rating["photo_reference"]}.jpg"); ?>" target="_blank" rel="noopener" data-test="catalog_rating_photo">
+                                <img src="<?php $opt["generateResourceLink"]("uploads/thumb_{$rating["photo_reference"]}.jpg"); ?>" alt="Foto zur Bewertung" class="mt-2 rounded" style="max-width: 150px;">
+                            </a>
+                        <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -125,6 +130,11 @@
                             type: "textarea",
                             text: "Bewertungstext",
                             required: true
+                        });
+                        catalog_rating_create_form.createField({
+                            name: "photo",
+                            type: "file",
+                            text: "Foto (optional)"
                         });
                         catalog_rating_create_form.buttonSubmit.innerHTML = "Bewertung abgeben";
                         catalog_rating_create_form.saveHook = (res) => {
