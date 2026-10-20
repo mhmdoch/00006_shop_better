@@ -11,4 +11,13 @@ class LogActiveModel extends z_model
                 ORDER BY `date` ASC";
         return $this->exec($sql, "is", $id, $type)->resultToArray();
     }
+
+    public function getRecentLogs(int $limit): array {
+        $sql = "SELECT `log_active`.*, `z_user`.`email` AS `userEmail`
+                FROM `log_active`
+                JOIN `z_user` ON `log_active`.`userId` = `z_user`.`id`
+                ORDER BY `log_active`.`date` DESC, `log_active`.`id` DESC
+                LIMIT ?";
+        return $this->exec($sql, "i", $limit)->resultToArray();
+    }
 }

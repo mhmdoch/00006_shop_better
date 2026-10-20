@@ -27,6 +27,9 @@
                     <?php endif; ?>
                     <?php if ($opt["user"]->checkPermission("order.manage")): ?>
                         <li class="nav-item">
+                            <a class="nav-link <?= ($opt["navMenu"] ?? "") == "dashboard" ? "active" : "" ?>" href="<?= $opt["root"] ?>dashboard" data-test="nav-dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link <?= ($opt["navMenu"] ?? "") == "allorder" ? "active" : "" ?>" href="<?= $opt["root"] ?>order" data-test="nav-all-order">Alle Bestellungen</a>
                         </li>
                     <?php endif; ?>

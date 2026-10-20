@@ -131,4 +131,27 @@ class ItemModel extends z_model
 
         return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] === 1;
     }
+
+    /**
+     * Items on sale that are almost or fully sold out, the emptiest first.
+     */
+    public function getLowStockItems(int $maxStock, int $limit): array {
+        $sql = "SELECT `item`.`id`, `item`.`stock`, `item`.`size`, `item`.`color`, `item`.`name` AS `item_name`,
+                       `catalog`.`id` AS `catalog_id`, `catalog`.`name` AS `catalog_name`, `brand`.`name` AS `brand_name`
+                FROM `item`
+                JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                JOIN `brand` ON `brand`.`id` = `catalog`.`brand_id`
+                WHERE `item`.`active` = 1 AND `catalog`.`active` = 1 AND `item`.`stock` <= ?
+                ORDER BY `item`.`stock` ASC, `item`.`id` ASC
+                LIMIT ?";
+        return $this->exec($sql, "ii", $maxStock, $limit)->resultToArray();
+    }
+
+    public function countLowStockItems(int $maxStock): int {
+        $sql = "SELECT COUNT(*) AS `amount`
+                FROM `item`
+                JOIN `catalog` ON `catalog`.`id` = `item`.`catalog_id`
+                WHERE `item`.`active` = 1 AND `catalog`.`active` = 1 AND `item`.`stock` <= ?";
+        return (int) $this->exec($sql, "i", $maxStock)->resultToLine()["amount"];
+    }
 }
