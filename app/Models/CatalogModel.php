@@ -153,4 +153,13 @@ class CatalogModel extends z_model
         $sql = "UPDATE z_file SET type = ?, extension = ?, size = ? WHERE id = ?";
         $this->exec($sql, "ssii", "image/jpeg", "jpg", $fileSize, $id);
     }
+
+    public function setTitleThumb($catalogId, $fileId): void {
+        $this->exec("UPDATE `catalog` SET `titlethumb` = ? WHERE `id` = ?", "si", $fileId, $catalogId);
+    }
+
+    // Used when the picture of a new catalog turns out not to be a usable image
+    public function deleteCatalog($catalogId): void {
+        $this->exec("DELETE FROM `catalog` WHERE `id` = ?", "i", $catalogId);
+    }
 }

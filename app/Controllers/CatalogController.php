@@ -27,11 +27,13 @@ class CatalogController extends z_controller
                 // $imageAsJPG = $imageAsJPG->toJPGwithThumb($titlethumb["reference"], $titlethumb["extension"], $titlethumb["thumbid"], $req);
 
             // picture processing with Imagick, the picture is optional
-            if ($titlethumb !== null) {
-                $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
-                $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
-            }
+            if ($titlethumb !== null && !$this->processImage($req, $titlethumb)) {
+                // Nothing stays saved, so the form can simply be sent again with another picture
+                $req->getModel("Catalog")->deleteCatalog($catalogId);
+                $req->getModel("CatalogImage")->deleteFile($titlethumb["thumbid"]);
 
+                return $res->error("Das Bild konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
+            }
 
             $res->insertDatabase(
                             "log_active",
@@ -77,7 +79,7 @@ class CatalogController extends z_controller
             }
 
             $this->removeImageFiles($image);
-            $req->getModel("CatalogImage")->deleteImageFile($image["fileId"]);
+            $req->getModel("CatalogImage")->deleteFile($image["fileId"]);
             return $res->success();
         }
 
@@ -93,12 +95,8 @@ class CatalogController extends z_controller
             $imageId = $res->insertDatabase("catalog_image", $formResult, ["catalog_id" => $catalogId]);
             $image = $req->getModel("CatalogImage")->getImage($imageId, $catalogId);
 
-            try {
-                $path = "webroot/uploads/" . $image["reference"] . "." . $image["extension"];
-                (new Thumbmagick($path))->thumbalize($image["reference"], $image["fileId"], $req);
-            } catch (\Throwable $e) {
-                $this->removeImageFiles($image);
-                $req->getModel("CatalogImage")->deleteImageFile($image["fileId"]);
+            if (!$this->processImage($req, $image)) {
+                $req->getModel("CatalogImage")->deleteFile($image["fileId"]);
 
                 return $res->error("Das Bild konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
             }
@@ -117,9 +115,13 @@ class CatalogController extends z_controller
 
             // A new picture was uploaded, so it still needs its thumbnail
             $titlethumb = $req->getModel("Catalog")->getCatalogPictureByCatalogId($catalogId);
-            if ($titlethumb !== null && (string) $titlethumb["thumbid"] !== (string) $catalog["titlethumb"]) {
-                $image = new Thumbmagick("webroot/uploads/" . $titlethumb['reference'] . "." . $titlethumb['extension']);
-                $image->thumbalize($titlethumb['reference'], $titlethumb["thumbid"], $req);
+            if ($titlethumb !== null && (string) $titlethumb["thumbid"] !== (string) $catalog["titlethumb"]
+                && !$this->processImage($req, $titlethumb)) {
+                // Keep the old picture, the other changes are already saved
+                $req->getModel("Catalog")->setTitleThumb($catalogId, $catalog["titlethumb"] ?: null);
+                $req->getModel("CatalogImage")->deleteFile($titlethumb["thumbid"]);
+
+                return $res->error("Das Bild konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild. Die übrigen Änderungen wurden gespeichert.");
             }
 
             return $res->success();
@@ -274,18 +276,10 @@ class CatalogController extends z_controller
             // proves that it is a real image and drops everything else inside the file.
             $photo = $req->getModel("CatalogRating")->getRatingPhoto($ratingId);
 
-            if ($photo !== null) {
-                $path = "webroot/uploads/" . $photo["reference"] . "." . $photo["extension"];
+            if ($photo !== null && !$this->processImage($req, $photo)) {
+                $req->getModel("CatalogRating")->removeRatingWithPhoto($ratingId, (int) $photo["fileId"]);
 
-                try {
-                    $image = new Thumbmagick($path);
-                    $image->thumbalize($photo["reference"], $photo["fileId"], $req);
-                } catch (\ImagickException $e) {
-                    if (file_exists($path)) unlink($path);
-                    $req->getModel("CatalogRating")->removeRatingWithPhoto($ratingId, (int) $photo["fileId"]);
-
-                    return $res->error("Das Foto konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
-                }
+                return $res->error("Das Foto konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
             }
 
             return $res->success();
@@ -365,6 +359,22 @@ class CatalogController extends z_controller
             "catalogOnline" => $catalogOnline,
             "navMenu" => "catalog",
         ]);
+    }
+
+    // Turns an uploaded picture into a jpg with a thumbnail. The framework only checks the file
+    // extension, so this also proves that it is a real image. If it is not, the files are removed again
+    // and false is returned, the caller cleans up its own database rows.
+    // $file needs the keys reference, extension and fileId.
+    private function processImage(Request $req, array $file): bool
+    {
+        try {
+            $image = new Thumbmagick("webroot/uploads/" . $file["reference"] . "." . $file["extension"]);
+            $image->thumbalize($file["reference"], $file["fileId"] ?? $file["thumbid"], $req);
+            return true;
+        } catch (\Throwable $e) {
+            $this->removeImageFiles($file);
+            return false;
+        }
     }
 
     // Deletes the original and the thumbnail of an uploaded picture. After processing both are jpg.

@@ -20,7 +20,7 @@ class CatalogImageModel extends z_model
     }
 
     // Removing the file row also removes the catalog_image row (cascade)
-    public function deleteImageFile($fileId): void {
+    public function deleteFile($fileId): void {
         $this->exec("DELETE FROM `z_file` WHERE `id` = ?", "i", $fileId);
     }
 }
