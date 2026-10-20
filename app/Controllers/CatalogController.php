@@ -69,6 +69,43 @@ class CatalogController extends z_controller
             return $res->reroute(["error", "404"]);
         }
 
+        if ($req->isAction("delete-catalogImage")) {
+            $image = $req->getModel("CatalogImage")->getImage((int) $req->getPost("imageId"), $catalogId);
+
+            if ($image === null) {
+                return $res->error();
+            }
+
+            $this->removeImageFiles($image);
+            $req->getModel("CatalogImage")->deleteImageFile($image["fileId"]);
+            return $res->success();
+        }
+
+        if ($req->hasFormData("upload_catalog_image")) {
+            $formResult = $req->validateForm([
+                (new FormField("image"))->required()->file(FILE_SIZE_5MB, ["jpg", "jpeg", "png"]),
+            ]);
+
+            if ($formResult->hasErrors) {
+                return $res->formErrors($formResult->errors);
+            }
+
+            $imageId = $res->insertDatabase("catalog_image", $formResult, ["catalog_id" => $catalogId]);
+            $image = $req->getModel("CatalogImage")->getImage($imageId, $catalogId);
+
+            try {
+                $path = "webroot/uploads/" . $image["reference"] . "." . $image["extension"];
+                (new Thumbmagick($path))->thumbalize($image["reference"], $image["fileId"], $req);
+            } catch (\Throwable $e) {
+                $this->removeImageFiles($image);
+                $req->getModel("CatalogImage")->deleteImageFile($image["fileId"]);
+
+                return $res->error("Das Bild konnte nicht verarbeitet werden. Bitte wähle ein gültiges Bild.");
+            }
+
+            return $res->success();
+        }
+
         if ($req->hasFormData()) {
             $formResult = $req->validateForm($this->catalogFormFields());
 
@@ -93,6 +130,7 @@ class CatalogController extends z_controller
         return $res->render("catalog/edit", [
             "brands" => $brands,
             "catalog" => $catalog,
+            "images" => $req->getModel("CatalogImage")->getImagesByCatalogId($catalogId),
             "itemableTypes" => CategoryHelper::itemableTypes(),
             "isActive" => CategoryHelper::isActive(),
             "genders" => CategoryHelper::gender(),
@@ -320,12 +358,24 @@ class CatalogController extends z_controller
             "currentColor" => $currentColor,
             "selectedItem" => $selectedItem,
             "titlethumb" => $titlethumb,
+            "images" => $req->getModel("CatalogImage")->getImagesByCatalogId($catalogId),
             "ratings" => $rating,
             "ratingSum" => $ratingSum,
             "ownRating" => $ownRating,
             "catalogOnline" => $catalogOnline,
             "navMenu" => "catalog",
         ]);
+    }
+
+    // Deletes the original and the thumbnail of an uploaded picture. After processing both are jpg.
+    private function removeImageFiles(array $image): void
+    {
+        foreach (["", "thumb_"] as $prefix) {
+            foreach (["jpg", $image["extension"]] as $extension) {
+                $path = "webroot/uploads/{$prefix}{$image["reference"]}.{$extension}";
+                if (file_exists($path)) unlink($path);
+            }
+        }
     }
 
     private function catalogRatingFormFields(): array

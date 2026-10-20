@@ -625,6 +625,48 @@
       "height": 502,
       "original": "webroot/uploads/lego_set_21325.jpg",
       "thumbnail": "webroot/uploads/thumb_lego_set_21325.jpg"
+    },
+    {
+      "reference": "shoe_mr530sg_2",
+      "extension": "jpg",
+      "name": "shoe_mr530sg_2.jpg",
+      "source_url": "https://www.newbalance.de/pd/530/MR530SG-D-095.html",
+      "image_url": "https://nb.scene7.com/is/image/NB/mr530sg_nb_03_i?wid=1000&hei=1000&fmt=jpeg",
+      "product_code": "MR530SG",
+      "size": 95681,
+      "type": "image/jpeg",
+      "width": 1000,
+      "height": 1000,
+      "original": "webroot/uploads/shoe_mr530sg_2.jpg",
+      "thumbnail": "webroot/uploads/thumb_shoe_mr530sg_2.jpg"
+    },
+    {
+      "reference": "shoe_mr530sg_3",
+      "extension": "jpg",
+      "name": "shoe_mr530sg_3.jpg",
+      "source_url": "https://www.newbalance.de/pd/530/MR530SG-D-095.html",
+      "image_url": "https://nb.scene7.com/is/image/NB/mr530sg_nb_04_i?wid=1000&hei=1000&fmt=jpeg",
+      "product_code": "MR530SG",
+      "size": 93848,
+      "type": "image/jpeg",
+      "width": 1000,
+      "height": 1000,
+      "original": "webroot/uploads/shoe_mr530sg_3.jpg",
+      "thumbnail": "webroot/uploads/thumb_shoe_mr530sg_3.jpg"
+    },
+    {
+      "reference": "shoe_mr530sg_4",
+      "extension": "jpg",
+      "name": "shoe_mr530sg_4.jpg",
+      "source_url": "https://www.newbalance.de/pd/530/MR530SG-D-095.html",
+      "image_url": "https://nb.scene7.com/is/image/NB/mr530sg_nb_06_i?wid=1000&hei=1000&fmt=jpeg",
+      "product_code": "MR530SG",
+      "size": 94332,
+      "type": "image/jpeg",
+      "width": 1000,
+      "height": 1000,
+      "original": "webroot/uploads/shoe_mr530sg_4.jpg",
+      "thumbnail": "webroot/uploads/thumb_shoe_mr530sg_4.jpg"
     }
   ]
 }

@@ -13,6 +13,20 @@
                 <hr>
                 <div id="create_catalog"></div>
             </div>
+
+            <div class="bg-box rounded p-4 mb-4">
+                <h5>Weitere Bilder:</h5>
+                <hr>
+                <div class="row" data-test="catalog_images">
+                    <?php foreach ($opt["images"] as $image): ?>
+                        <div class="col-6 col-md-4 mb-3">
+                            <img src="<?php $opt["generateResourceLink"]("uploads/thumb_{$image["reference"]}.jpg"); ?>" class="img-fluid rounded" alt="Katalogbild">
+                            <a href="#" class="delete-catalogImage bi bi-trash3" data-id="<?= e($image["id"]) ?>" data-test="delete_catalog_image" title="Bild entfernen" aria-label="Bild entfernen"></a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div id="upload_catalog_image"></div>
+            </div>
         </main>
 
 
@@ -96,6 +110,25 @@
                 value: <?= json_encode($catalog["active"]) ?>,
                 required: true
             });
+            var upload_image_form = Z.Forms.create({
+                dom: "upload_catalog_image"
+            });
+            upload_image_form.createField({
+                name: "image",
+                type: "file",
+                text: "Bild hinzufügen",
+                required: true
+            });
+            upload_image_form.buttonSubmit.innerHTML = "Bild hochladen";
+            upload_image_form.saveHook = () => location.reload();
+
+            $(".delete-catalogImage").on("click", function (event) {
+                event.preventDefault();
+                Z.Request.action("delete-catalogImage", {imageId: $(this).data("id")}, (res) => {
+                    if (res.result === "success") location.reload();
+                });
+            });
+
             catalog_create_form.createField({
                 name: "titlethumb",
                 type: "file",

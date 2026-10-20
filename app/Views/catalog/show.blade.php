@@ -22,6 +22,16 @@
                 <img src="<?php $opt["generateResourceLink"]("assets/img/{$opt["catalog"]["itemable_type"]}.png"); ?>" class="card-img-top">
             <?php } ?>
 
+            <?php if (!empty($opt["images"])): ?>
+                <div class="d-flex flex-wrap mt-3" data-test="catalog_gallery">
+                    <?php foreach ($opt["images"] as $image): ?>
+                        <a href="<?php $opt["generateResourceLink"]("uploads/{$image["reference"]}.jpg"); ?>" target="_blank" rel="noopener" class="mr-2 mb-2">
+                            <img src="<?php $opt["generateResourceLink"]("uploads/thumb_{$image["reference"]}.jpg"); ?>" alt="Katalogbild" class="rounded" style="max-width: 120px;">
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty(trim($opt["catalog"]["description"] ?? ""))): ?>
                 <p class="mt-4 mb-0" data-test="catalog_description"><?= nl2br(e($opt["catalog"]["description"])) ?></p>
             <?php endif; ?>
