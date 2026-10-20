@@ -9,3 +9,6 @@ logs/
 # Berichtsheft: generated/uploaded personal files
 webroot/assets/berichtsheft_fertig.pdf
 webroot/assets/cost-report.xls
+
+# Uploads from the app and the tests. The seed pictures are already tracked, new ones need git add -f
+webroot/uploads/
