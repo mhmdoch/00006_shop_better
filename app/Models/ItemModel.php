@@ -56,4 +56,15 @@ class ItemModel extends z_model
                 WHERE `item`.`id` = ?";
         return $this->exec($sql, "i", $itemId)->resultToLine();
     }
+
+    /**
+     * Sets the stock only if it is still the expected one.
+     * @return bool False if the stock was changed in the meantime
+     */
+    public function changeStock(int $itemId, int $expectedStock, int $newStock): bool {
+        $sql = "UPDATE `item` SET `stock` = ? WHERE `id` = ? AND `stock` = ?";
+        $this->exec($sql, "iii", $newStock, $itemId, $expectedStock);
+
+        return (int) $this->exec("SELECT ROW_COUNT() AS `changed`")->resultToLine()["changed"] === 1;
+    }
 }

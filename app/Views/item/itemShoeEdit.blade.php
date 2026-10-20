@@ -88,6 +88,12 @@
                 value: <?= json_encode($opt["item"]["stock"] ?? "") ?>,
                 required: true
             });
+            // The stock the admin saw, so a change made by an order in the meantime is not overwritten
+            item_shoe_edit_form.createField({
+                name: "stock_before",
+                type: "hidden",
+                value: <?= json_encode((string) ($opt["item"]["stock"] ?? "")) ?>
+            });
             item_shoe_edit_form.buttonSubmit.textContent = "Speichern";
         });
     </script>

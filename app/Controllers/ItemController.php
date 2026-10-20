@@ -57,7 +57,7 @@ class ItemController extends z_controller
 
             $this->taxrateToFraction($formResult);
 
-            return $this->saveItemVersion($res, $item, $formResult, ["sku", "size", "color", "taxrate", "price"]);
+            return $this->saveItemVersion($req, $res, $item, $formResult, ["sku", "size", "color", "taxrate", "price"]);
         }
 
         App\Helper\Breadcrumbs::append("{$item['brand_name']} {$item['catalog_name']}", "/catalog/show/" . $item['catalog_id']);
@@ -92,7 +92,7 @@ class ItemController extends z_controller
             }
 
             return $this->saveItemVersion(
-                $res, $item, $formResult,
+                $req, $res, $item, $formResult,
                 ["sku", "name", "description", "set_number", "theme", "piece_count", "release_date", "price"],
                 ["taxrate" => $item["taxrate"]]
             );
@@ -112,10 +112,16 @@ class ItemController extends z_controller
      * Only a stock change updates the item in place. Any other change creates
      * a new version of the item and deactivates the old one.
      */
-    private function saveItemVersion(Response $res, array $item, FormResult $formResult, array $fields, array $extra = [])
+    private function saveItemVersion(Request $req, Response $res, array $item, FormResult $formResult, array $fields, array $extra = [])
     {
         $itemId = $item["id"];
         $itemChanges = [];
+
+        // Orders change the stock too. If it is not what the admin saw, saving would overwrite them.
+        $stockBefore = $req->getPost("stock_before");
+        if (!is_numeric($stockBefore) || (int) $stockBefore !== (int) $item["stock"]) {
+            return $res->error("Der Bestand wurde zwischenzeitlich geändert. Bitte die Seite neu laden.");
+        }
 
         foreach ($fields as $field) {
             $newValue = $formResult->getValue($field);
@@ -138,7 +144,11 @@ class ItemController extends z_controller
         }
 
         if (empty($itemChanges)) {
-            $res->updateDatabase("item", "id", "i", $itemId, new FormResult(), ["stock" => $newStock]);
+            // Only writes if nobody changed the stock since the check above
+            $stockChanged = $req->getModel("Item")->changeStock((int) $itemId, (int) $oldStock, (int) $newStock);
+            if (!$stockChanged) {
+                return $res->error("Der Bestand wurde zwischenzeitlich geändert. Bitte die Seite neu laden.");
+            }
 
             $action = $newStock > $oldStock ? "stock erhöht" : "stock reduziert";
             $res->insertDatabase("log_active",
