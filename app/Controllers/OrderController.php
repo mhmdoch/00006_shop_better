@@ -58,7 +58,10 @@ class OrderController extends z_controller
                 $req->getModel("Cart")->getDiscountByCartId($order["cart_id"])
             );
 
-            $res->sendEmail(
+            // The order is already saved, so a failing mail must not turn it into an error
+            $this->sendMailSafely(
+                $res,
+                "Order confirmation for order {$orderId}",
                 $order["email"],                    // Recipient
                 "Bestellinformationen",             // Subject
                 "email/orderconfirmation",          // View file
@@ -74,7 +77,6 @@ class OrderController extends z_controller
                 ],
                 "mail_layout",                      // Layout file
             );
-
 
             return $res->success([
                 "orderId" => $orderId,
@@ -230,7 +232,10 @@ class OrderController extends z_controller
                 ]
             );
 
-            $res->sendEmail(
+            // The status is already saved, so a failing mail must not turn it into an error
+            $this->sendMailSafely(
+                $res,
+                "Status mail for order {$orderId}",
                 $order["email"],
                 "Status deiner Bestellung",
                 "email/orderstatus",
@@ -283,5 +288,26 @@ class OrderController extends z_controller
             'logs' => $logs,
             "navMenu" => "order",
         ]);
+    }
+
+    // Sends a mail without ever failing the request. The framework does not throw when the mail server
+    // cannot be reached, it prints the error instead. That text would end up in front of the JSON answer,
+    // so everything it prints is caught here and written to the log.
+    private function sendMailSafely(Response $res, string $label, ...$mailArguments): bool
+    {
+        ob_start();
+        try {
+            $sent = $res->sendEmail(...$mailArguments);
+        } catch (\Throwable $e) {
+            $sent = false;
+            error_log("{$label} could not be sent: " . $e->getMessage());
+        }
+        $printed = trim(ob_get_clean());
+
+        if ($sent === false && $printed !== "") {
+            error_log("{$label}: {$printed}");
+        }
+
+        return $sent !== false;
     }
 }
