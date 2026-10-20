@@ -1,44 +1,74 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/zubzet/branding/refs/heads/main/logo/square_long.png" alt="ZubZet Logo" width="200"/>
-</p>
+# Shop Better
 
-<h1 align="center">ZubZet PHP Framework</h1>
-<p align="center">
-  A lightweight opinionated PHP framework built with complexity adversity in mind, empowering developers and easy learning.
-</p>
+Ein kleiner Online-Shop als **Übungsprojekt**, gebaut mit dem PHP-Framework [ZubZet](https://zubzet.com/docs).
+Er ist nicht für den Produktivbetrieb gedacht.
 
-<p align="center">
-  <a href="https://github.com/zubzet/framework"><img alt="GitHub Repo stars" src="https://img.shields.io/badge/Star%20on-GitHub-blue?style=for-the-badge&logo=github"></a>
-  <a href="https://zubzet.com/docs"><img alt="Documentation" src="https://img.shields.io/badge/Read-the%20Docs-brightgreen?style=for-the-badge&logo=readthedocs"></a>
-  <a href="https://packagist.org/packages/zubzet/framework"><img alt="Latest Release" src="https://img.shields.io/badge/Latest%20Release-Packagist-orange?style=for-the-badge&logo=packagist"></a>
-  <a href="https://github.com/zubzet/framework/issues"><img alt="GitHub Issues" src="https://img.shields.io/badge/Report-Issues-yellow?style=for-the-badge&logo=bug"></a>
-  <a href="https://github.com/zubzet/framework/blob/main/LICENSE"><img alt="APL 2.0 License" src="https://img.shields.io/github/license/zubzet/framework?style=for-the-badge&logo=open-source-initiative"></a>
-</p>
+## Funktionen
 
-<br>
+- Katalog mit Marken, Produkten (Schuhe und Lego) und Varianten mit Lagerbestand
+- Warenkorb für Gäste und angemeldete Kunden, mit Rabattcodes
+- Bestellung mit Adresse, Bestätigungsmail und Statusverwaltung
+- Gastbestellungen, die man über einen geheimen Link ansehen kann
+- Bewertungen mit Sternen, Text und optionalem Foto
+- Verwaltung für Katalog, Marken, Rabatte und Bestellungen, geschützt über Berechtigungen
+- Bestellpositionen speichern Marke, Produktname und SKU, damit alte Bestellungen sich nicht ändern
 
-### **Why ZubZet?**
+## Voraussetzungen
 
-- **Get Started Quickly:** With sensible defaults and out-of-the-box features, like routing and templating, there’s no steep learning curve. Just install and start building.
+- Docker mit Docker Compose
+- Node.js und npm
 
-- **Rapid Development:** Skip the boilerplate. ZubZet’s pre-configured components allow you to prototype and develop your projects faster, while maintaining clean and structured code.
+## Starten
 
-- **No Barriers for Newcomers:** We believe everyone should have access to good tools. ZubZet is welcoming, friendly, and empoweres newcomers.
+```bash
+npm run start     # baut die Container, installiert Composer-Pakete und spielt die Seed-Daten ein
+npm run startup   # startet zusätzlich im Vordergrund
+npm run stop      # stoppt die Container und löscht die Volumes (auch die Datenbank)
+```
 
-- **Great Portability:** Whether you're developing locally or deploying in a complex production environment, ZubZet is designed to be lightweight, flexible, and portable.
+Die Seite läuft danach unter <http://localhost:8080>.
+`npm run info` zeigt die Zugangsdaten der Testnutzer an.
 
-### **A Gentle Approach to MVC**
+Weitere Befehle:
 
-The framework follows the **Model-View-Controller** (MVC) pattern, but you don’t need to be an expert to get started:
+| Befehl | Zweck |
+| --- | --- |
+| `npm run shell` | Shell im Anwendungs-Container |
+| `npm run seed` | Seed-Daten neu einspielen |
 
-1. **Controllers** handle application logic in a simple, straightforward way.
-2. **Models** manage data interactions with minimal setup, be it a database or other sources.
-3. **Views** allow you to easily create templates that integrate with your data.
+## Tests
 
-### **Documentation**
-Looking for step-by-step guides and practical examples? The [ZubZet Documentation](https://zubzet.com/docs) is the right place to look. It’s packed with tutorials and detailed guides to help you learn the ins and outs of the framework and get started quickly.
+```bash
+npm run tests       # alle Cypress-E2E-Tests im Terminal
+npm run cypress     # Cypress mit Oberfläche
+npm run tests:php   # PHP-Test für die Preis- und Steuerberechnung
+```
 
-### **API Reference**
-Dive deep into the technical details. The comprehensive [API Reference](https://zubzet.com/docs) covers every class, method, and parameter to help you customize and extend ZubZet for your specific needs.
+Die Cypress-Tests brauchen die laufende App und die Seed-Daten.
+Sie liegen in `tests/cypress/e2e/` und sind nach Bereichen sortiert (account, brand, cart, catalog, item, order).
 
-There’s no need to trade clarity for capability — build something great without getting bogged down by complexity. ZubZet is here to support your ideas, big or small—let’s build something great, together.
+## Projektstruktur
+
+```
+app/
+  Controllers/   Anfragen pro Bereich (Catalog, Cart, Order, Brand, Item, Discount)
+  Models/        Datenbankzugriffe
+  Views/         Blade-Templates
+  Helper/        Preisformat, Bestellstatus, Bilder und Thumbnails, Pagination
+  Database/
+    migrations/  SQL-Migrationen, nach Datum benannt
+    seed/        Beispieldaten
+tests/           Cypress- und PHP-Tests
+z_config/        Einstellungen des Frameworks
+webroot/         öffentliche Dateien, Uploads landen in webroot/uploads/
+```
+
+## Konfiguration
+
+Die Datenbank- und Mail-Einstellungen kommen aus Umgebungsvariablen (siehe `z_config/z_settings.ini`
+und `packaging/docker`). Uploads liegen in `webroot/uploads/`, daher braucht PHP die Erweiterung `imagick`
+für die Thumbnails.
+
+## Bekannte Lücken
+
+Es gibt keine Zahlungsanbindung, keine Versandkosten und keine rechtlichen Seiten wie Impressum oder AGB.
